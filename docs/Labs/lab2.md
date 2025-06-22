@@ -50,7 +50,7 @@ Any application, service, or other data that is sent or received by your compute
 
 **A firewall looks at these packets.**
 
-To be clear, the firewall doesn’t look inside packets, but just at the outside data like IP address and/or port destination, etc. The actual transmitted data is still secure and unread.
+To be clear, the firewall doesn’t look *inside* packets, but just at the outside data like IP address and/or port destination, etc. The actual transmitted data is still secure and unread.
 
 Generally with firewalls, we apply the _Principle of Least Privilege_ by dropping all new connections by default, and allowing a few exceptions. This is known as **whitelisting**.
 
@@ -62,7 +62,7 @@ Although programmers and developers usually use graphical IDE's to code and comp
 
 Developers very often use a text editor to modify configuration files. In this course, you will become familiar with the process of installing, configuring, and running network services. Text editors are an important tool to help this setup, but are also used to "tweak" or make periodic changes in service configurations.
 
-The two most readily-available command line text editor built into Windows is **Notepad**.
+The most readily-available command line text editor built into Windows is **Notepad**.
 
 However, Notepad is not available in Server Core. To edit a text file in that environment, we have three main options:
 1. Use PowerShell's object-oriented programming to send an edit directly into a text file. This is cumbersome and is not interactive (you don't see the text file on screen), but it is the only built-in option.
@@ -164,7 +164,7 @@ To do this, we're going to work with the **Windows Defender Firewall** on srv1.
 20. You've enabled ICMP ping! Let's go test it.
 21. Switch back to your client1 machine, and run the same ping you ran earlier pointing to srv1. (Refer to *Part 2, Step 4*.)
 22. Does it work?
-23. It if does, congratulations! You've just enabled ping for connectivity checking and gone through your first foray into the Windows Firewall.
+23. It if does, congratulations! You've just enabled ping for connectivity checking to *srv1* and gone through your first foray into the Windows Firewall.
 
 > ℹ️ **A note for later labs:**
 > By default, this rule is set to only allow incoming pings (ICMP requests) from computers on your **VM network**—that is, other virtual machines on the same VMware NAT or host-only network as your server—not from the wider Internet or any physical computers in the classroom.
@@ -178,18 +178,102 @@ To do this, we're going to work with the **Windows Defender Firewall** on srv1.
 > 
 > In the **Inbound Rules** list, scroll through to see if you can find the rule that’s allowing web server pages to be requested from *srv1*.
 > 
-> Write down the name of the rule in your Lab Logbook when you find it (it’s not called IIS) and explain why you think you didn’t have to enable this rule yourself. Think back to when you installed the Server Role.
+> Write down the name of the rule in your Lab Logbook when you find it (it’s not called IIS) and explain why you think you didn’t have to enable this rule yourself. Think back to when you installed the IIS Server Role.
 
-### Part 3: Windows Server Core (srv2) - Applying Firewall Rules
+### Part 4: Windows Server Core (srv2) - Applying Firewall Rules
 
-(Insert instructions on firewall whitelisting, then adding a rule for ICMP ping. This will be done with PowerShell.)
-(On Windows Server GUI and then Windows 11 client, test ping for success.)
+Let's apply the same incoming ping firewall rule to our Server Core machine so we can check it's network connectivity as well.
 
-### Part 4: Windows Client (client1) - No Rules
+1. Login to your Server Core (srv2) machine.
+2. The *sfconfig* text-based application automatically launches.
+3. Select option 8 to find this machine's IP address. Write it down.
+4. Back in your Windows 11 Client (client1), try to ping this address. Does it work?
+5. Just as in srv1, it doesn't.
+6. Go back to srv2.
+7. If you're still in the *Network settings* page, leave the field blank and hit **Enter** to go back to the main screen.
+8. Select option 15 to exit to PowerShell.
+9. As there's no GUI, we need to use PowerShell for firewall management.
+10. Let's take a look at the existing rules, just like in Part 2. Run the following PowerShell command: 
 
-(Briefly explain why only basic firewall protection is enabled, as it's just a client machine. Should discuss the difference between Public and Private scopes.)
+```powershell
+Get-NetFirewallRule | Where-Object DisplayName -Like '*ICMPv4-In*'
+```
 
-(Ping should be enabled, though, for future connectivity testing, but only on the local network.)
+11. Several results appear in the search. Look for the one with the name: **Core Networking Diagnostics - ICMP Echo Request (ICMPv4-In)**
+12. This firewall rule object, starting from *Name* all the way down to *PackageFamilyName* lists all the configured properties for this rule.
+13. Read through these properties. Recognize any from our GUI version?
+14. This rule matches both our incoming ping requests and keeps to *Private, Public* profiles. As with our GUI version, the scope is defaulted to local subnet only.
+15. Let's turn on this incoming firewall rule by running the following command:
+
+```powershell
+Enable-NetFirewallRule -Name CoreNet-Diag-ICMP4-EchoRequest-In
+```
+
+16. This selects the right rule and enables it.
+17. One of the things you **must** get into the habit of doing with CLI commands is ***double-checking your work***.
+18. Let's do that now by asking the system if it was actually enabled:
+
+```powershell
+Get-NetFirewallRule -Name CoreNet-Diag-ICMP4-EchoRequest-In
+```
+
+19. Look for the *Enabled:* field. See how it's changed to **True**? It worked!
+20. Optional: We can even check the scope for local subnet only as we did in the GUI version if we want with the following command:
+
+```powershell
+Get-NetFirewallRule -Name CoreNet-Diag-ICMP4-EchoRequest-In | Get-NetFirewallAddressFilter
+```
+
+Output:
+```
+LocalAddress  : Any
+RemoteAddress : LocalSubnet4
+```
+
+21. Last, because there are two incoming ICMP rules (*Domain* profile and *Private, Public* profile), let's check that only the *Private, Public* rule is enabled:
+
+Command:
+```powershell
+Get-NetFirewallRule -DisplayName "Core Networking Diagnostics - ICMP Echo Request (ICMPv4-In)" | Select-Object DisplayName, Profile, Enabled
+```
+
+
+22. This shows a brief status of both rules. The *Domain* version should show **False** under the *Enabled* header, while the *Private, Public* version should show **True**.
+
+Output:
+```
+DisplayName                                                         Profile Enabled
+-----------                                                         ------- -------
+Core Networking Diagnostics - ICMP Echo Request (ICMPv4-In)          Domain   False
+Core Networking Diagnostics - ICMP Echo Request (ICMPv4-In) Private, Public    True
+```
+
+23. Now, let's test our ping. Switch over to your Windows 11 Client (client1).
+24. Open a Command Prompt window, and run the following command: `ping srv2-ipaddress` (Refer to Part 3, Step 3).
+25. Does it work?
+26. It if does, congratulations! You've just enabled ping for connectivity checking to *srv2* and gone through your first foray into the PowerShell!
+
+### Part 5: Windows Client (client1) - Applying Firewall Rules
+
+Finally, let's enable ping on our Windows Client machine.
+
+1. Login to *client1*.
+2. Click the **Start** button and type the following search: **firewall**
+3. Of the options that appear, select: **Windows Defender Firewall with Advanced Security**
+4. Just as in *Part 2* with *srv1*, navigate to **Inbound Rules**.
+5. Click the *Name* header to sort by name.
+6. Find the following rule:
+	1. Name: **Core Networking Diagnostics - ICMP Echo Request (ICMPv4-In)**
+	2. Profile: **Private, Public**
+7. Double-click it to open the rule's configuration settings.
+8. In the *General* tab, find and check the box next to **Enabled**.
+9. Click **Apply**, then **OK**.
+10. Open a *Command Prompt* window and run the following to get your client's IP address: `ipconfig`
+11. Switch to your *Server Core (srv2)* machine.
+12. In PowerShell, run the following command: `ping client1-ipaddress` (Where client1-ipaddress is the address from Step 10.)
+	1. Example: `ping 192.168.1.15`
+13. Does it work?
+14. It if does, congratulations! You've just enabled ping for connectivity checking to *client1* and have full connectivity checking for your entire environment! This will become ***very*** handy in Labs 3-4.
 
 ## Investigation 2: Remote Management - Windows Server GUI (srv1)
 
