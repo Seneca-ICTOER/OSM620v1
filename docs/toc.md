@@ -3,25 +3,17 @@ id: toc
 title: Table of contents
 sidebar_position: 2
 slug: /toc
-description: Contents of (course notes title here)
+description: Contents of OSM620 - Fundamentals of Microsoft Systems
 ---
 
 # Table of contents
 
-## Introduction <a id="part-a-introduction"></a>
+## Labs <a id="labs"></a>
 
-- [Test Page](A-Introduction/testfile.md)
-- [Topic 2](A-Introduction/topic-file-2.md)
-- [Topic 3](A-Introduction/topic-file-3.md)
+- [Lab 1](Labs/lab1.md)
+- [Lab 2](Labs/lab2.md)
 
-## SubSection2
+## Assignments <a id="assignments"></a>
 
-- [Topic 1](B-SubSection2/topic-file-1.md)
-- [Topic 2](B-SubSection2/topic-file-2.md)
-- [Topic 3](B-SubSection2/topic-file-3.md)
-
-## SubSection3
-
-- [Topic 1](C-SubSection3/topic-file-1.md)
-- [Topic 2](C-SubSection3/topic-file-2.md)
-- [Topic 3](C-SubSection3/topic-file-3.md)
+- [Assignment 1](Assignments/assignment1.md)
+- [Assignment 2](Assignments/assignment2.md)

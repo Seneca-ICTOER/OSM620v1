@@ -8,7 +8,9 @@ description: Contents of (course notes title here)
 
 # Introduction
 
-This is a demonstration of a docusaurus template that we use to create OER's.
+Future location of OSM620 content.
+
+### **This is currently in DRAFT MODE.**
 
 ## PDF version of these notes:
 
