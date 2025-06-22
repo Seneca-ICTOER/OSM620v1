@@ -5,19 +5,19 @@ import rehypeKatex from 'rehype-katex';
 
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
-  title: 'OER Course Title',
-  tagline: 'OER Tag/Keyword',
+  title: 'OSM620 - Fundamentals of Microsoft Systems',
+  tagline: 'OSM620',
   url: 'https://seneca-ictoer.github.io/',
-  baseUrl: '/OERTemplate/',
+  baseUrl: '/OSM620/',
   trailingSlash: false,
   onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
   organizationName: 'seneca-ictoer',
-  projectName: 'OERTemplate',
+  projectName: 'OSM620',
   themeConfig: {
     navbar: {
-      title: 'OER Course Title',
+      title: 'OSM620 - Fundamentals of Microsoft Systems',
       logo: {
         alt: 'Seneca Polytechnic',
         src: 'img/logo.svg',
@@ -37,7 +37,7 @@ module.exports = {
       style: 'dark',
       links: [
         {
-          title: 'OER Course Title',
+          title: 'OSM620 - Fundamentals of Microsoft Systems',
           items: [
             {
               html: `<a href='#' id='pwa-button' class='footer__link-item' hidden>Install as an App</a>`,
@@ -45,7 +45,7 @@ module.exports = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Seneca Polytechnic.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Chris Johnson.`,
     },
     prism: {
       theme: lightCodeTheme,

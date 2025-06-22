@@ -49,10 +49,10 @@ jobs:
           yes "" | sudo ./install.sh
 
       - name: Build PDF
-        run: npx docusaurus-prince-pdf -u https://seneca-ictoer.github.io/OERTemplate/
+        run: npx docusaurus-prince-pdf -u https://seneca-ictoer.github.io/OSM620/
 
       - name: rename
-        run: mv ./pdf/seneca-ictoer.github.io-OERTemplate.pdf ./pdf/OERTemplate.pdf
+        run: mv ./pdf/seneca-ictoer.github.io-OSM620.pdf ./pdf/OSM620.pdf
 
       - name: Push pdf
         run: |
