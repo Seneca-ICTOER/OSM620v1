@@ -285,21 +285,46 @@ In this investigation, we'll set up remote access to our Windows Server GUI (srv
 
 ### Part 1: Enabling Remote Desktop Connections
 
-In this part, we'll turn on Remote Desktop (RDP) on the server.
+In this part, we'll turn on Remote Desktop (RDP) on the server. This will allow you to remotely connect to *srv1* from your Windows 11 Client.
 
-(Insert step-by-step instructions)
+1. In the *Server Manager* application, navigate to *Local Server*.
+2. In the main *Properties* window, find the line entry for: **Remote Desktop**
+3. Click the link next to it: **Disabled**
+4. In the new *System Properties* window, you should automatically be on the *Remote* tab.
+5. Look down to the section on **Remote Desktop**.
+6. Toggle the option for: **Allow remote connections to this computer**
+7. Ensure the checkbox next to this is on: **Allow connections only from computers running Remote Desktop with Network Level Authentication (recommended)**
+8. Click **Apply**, then **OK**.
 
-### Part 2: Adding an RDP Firewall Rule
+### Part 2: Adding your RDP Firewall Rules
 
 In this part, we'll add a firewall rule to allow the connection over the local network.
 
-(insert step-by-step instructions)
+1. On *srv1*, open **Windows Defender Firewall with Advanced Security**.
+2. In the *Inbound Rules* section, look for the following rules:
+	1. Remote Desktop - Shadow (TCP-In)
+	2. Remote Desktop - User Mode (TCP-In)
+	3. Remote Desktop - User Mode (UDP-In)
+3. If they're all enabled (they should be), you're good to go!
+4. Why check? Always check your firewall rules when enabling a new service, even if it *usually* enables the associated firewall rule automatically. **Never assume!**
+5. If these rules are **not** enabled, enable them now.
 
 ### Part 3: Connecting to Windows Server (srv1) from Windows 11
 
 In this part, we'll verify our work by connecting to the server using our Windows 11 client VM.
 
-(Insert step-by-step instructions)
+1. Make sure you've got your *srv1* IP address from earlier. (You wrote it down, *right*?)
+2. On *client1*, click the **Start** menu.
+3. Search for and open: **Remote Desktop Connection**
+4. In the newly opened application, in the *Computer* field, enter the IP address for *srv1*.
+5. Click **Connect**.
+6. Enter your *srv1* username and password, then click **OK**.
+7. A security dialogue box pops up. **Check the box next to *"Don't ask me again for connections to this computer"* before the next step.**
+8. Click **Yes**.
+9. If you can see your *srv1* desktop, congratulations! You now have remote access.
+10. To quit the remote session, find the floating HUD at the top of the screen with the IP address and click on the **X** icon.
+11. Note: **This will not shutdown your *srv1* VM. It only ends your remote session.**
+12. Note 2: A remote session will automatically lock your VM's direct session. You will need to unlock it again when you go back to it through VMware Workstation directly.
 
 ## Investigation 3: Remote Management - Windows Server Core (srv2) with Remote Desktop
 
@@ -307,21 +332,61 @@ In this investigation, we'll set up remote access to our Windows Server Core (sr
 
 ### Part 1: Enabling Remote Desktop Connections
 
-In this part, we'll turn on Remote Desktop (RDP) on the server.
+In this part, we'll turn on Remote Desktop (RDP) on the Core server (*srv2*).
 
-(Insert step-by-step instructions)
+1. Login to *srv2*.
+2. If you're at the PowerShell command prompt, run the following command to get back into the text-based *Server Manager* application: `sconfig`
+3. Select option 7.
+4. In the *Remote desktop* page, select option **E** to enable Remote Desktop.
+5. It will ask you to select a security level. Select **Option 1**.
+6. Press **Enter** to complete and go back to the main *Server Manager* page.
+7. **Double-check your work.** Select option 7 again.
+8. Is the *Remote desktop status* changed and correct?
+9. If not, go through Steps 4-9 again.
+10. If yes, press **Enter** without entering any options to go back to the main screen without making any changes.
 
-### Part 2: Adding an RDP Firewall Rule
+### Part 2: Adding a RDP Firewall Rules
 
-In this part, we'll add a firewall rule to allow the connection over the local network.
+In this part, we'll check that the RDP firewall rules have been enabled.
 
-(insert step-by-step instructions)
+1. Select **Option 15** to exit to PowerShell.
+2. Run the following PowerShell command to check the status of your RDP firewall rules:
 
+Command:
+```powershell
+Get-NetFirewallRule | Where-Object { $_.DisplayName -like '*Remote Desktop*' -and $_.Direction -eq 'Inbound' } | 
+    Select-Object Name, DisplayName, Profile, Enabled
+```
+
+Output:
+```
+Name                          DisplayName                         Profile Enabled
+----                          -----------                         ------- -------
+RemoteDesktop-In-TCP-WS       Remote Desktop - (TCP-WS-In)            Any   False
+RemoteDesktop-In-TCP-WSS      Remote Desktop - (TCP-WSS-In)           Any   False
+RemoteDesktop-Shadow-In-TCP   Remote Desktop - Shadow (TCP-In)        Any    True
+RemoteDesktop-UserMode-In-TCP Remote Desktop - User Mode (TCP-In)     Any    True
+RemoteDesktop-UserMode-In-UDP Remote Desktop - User Mode (UDP-In)     Any    True
+```
+
+3. Check that your output matches the above. This is the same as on *srv1*, just at the command line. Notice with are enabled and which are not?
+4. If you need to, grab the IP address for *srv2* here by running this command in PowerShell: `ipconfig`
 ### Part 3: Connecting to Windows Server (srv2) from Windows 11 via RDP
 
-In this part, we'll verify our work by connecting to the server using our Windows 11 client VM.
+In this part, we'll verify our work by connecting to *srv2* using our Windows 11 client VM. This is essentially the same as our instructions for *srv1*, but with a different IP address.
 
-(Insert step-by-step instructions)
+1. Make sure you've got your *srv2* IP address from earlier. (You wrote it down, *right*?)
+2. On *client1*, click the **Start** menu.
+3. Search for and open: **Remote Desktop Connection**
+4. In the newly opened application, in the *Computer* field, enter the IP address for *srv1*.
+5. Click **Connect**.
+6. Enter your *srv2* username and password, then click **OK**.
+7. A security dialogue box pops up. **Check the box next to *"Don't ask me again for connections to this computer"* before the next step.**
+8. Click **Yes**.
+9. If you can see your *srv2* Command Prompt window, congratulations! You now have remote access.
+10. To quit the remote session, find the floating HUD at the top of the screen with the IP address and click on the **X** icon.
+11. Note: **This will not shutdown your *srv2* VM. It only ends your remote session.**
+12. Note 2: A remote session will automatically lock your VM's direct session. You will need to unlock it again when you go back to it through VMware Workstation directly.
 
 ### Part 4: File system navigation
 
@@ -337,11 +402,121 @@ In this part, we'll verify our work by connecting to the server using our Window
 
 In this part, we'll turn on incoming SSH connections so we can connect to our server using Visual Studio Code from the Windows 11 client.
 
-(Insert step-by-step instructions for enabling SSH on srv2 via PowerShell commands)
+1. Login to your Server Core *(srv2)*.
+2. Exit the *Server Manager* program by selecting **Option 15**.
+3. In PowerShell, run the following command to install the OpenSSH Server
+
+```powershell
+Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
+```
+
+4. After it installs, we have to start the SSH service. Run the following:
+
+```powershell
+Start-Service sshd
+```
+
+5. We now have to set the SSH service to start automatically every time the system boots. Run the following:
+
+```powershell
+Set-Service -Name sshd -StartupType 'Automatic'
+```
+
+```powershell
+# Install OpenSSH Server
+Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
+
+# Start and enable the service
+Start-Service sshd
+Set-Service -Name sshd -StartupType 'Automatic'
+
+# Confirm firewall rule is present or add it
+Get-NetFirewallRule -Name *ssh*
+# If not present, add:
+New-NetFirewallRule -Name sshd -DisplayName 'OpenSSH Server (sshd)' -Enabled True -Direction Inbound -Protocol TCP -Action Allow -LocalPort 22
+```
 
 ### Part 2: Adding an SSH Firewall Rule
 
+1. We'll now add an SSH rule. One already exists, but it's only attached to the *Private* profile and would not work for us.
+2. Instead, we'll create a custom rule. Run the following command:
+
+```powershell
+New-NetFirewallRule -Name sshd -DisplayName 'OpenSSH Server (sshd)' -Enabled True -Direction Inbound -Protocol TCP -Action Allow -LocalPort 22 -Profile Private,Public
+```
+
+3. This rule sets the following:
+	1. Name: sshd
+	2. Display Name: OpenSSH Server (sshd)
+	3. Enabled: True
+	4. Profile: Private, Public
+	5. Direction: Inbound
+	6. Action: Allow
+	7. Protocol: TCP
+	8. Port: 22
+4. Verify your work! First, let's look at the firewall object by running the following command:
+5. Now, let's verify the protocol and port with the following command:
+
+Command:
+```powershell
+Get-NetFirewallRule -Name 'sshd'
+```
+
+Output:
+```powershell
+Name                          : sshd
+DisplayName                   : OpenSSH Server (sshd)
+Description                   :
+DisplayGroup                  :
+Group                         :
+Enabled                       : True
+Profile                       : Private, Public
+Platform                      : {}
+Direction                     : Inbound
+Action                        : Allow
+EdgeTraversalPolicy           : Block
+LooseSourceMapping            : False
+LocalOnlyMapping              : False
+Owner                         :
+PrimaryStatus                 : OK
+Status                        : The rule was parsed successfully from the store. (65536)
+EnforcementStatus             : NotApplicable
+PolicyStoreSource             : PersistentStore
+PolicyStoreSourceType         : Local
+RemoteDynamicKeywordAddresses : {}
+PolicyAppId                   :
+PackageFamilyName             :
+```
+
+Command:
+```powershell
+Get-NetFirewallRule -Name 'sshd' | Get-NetFirewallPortFilter | Select-Object Name, Protocol, LocalPort
+```
+
+Output:
+```powershell
+Name Protocol LocalPort
+---- -------- ---------
+     TCP      22
+```
+
+6. If your own output looks like the above, congratulations! If not, try your configuration commands again or ask for help.
 ### Part 3: Connecting to Windows Server Core (srv 2) from Windows 11 via SSH
+
+1. On your Windows 11 Client (*client1*), open Command Prompt.
+2. Enter the following command: `ssh Administrator@srv1ipaddress` (Where *srv2ipaddress* is your actual *srv2* IP address.)
+	1. Example: `ssh Administrator@192.168.1.15`
+3. The first time you connect, a prompt will ask you if you are sure. Type **yes** and hit **Enter**.
+4. Type your password when asked and hit **Enter**.
+	1. Note: You will *not* see asterisks or other characters as you type. **This is normal.** It is taking your keyboard input. It may take you a few tries to get used to it.
+5. Once logged in, you are now on *srv2*'s Command Prompt environment.
+6. To get back into PowerShell (which you should), run: `powershell`
+7. It is **not** recommended to run the *sconfig* program over an SSH connection. If you need to use the *sconfig / Server Manager* text-based program, connect through your RDP connection in Part 1.
+
+> ℹ️ **A note about SSH and *Server Manager*:**
+   Your SSH connection will allow you to run the *sconfig* Server Manager program and load it. However, many of it's functions fail over an SSH connection because it relies on background interactive processes that can't run on an SSH session. They must be run from the RDP connection, despite it *looking* the same.
+>
+   For an example of this, run `sconfig` from your SSH session and try to run Windows Updates. If it finds any and you try to install them, it will fail. This is an SSH+sconfig problem; run the same thing through RDP and it will work fine.
 
 ## Investigation 5: Remote Management - Windows Server Core (srv2) with Visual Studio Code + SSH
 
