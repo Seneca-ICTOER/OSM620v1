@@ -12,6 +12,7 @@ description: Contents of OSM620 - Fundamentals of Microsoft Systems
 
 - [Lab 1](Labs/lab1.md)
 - [Lab 2](Labs/lab2.md)
+- [Lab 3](Labs/lab3.md)
 
 ## Assignments <a id="assignments"></a>
 
