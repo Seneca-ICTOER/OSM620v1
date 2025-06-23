@@ -513,10 +513,10 @@ Name Protocol LocalPort
 6. To get back into PowerShell (which you should), run: `powershell`
 7. It is **not** recommended to run the *sconfig* program over an SSH connection. If you need to use the *sconfig / Server Manager* text-based program, connect through your RDP connection in Part 1.
 
-> ℹ️ **A note about SSH and *Server Manager*:**
-   Your SSH connection will allow you to run the *sconfig* Server Manager program and load it. However, many of it's functions fail over an SSH connection because it relies on background interactive processes that can't run on an SSH session. They must be run from the RDP connection, despite it *looking* the same.
->
-   For an example of this, run `sconfig` from your SSH session and try to run Windows Updates. If it finds any and you try to install them, it will fail. This is an SSH+sconfig problem; run the same thing through RDP and it will work fine.
+> ℹ️ **A note about SSH and *Server Manager*:**  
+> Your SSH connection will allow you to run the *sconfig* Server Manager program and load it. However, many of it's functions fail over an SSH connection because it relies on background interactive processes that can't run on an SSH session. They must be run from the RDP connection, despite it *looking* the same.  
+>  
+>  For an example of this, run `sconfig` from your SSH session and try to run Windows Updates. If it finds any and you try to install them, it will fail. This is an SSH+sconfig problem; run the same thing through RDP and it will work fine.
 
 ## Investigation 5: Remote Management - Windows Server Core (srv2) with Visual Studio Code + SSH
 
