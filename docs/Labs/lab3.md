@@ -35,7 +35,7 @@ To set this server with an static IP address:
 	3. Default gateway
 11. Select the **Use the following DNS server addresses:** option.
 12. Enter the following information in the fields below from your previously-written *srv1* address information:
-	1. Preferred DNS server: **127.0.0.1** (<-- This is important!)
+	1. Preferred DNS server: **127.0.0.1** (< This is important!)
 	2. Alternate DNS server: Choose one from your written records, it doesn't matter which.
 13. Click **OK**.
 14. Back in the *Ethernet0 Properties* window, click **Close**.
