@@ -1,6 +1,6 @@
 ---
 id: lab1
-title: Lab 1
+title: Lab 1 - Environment Setup
 sidebar_position: 1
 description: TBD
 ---

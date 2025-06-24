@@ -1,6 +1,6 @@
 ---
 id: lab4
-title: Lab 4
+title: Lab 4 - Implementing DHCP
 sidebar_position: 4
 description: Lab 4 - Implementing DHCP
 ---

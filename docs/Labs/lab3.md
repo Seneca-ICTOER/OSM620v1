@@ -1,6 +1,6 @@
 ---
 id: lab3
-title: Lab 3
+title: Lab 3 - Implementing DNS
 sidebar_position: 3
 description: Lab 3 - Implementing DNS
 ---

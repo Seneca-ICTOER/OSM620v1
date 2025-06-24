@@ -1,6 +1,6 @@
 ---
 id: lab2
-title: Lab 2
+title: Lab 2 - Security and Remote Connectivity
 sidebar_position: 2
 description: Lab 2 - Security and Remote Connectivity
 ---

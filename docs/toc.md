@@ -10,10 +10,10 @@ description: Contents of OSM620 - Fundamentals of Microsoft Systems
 
 ## Labs <a id="labs"></a>
 
-- [Lab 1](Labs/lab1.md)
-- [Lab 2](Labs/lab2.md)
-- [Lab 3](Labs/lab3.md)
-- [Lab 4](Labs/lab4.md)
+- [Lab 1 - Environment Setup](Labs/lab1.md)
+- [Lab 2 - Security and Remote Connectivity](Labs/lab2.md)
+- [Lab 3 - Implementing DNS](Labs/lab3.md)
+- [Lab 4 - Implementing DHCP](Labs/lab4.md)
 
 ## Assignments <a id="assignments"></a>
 
