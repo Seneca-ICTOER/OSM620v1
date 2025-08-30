@@ -5,7 +5,7 @@
 
 In this investigation, you will be downloading your Windows OS installation media by logging into your Seneca-based Azure account. You will also generate your personal serial keys.
 
-1. Navigate to the Microsoft Azure site: [portal.azure.com](portal.azure.com)
+1. Navigate to the Microsoft Azure site: portal.azure.com
 1. Use your Seneca e-mail address and password to login.
 1. Once on the main Azure page, look for the Search bar at the top of the page.
 1. In the Search bar, type: **Education**, then hit Enter.
