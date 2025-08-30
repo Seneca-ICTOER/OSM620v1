@@ -69,7 +69,7 @@ To run this course and its tech on a personal computer, it must meet the followi
 
 Broadcom (formerly VMware) now requires account registration before you can download the VMware Workstation software. Follow the instructions below to do so. You only have to do this once. (If you already have an account using your Seneca e-mail, skip to Step 3.)
 
-1. Visit the Broadcom registration site: <https://profile.broadcom.com/web/registration>
+1. Visit the Broadcom registration site: [https://profile.broadcom.com/web/registration]
 1. Provide your Seneca e-mail address and continue.
 1. You will be sent a verification code. Check your Seneca e-mail and enter the code on the page.
 1. On the *Complete your Registration* page, enter your information and click **Create Account.**
@@ -80,7 +80,7 @@ Broadcom (formerly VMware) now requires account registration before you can down
 
 ### Part 3: Downloading VMware Workstation
 
-1. Go to this link: <https://support.broadcom.com/group/ecx/productdownloads?subfamily=VMware%20Workstation%20Pro&freeDownloads=true>
+1. Go to this link: [https://support.broadcom.com/group/ecx/productdownloads?subfamily=VMware%20Workstation%20Pro&freeDownloads=true]
 1. Click on **WMware Workstation Pro 17 for Windows**
 1. Click on the highest version available. (17.6.3 as of last update)
 1. On the next screen, click on the blue link inside *I agree to the Terms and Conditions* to open a new tab with their terms and conditions. Do not close this window.
@@ -95,7 +95,7 @@ Broadcom (formerly VMware) now requires account registration before you can down
     1. Zip/Postal Code: **M2J 2X5**
 1. ***Finally*** click on the cloud icon again to begin the actual download.
 1. If you ever need to download the software again, you won't have to go through any of the registration mess. Follow Part 3, Steps 1-3, then Step 9.
-1. Direct link: <https://downloads2.broadcom.com/?file=VMware-workstation-full-17.6.3-24583834.exe&oid=38988096&id=yvNR4Ur3i4n6Ic4Z3pGm4ZNuhcOR9OzqJ5c71zWGQWtt7jgem-_11MXlHeTdyjW73tEfOS8fwGI=&verify=1750391577-zQ%2BZJXDvInv3EbAMve2m8vmVtcjOe%2Fk1IQv17jA69gA%3D>
+1. Direct link: [https://downloads2.broadcom.com/?file=VMware-workstation-full-17.6.3-24583834.exe&oid=38988096&id=yvNR4Ur3i4n6Ic4Z3pGm4ZNuhcOR9OzqJ5c71zWGQWtt7jgem-_11MXlHeTdyjW73tEfOS8fwGI=&verify=1750391577-zQ%2BZJXDvInv3EbAMve2m8vmVtcjOe%2Fk1IQv17jA69gA%3D]
 
 ### Part 4: Install VMware Workstation (TBD)
 
