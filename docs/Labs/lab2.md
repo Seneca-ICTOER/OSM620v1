@@ -80,7 +80,7 @@ Now that we've created the Hyper-V network adapter, we have to give it an IP add
 
 ## Investigation 2: RRAS and NAT
 
-Our server now has access to two networks.
+Our server now has access to two networks:
 
 * **External Network**: Connection to the Internet
 * **vEthernet (HQ Network)**: Internal network only between *srv1* and the Hyper-V VMs we'll create in Investigation 3. This network *does not* have access to the Internet.
@@ -144,7 +144,7 @@ It's now time to configure the routing and NAT bridging between the two networks
 1. Back in the *NAT* window, you should see two created interfaces:
     * External Network
     * vEthernet (HQ Network)
-1. Keep the application open on *NAT* and minimize. We'll comme back to it later.
+1. Keep the application open on *NAT* and minimize. We'll come back to it later.
 1. That's it! Move on to the next Investigation.
 
 ## Investigation 3: Installing Windows Client 1 with Hyper-V *(client1)*
