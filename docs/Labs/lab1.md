@@ -28,7 +28,9 @@ In this investigation, you will be downloading your Windows OS installation medi
 
 ## Investigation 2: VMWare Workstation
 
-The use of VMware Workstation is required for this course. You can either use a Seneca Lab computer (Option 1) or a personal computer (Option 2). If you use an external SSD, you can use both!
+The use of VMware Workstation is required for this course. You can either use a Seneca Lab computer (Option 1) or a personal computer (Option 2).
+
+If you use an external SSD, you can use both!
 
 **WARNING: Seneca Lab computers erase any locally saved data when restarted from their internal drives. Save all work to an external drive or online storage.**
 
@@ -102,23 +104,24 @@ Broadcom (formerly VMware) now requires account registration before you can down
 1. ***Finally*** click on the cloud icon again to begin the actual download.
 1. If you ever need to download the software again, you won't have to go through any of the registration mess. Follow Part 3, Steps 1-3, then Step 9.
 
-### Part 4: Install VMware Workstation (TBD)
+### Part 4: Install VMware Workstation
 
 1. Find the downloaded .exe file and run the installer.
 1. Follow all prompts and install.
 
-### Part 5: Launch VMware Workstation (TBD)
+### Part 5: Launch VMware Workstation
 
 1. Open **VMware Workstation** from your desktop or the Start Menu.
 1. When asked, paste in your serial key.
 1. Proceed to the next Investigation.
 
-## Investigation 5: VM1 Installation - Windows Server 2025 Datacenter
+## Investigation 3: VM1 Installation - Windows Server 2025 Datacenter (*srv1*)
 
+* Hypervisor: **VMware Workstation**
 * Name: **srv1-cjohnson30**
-* RAM: **16GB**
+* RAM: **16 GB**
 * CPU: **6 cores**
-* Storage: **249 GB**
+* Storage: **250 GB**
 * Networking: **2 NICs**
 
 ### Part 1: Setup Instructions
@@ -130,14 +133,18 @@ Broadcom (formerly VMware) now requires account registration before you can down
     1. Now click **Browse**.
     1. Navigate to where you saved your ***Windows Server 2025 Datacenter*** downloaded ISO and select it.
     1. Once selected, the previous screen should now say:
+
         > **Windows Server 2025 detected.**
+        >
+        > This operating system will use Easy Install.
+
     1. If it doesn't, you haven't selected the right file, or your download was corrupted. **Ask for help.**
     1. Click **Next**.
 1. On the "Easy Install Information" screen, do the following:
     1. Paste in your serial key.
     1. Version of Windows to install: Select *Windows Server 2025 Datacenter*
     1. Personalize Windows:
-        1. Full Name: Administrator
+        1. Full Name: **Administrator**
         1. Password (both fields): Select a strong password **you will remember**. You will use this same password for all VMs in this course.
         1. ***Do not select "Log on automatically"***.
         1. Click **Next**.
@@ -147,47 +154,127 @@ Broadcom (formerly VMware) now requires account registration before you can down
     1. Location: If using an external SSD (like with our lab computers), click **Browse** and navigate to your external SSD.
         1. Create the following directory structure in your SSD: *OSM620 > Virtual Machines/srv1-cjohnson30*
         1. Select this new *srv1-cjohnson30* folder.
-        1. Make sure you now see this change in the Location field. (Example: *Z:/OSM620/Virtual Machines/srv1-cjohnson30*)
+        1. Make sure you now see this change in the Location field.
+
+           > **Example:** *Z:/OSM620/Virtual Machines/srv1-cjohnson30*
+
     1. Click **Next**.
 1. On the "Specify Disk Capacity" screen, do the following:
-    1. Maximum disk size (GB): **80**
+    1. Maximum disk size (GB): **250**
     1. Select *Split virtual disk into multiple files*.
     1. Click Next.
 1. On the "Ready to Create Virtual Machine" screen, do the following:
     1. Click on **Customize hardware...**
 1. On the new "Hardware" screen, do the following:
-    1. Select *Memory*, and change the value to: **4096**
+    1. Select *Memory*, and change the value to: **16384**
     1. Select *Processors*, and change:
-        1. Number of processors: **2**
-        1. Number of cores per processor: **1**
+        1. Number of processors: **1**
+        1. Number of cores per processor: **6**
         1. Virtualize Intel VT-x/EPT or AMD-V/RVI: **Checked**
         1. Virtualize CPU performance counters: ***Unchecked***
         1. Virtualize IOMMU (IO memory management unit): **Checked**
     1. Select *Network Adapter* and confirm:
         1. *Connected at power on:* **Checked**
         1. *NAT*: **Checked**
+    1. Click on the ***Add...*** button on the bottom left of the *Hardware* window.
+        1. Select *Network Adapter* and click **Finish**.
+        1. Back in the *Hardware* window, click on *Network Adapter 2*.
+        1. Under *Network connection*, click the **Custom: Specific virtual network** radio button.
+        1. Just below that, click the drop-down (it likely says *VMnet0* by default). Find and select **VMnet10**.
         1. Click **Close**.
 1. Back in the "Ready to Create Virtual Machine" screen, click **Finish**.
 1. The virtual machine should launch.
 1. If you get a dialog box about *Side channel mitigations*, check the box for *Do not show this hint again* and click **OK**.
-1. Click **Close**.
-1. Click on the big **Play** to turn on the virtual machine begin the OS installation. This may take some time.
+1. Your new Virtual Machine should now finish creating and then turn on and begin the OS installation.
+1. Windows installation is automated at this point and won't require any input from you. It may restart several times.
 
-### Part 2: Post-Installation Tasks
+    > **Time Note:** Installation may take some time.
+    >
+    > Feel free to get some caffeine or make a sandwich.
 
-* Time Zone
-* Name Change
-* Windows Activation
-* Updates
-* Internet Connectivity Check w/IE
-* Download and Install Firefox
+1. Eventually, you will be presented with the desktop and the VMware Tools installer having completed and asking if you'd like to restart. Choose **Yes**.
+1. Once you've restarted, you're installation is complete.
 
-## Investigation 6: VM2 Installation - Windows Server 2025 Core
+## Investigation 4: Post-Installation Tasks (*srv1*)
 
+After installing a new operating system, there are always a number of **post-installation tasks** to complete. **These aren't optional!**
+
+### Step 1: Applying Time Zone Settings
+
+This one is fairly straight-forward. Having the proper time zone set (EST) is essential for proper time keeping and ensuring encrypted webpages connect properly.
+
+1. In the *Server Manager* application, click on **Local Server** in the left-hand menubar.
+1. In the main *Properties* area, on the right-hand column, look for the *Time Zone* line. It should say **(UTC-05:00) Eastern Time (US & Canada)**.
+1. If the *Time Zone* line item doesn't say the above, click on the displayed time zone and change it to UTC-05:00 as seen above.
+
+### Step 2: Server Name Change
+
+The default name applied to your new server will be semi-randomized. For proper identification (and to not wonder which server you're on when you have several), we're going to change this.
+
+1. In the *Server Manager* application, click on **Local Server** in the left-hand menubar.
+1. In the main *Properties* area, on the left-hand column, look for the *Computer name* line.
+1. Click the current computer name.
+1. In the *System Properties* dialog box that pops up, find the **Change** button and click it. (Ignore the *Computer Description* field. It's tempting, but wrong!)
+1. In the new *Computer Name/Domain Changes* dialog box that pops up, find the *Computer name* field. Replace it with **srv1-SenecaUsername**.
+1. When you click **OK**, the system will warn you about restarting. Choose to restart the system when asked.
+1. Once you've restarted and logged back in, go back to the *Server Manager* from Step 1 and double-check your new computer name is correct. **Do not skip this step!**
+1. If it is, you're done!
+
+### Step 3: Windows Activation
+
+Activating Windows unlocks certain settings and features. Since you've used your valid serial key (right?), you can activate with Microsoft easily.
+
+1. In the *Server Manager* application, click on **Local Server** in the left-hand menubar.
+1. In the main *Properties* area, on the right-hand column, look for the *Product ID* line.
+1. Click on the **Not activated** link.
+1. Follow the instructions in the popup dialog box. If unable to activate easily, **ask your professor for help**.
+
+### Step 4: Installing OS Updates
+
+A critical part of a security-conscious mindset is running regular updates. **This is NOT something you do only once at the start of installation.** You should be running these regularly to keep up to date with security fixes and zero-day exploits.
+
+1. If you're already in the *Settings* application, look through the left menubar for **Windows Update** and click it. (Otherwise, click on the *Start* menu and search for **Updates**.)
+1. In the *Windows Update* main screen, scroll down to **Advanced Options** and click it.
+1. The very first option is *Receive updates to other Microsoft products*. Toggle this from **Off** to **On**.
+1. At the top of the screen, where it says *Windows Update > Advanced Options*, click **Windows Update** to go back to the previous screen.
+1. You will likely already see updates ready. Click on **Download & install all**.
+1. As you might expect, this can take a while. Timing will depend on your Internet connection, how fast your computer is, how fast your SSD is, and how many updates there are. Please be patient. Your computer may restart.
+1. Once updates have begun, take a break while it does its thing. Grab a drink, make a sandwich, text a friend.
+1. After updates are complete, go back into *Windows Update* and click **Check for updates** again. There may be (and often times are) more.
+1. If there are more updates, complete Steps 5-8 again until there are no more updates available.
+1. In *Windows Update*, scroll back down to **Advanced options** again and click it.
+1. Inside *Windows Update > Advanced options* scroll down to **Optional updates** and click it.
+1. Select all available updates that appear (you may have to expand some lists).
+1. Click **Download & install**.
+
+### Step 5: Internet Connectivity Check w/Edge
+
+We'll double-check we can access the Internet using the built-in Microsoft Edge application.
+
+1. Open *Microsoft Edge*.
+1. Go through the first-run questions.
+1. When able, use the browser to navigate to **eff.org**.
+1. If the website loads, move on to the next step. If not, **ask your professor for help**.
+
+### Step 6: Download and Install Firefox
+
+There are a ton of feature and privacy reasons *not* to use Microsoft Edge. Instead, we'll download and install **Mozilla Firefox** and use that going forward.
+
+1. Open *Microsoft Edge*.
+1. Navigate to: [Download Mozilla Firefox](https://www.firefox.com/en-CA/browsers/desktop/windows)
+1. Wait for the installer to finish, then open it.
+1. Follow the installer instructions.
+1. Once complete, open *Firefox* and navigate to **eff.org** to check everything is okay.
+1. Close *Microsoft Edge* forever.
+
+## Investigation 5: VM2 Installation - Windows Server 2025 Core (*srv2*)
+
+* Hypervisor: **VMware Workstation**
 * Name: **srv2-cjohnson30**
-* RAM: **2 GB**
+* RAM: **4 GB**
 * CPU: **2 cores**
-* Storage: **36 GB**
+* Storage: **250 GB**
+* Networking: **2 NICs**
 
 ### Part 1: Setup Instructions
 
@@ -217,7 +304,7 @@ Broadcom (formerly VMware) now requires account registration before you can down
        1. Make sure you now see this change in the Location field. (Example: *Z:/OSM620/Virtual Machines/srv2-cjohnson30*)
     1. Click **Next**.
 1. On the "Specify Disk Capacity" screen, do the following:
-    1. Maximum disk size (GB): **80**
+    1. Maximum disk size (GB): **250**
     1. Select *Split virtual disk into multiple files*.
     1. Click Next.
 1. On the "Ready to Create Virtual Machine" screen, do the following:
@@ -225,22 +312,83 @@ Broadcom (formerly VMware) now requires account registration before you can down
 1. On the new "Hardware" screen, do the following:
     1. Select *Memory*, and change the value to: **4096**
     1. Select *Processors*, and change:
-       1. Number of processors: **2**
-       1. Number of cores per processor: **1**
+       1. Number of processors: **1**
+       1. Number of cores per processor: **2**
        1. Virtualize Intel VT-x/EPT or AMD-V/RVI: **Checked**
        1. Virtualize CPU performance counters: ***Unchecked***
        1. Virtualize IOMMU (IO memory management unit): **Checked**
     1. Select *Network Adapter* and confirm:
-       1. *Connected at power on:* **Checked**
-       1. *NAT*: **Checked**
-    1. Click **Close**.
+        1. *Connected at power on:* **Checked**
+        1. *NAT*: **Checked**
+    1. Click on the ***Add...*** button on the bottom left of the *Hardware* window.
+        1. Select *Network Adapter* and click **Finish**.
+        1. Back in the *Hardware* window, click on *Network Adapter 2*.
+        1. Under *Network connection*, click the **Custom: Specific virtual network** radio button.
+        1. Just below that, click the drop-down (it likely says *VMnet0* by default). Find and select **VMnet10**.
+        1. Click **Close**.
 1. Back in the "Ready to Create Virtual Machine" screen, click **Finish**.
 1. The virtual machine should launch.
 1. If you get a dialog box about *Side channel mitigations*, check the box for *Do not show this hint again* and click **OK**.
-1. Click **Close**.
-1. Click on the big **Play** to turn on the virtual machine begin the OS installation. This may take some time.
+1. Your new Virtual Machine should now finish creating and then turn on and begin the OS installation.
+1. Windows installation is automated at this point and won't require any input from you. It may restart several times.
+
+    > **Time Note:** Installation may take some time.
+    >
+    > Feel free to get some caffeine or make a sandwich.
+
+1. Eventually, you will be presented with the desktop and the VMware Tools installer having completed and asking if you'd like to restart. Choose **Yes**.
+1. Once you've restarted, you're installation is complete.
 
 ### Part 2: Post-Installation Tasks
+
+## Investigation 4: Post-Installation Tasks (*srv2*)
+
+After installing a new operating system, there are always a number of **post-installation tasks** to complete. **These aren't optional!**
+
+### Step 1: Applying Time Zone Settings
+
+This one is fairly straight-forward. Having the proper time zone set (EST) is essential for proper time keeping and ensuring encrypted webpages connect properly.
+
+1. In the *SConfig* application, select Option 9 (*Date and Time*). Use your keyboard.
+1. The *Date and Time* dialog box pops up.
+1. Look for the *Time Zone* line. It should say **(UTC-05:00) Eastern Time (US & Canada)**.
+1. If the *Time Zone* line item doesn't say the above, click on the *Change time zone...* button and change it to UTC-05:00 as seen above.
+1. Click **OK* to close out of *Date and Time*.
+1. Back in *SConfig*, choose Option 9 again to confirm your changes have stuck. If yes, continue to Step 2.
+
+### Step 2: Server Name Change
+
+The default name applied to your new server will be semi-randomized. For proper identification (and to not wonder which server you're on when you have several), we're going to change this.
+
+1. In the *SConfig* application, selection Option 2 (*Computer name*). Use your keyboard.
+1. In the new *Computer name* screen, enter your new computer name in the waiting text field: **srv2-SenecaUsername**
+1. Press **Enter** on your keyboard to confirm the change.
+1. The system now asks you about restarting. Enter **Y** to choose yes and hit the **Enter** key to confirm.
+1. Once you've restarted and logged back in, go back to the *Computer name* screen from Step 2 and double-check your new computer name is correct. **Do not skip this step!**
+1. If it is, you're done!
+
+### Step 3: Windows Activation
+
+Activating Windows unlocks certain settings and features. Since you've used your valid serial key (right?), you can activate with Microsoft easily.
+
+1. In the *SConfig* application, select Option 11 (*Windows activation*). Use your keyboard.
+1. In the new *Windows activation* screen, enter **2** (*Activate Windows*) and hit **Enter** to begin the activation process with Microsoft.
+1. Follow the instructions on screen. If unable to activate easily, **ask your professor for help**.
+
+### Step 4: Installing OS Updates
+
+A critical part of a security-conscious mindset is running regular updates. **This is NOT something you do only once at the start of installation.** You should be running these regularly to keep up to date with security fixes and zero-day exploits.
+
+1. In the *SConfig* application, select Option 5 (*Update settings*). Use your keyboard.
+1. In the new *Update setting* screen, enter **5** (*Opt-in to Microsoft Update*) and hit **Enter** to confirm.
+1. The next screen will ask you confirm again. Enter **y** and hit **Enter** to continue. (Then, hit **Enter** again.)
+1. In the *SConfig* application, select Option 6 (*Install updates*). Use your keyboard.
+1. In the new *Install updates* screen, enter **1** (*All quality updates*) and hit **Enter** to confirm.
+1. After a short check, you are asked which updates to install. Select **a** to install all updates and hit **Enter** to confirm.
+1. As you might expect, this can take a while. Timing will depend on your Internet connection, how fast your computer is, how fast your SSD is, and how many updates there are. Please be patient. Your computer may restart.
+1. Once updates have begun, take a break while it does its thing. Grab a drink, make a sandwich, text a friend.
+1. After updates are complete, go through Steps 4-6 again. Do so until the system tells you there are no new updates. (It may take a few cycles to get them all.)
+1. When complete, shut down *srv2*. Use the on-screen menu options in *SConfig* to do so.
 
 ## Investigation 7: VM3 Installation - Windows 11 Client
 
@@ -289,14 +437,26 @@ Broadcom (formerly VMware) now requires account registration before you can down
       1. Virtualize CPU performance counters: ***Unchecked***
       1. Virtualize IOMMU (IO memory management unit): **Checked**
    1. Select *Network Adapter* and confirm:
-      1. *Connected at power on:* **Checked**
-      1. *NAT*: **Checked**
-   1. Click **Close**.
+        1. *Connected at power on:* **Checked**
+        1. *NAT*: **Checked**
+   1. Click on the ***Add...*** button on the bottom left of the *Hardware* window.
+        1. Select *Network Adapter* and click **Finish**.
+        1. Back in the *Hardware* window, click on *Network Adapter 2*.
+        1. Under *Network connection*, click the **Custom: Specific virtual network** radio button.
+        1. Just below that, click the drop-down (it likely says *VMnet0* by default). Find and select **VMnet10**.
+        1. Click **Close**.
 1. Back in the "Ready to Create Virtual Machine" screen, click **Finish**.
 1. The virtual machine should launch.
 1. If you get a dialog box about *Side channel mitigations*, check the box for *Do not show this hint again* and click **OK**.
-1. Click **Close**.
-1. Click on the big **Play** to turn on the virtual machine begin the OS installation. This may take some time.
+1. Your new Virtual Machine should now finish creating and then turn on and begin the OS installation.
+1. Windows installation is automated at this point and won't require any input from you. It may restart several times.
+
+    > **Time Note:** Installation may take some time.
+    >
+    > Feel free to get some caffeine or make a sandwich.
+
+1. Eventually, you will be presented with the desktop and the VMware Tools installer having completed and asking if you'd like to restart. Choose **Yes**.
+1. Once you've restarted, you're installation is complete.
 
 ### Part 2:  Installation Options
 
