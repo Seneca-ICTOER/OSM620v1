@@ -151,9 +151,11 @@ It's now time to configure the routing and NAT bridging between the two networks
 
 ## Investigation 3: Installing Windows Client 1 with Hyper-V *(client1)*
 
-### Part 1: Creating the Hyper-V Appliance
+In this investigation, you'll create your first Hyper-V based virtual machines.
 
-### Part 2: Installing Windows 11 (*client1*)
+These will be Windows 11 client machines. Think of these as typical workstations in a corporate office.
+
+### Part 1: Creating the Hyper-V Appliance
 
 * Hypervisor: **Hyper-V**
 * Name: **client1-`SenecaUsername`**
@@ -161,68 +163,75 @@ It's now time to configure the routing and NAT bridging between the two networks
 * CPU: **2 processors**
 * Storage: **64 GB**
 
-### Part 1: Setup Instructions
+1. Drag and drop the *Microsoft Windows 11 ISO* file from Lab 1 onto the desktop of *srv1*. It should copy the file there. If it doesn't, ask your professor for help before continuing.
+1. Open the **Server Manager** application and go to **Tools > Hyper-V Manager**.
+1. This opens the *Hyper-V Manager* application.
+1. In the right-hand column, click on **New > Virtual Machine...**
+1. The *New Virtual Machine Wizard* appears.
+1. On the *Before You Begin* page, check the **Do not show this page again** option and click **Next**.
+1. **Specify Name and Location**:
+    * Name: **client1-`SenecaUsername`**
+    * Leave the rest at their defaults.
+1. **Specify Generation:** Leave defaults.
+1. **Assign Memory:** 4096 MB
+1. **Configure Networking:**
+    * Connection: **HQ Network**
+1. **Connect Virtual Hard Disk:**
+    * **Create a virtual hard disk** selected.
+    * Size: **64 GB**
+    * Lave the rest at their defaults.
+1. **Installer Options:**
+    * Select **Install an operating system from a bootable CD/DVD-ROM**
+    * Select **Image file (.iso):**
+    * Click **Browse** and select the Windows 11 ISO image file you copied to *srv1*.
+1. **Summary:** Click *Finish*.
 
-1. In the main window, you should see a large + symbol icon titled **Create a New Virtual Machine**. Click it.
-1. In the new dialog box, keep *Typical* selected and click the **Next** button.
-1. On the next screen, *Guest Operating System Installation*, do the following:
-   1. Select *Installer disc image file (ISO):*
-   1. Now click **Browse**.
-      1. Navigate to where you saved your ***Windows 11 Education*** downloaded ISO and select it.
-   1. Once selected, the previous screen should now say *"Windows 11 x64 detected."* If it doesn't, you haven't selected the right file, or your download was corrupted. Ask for help.
-   1. Click **Next**.
-1. On the "Name the Virtual Machine" screen, do the following:
-   1. Virtual machine name: client1-*senecausername*
+> **WARNING:** Do not start the *client1* VM, yet! We need to modify it. See *Part 2*.
 
-      > For example, if my Seneca e-mail address is `cjohnson30@myseneca.ca`, then my Seneca username is *cjohnson30*. This would give me a VM name of *client1-cjohnson30*.
+### Part 2: Modifying *client1* VM for Windows 11
 
-   1. Location: If using an external SSD (like with our lab computers), click **Browse** and navigate to your external SSD.
-      1. Create the following directory structure in your SSD: OSM620 > Virtual Machines
-      1. Select this new Virtual Machines folder.
-      1. Make sure you now see this change in the Location field. (Example: Z:/OSM620/Virtual Machines)
-   1. Click **Next**.
-1. On the "Encryption Information" screen, do the following:
-   1. Select *Only the files needed to support TPM are encrypted.*
-   1. Enter the same password as your other VMs in both fields.
-   1. **Uncheck** the *Remember the password on this machine in Credentials Manager* option.
-   1. Click **Next**.
-1. On the "Specify Disk Capacity" screen, do the following:
-   1. Maximum disk size (GB): **64**
-   1. Select *Split virtual disk into multiple files*.
-   1. Click **Next**.
-1. On the "Ready to Create Virtual Machine" screen, do the following:
-   1. Click on **Customize hardware...**
-1. On the new "Hardware" screen, do the following:
-   1. Select *Memory*, and change the value to: **4096**
-   1. Select *Processors*, and change:
-      1. Number of processors: **2**
-      1. Number of cores per processor: **1**
-      1. Virtualize Intel VT-x/EPT or AMD-V/RVI: **Checked**
-      1. Virtualize CPU performance counters: ***Unchecked***
-      1. Virtualize IOMMU (IO memory management unit): **Checked**
-   1. Select *Network Adapter* and confirm:
-        1. *Connected at power on:* **Checked**
-        1. *NAT*: **Checked**
-   1. Click on the ***Add...*** button on the bottom left of the *Hardware* window.
-        1. Select *Network Adapter* and click **Finish**.
-        1. Back in the *Hardware* window, click on *Network Adapter 2*.
-        1. Under *Network connection*, click the **Custom: Specific virtual network** radio button.
-        1. Just below that, click the drop-down (it likely says *VMnet0* by default). Find and select **VMnet10**.
-        1. Click **Close**.
-1. Back in the "Ready to Create Virtual Machine" screen, click **Finish**.
-1. The virtual machine should launch.
-1. If you get a dialog box about *Side channel mitigations*, check the box for *Do not show this hint again* and click **OK**.
-1. Your new Virtual Machine should now finish creating and then turn on and begin the OS installation.
-1. Windows installation is automated at this point and won't require any input from you. It may restart several times.
+Despite Hyper-V being a Microsoft product and Windows 11 being a Microsoft product, Hyper-V doesn't automatically add everything needed to run Windows 11.
 
-    > **Time Note:** Installation may take some time.
-    >
-    > Feel free to get some caffeine or make a sandwich.
+If you think this is silly... It is. Welcome to the wonderful world of IT.
 
-1. Eventually, you will be presented with the desktop and the VMware Tools installer having completed and asking if you'd like to restart. Choose **Yes**.
-1. Once you've restarted, your installation is complete.
+1. In the **Hyper-V Manager** application, select the *client1* VM.
+1. In the right-hand column, look for and click on the **Settings...* option.
+1. This opens up the settings window for the *client1* VM. Change the following:
+1. **Processor:**
+    * Number of virtual processors: **2**
+    * Make sure to click **Apply**!
+1. **Security:**
+    * Encryption Support > Enable Trusted Platform Module: **Checked**
+    * Make sure to click **Apply**!
+1. Click **OK** to close the VM settings window.
 
-### Part 2:  Installation Options
+### Part 3: Hyper-V Client Management
+
+Knowing how to power on and off your Hyper-V VM is important and includes a few cool features.
+
+In the **Hyper-V Manager** application, select the **client1** VM. (Single click. Do not double-click.)
+
+On the right-hand column, towards the bottom, you have:
+
+* **Connect**: This *connects* to the VM. It will open a virtual monitor to the machine. Just like a normal computer, if the computer (VM) is off, connecting to it will do nothing but give you a blank screen.
+* **Settings**: You used this in *Part 2*. Modify VM settings. Don't change anything unless told to.
+* **Start**: Power on the VM. If you are already connected to it, you will see it power up. If not connected, it still powers up. Click on **Connect** to open a screen to it.
+
+When the VM is powered on, you have additional options in that column:
+
+* **Turn Off:** This is the equivalent of pulling the power plug. Don't do this unless the VM is fully frozen and not responding from commands. (This is the *"Nuke it from orbit."* option. It works, but it's overkill and may cause damage.)
+
+* **Shut down:** This is the polite version of the option above. Hyper-V will send a gentle "Please shut down." command to the Windows 11 client. If the Windows 11 client is working, it'll close all applications and shut down properly. Hyper-V detects the OS having shut down and then powers off the VM itself. (**This is your preferred option.**)
+
+* **Reset:** Equivalent to pressing the *Reset* physical button on a computer. Yanks the power and then turns it back on. AKA *"Nuke and reload."* (Again, don't use unless unresponsive.)
+
+* The **Start** button disappears when the VM is on, which makes sense.
+
+There are other options, but those are enough to get by for now.
+
+> **IMPORTANT:** Always safely shut down all Hyper-V VMs before shutting down your Windows Server!
+
+### Part 4: Installing Windows 11 (*client1*)
 
 1. Once the Windows 11 Setup screen appears:
 1. On *Select language settings*, keep the defaults and click **Next**.
@@ -238,19 +247,23 @@ It's now time to configure the routing and NAT bridging between the two networks
 1. The Windows Installer will now install the OS. This may take some time, and the percentage may freeze at certain points. Be patient.
 1. When the installer finishes, Windows 11 will start up and you will be launched into the First-Run Setup. Go to Part 3.
 
-### Part 3:  First-Run Setup
+### Part 5:  First-Run Setup
 
 1. On *Is this the right country or region?*, select **Canada** and click **Yes.**
 1. On *Is this the right keyboard layout or input method?*, stick with the default and click **Yes**.
 1. On *Want to add a secondary keyboard layout?*, click **Skip**.
 
-Windows will now check for available updates from the Internet. If it finds any, it will install them automatically.
+  > **Note:** If it has an Internet connection, Windows will now check for available updates from the Internet. If it finds any, it will install them automatically.
+  >
+  > If it doesn't have an Internet connection, this step will be skipped.
 
 This process may take some time. Please be patient. Your VM may restart on its own.
 
-### Part 4: Account Creation
+### Part 6: Account Creation
 
 Now that language/keyboard and installer updates have been applied, it's time to create your account.
+
+> **Note:** Steps 1-2 may not be necessary. If you're asked for a name, start with Step 3.
 
 1. On *Let's set things up for work or school*, select **Sign-in options**.
 1. On this next screen, click on **Domain join instead**.
@@ -264,13 +277,13 @@ Now that language/keyboard and installer updates have been applied, it's time to
 1. On *Improve inking & typing*, select **No**, then click **Accept**.
 1. On *Get tailored experiences with diagnostic data*, select **No**, then click **Accept**.
 
-Windows will now check for *more* available updates. As before, if it finds any, it will install them automatically.
+> **Note:** If it has a valid Internet connection, Windows will now check for *more* available updates. As before, if it finds any, it will install them automatically.
+>
+> If not, it will simply continue.
 
 This process may take some time. Please be patient. Your VM may restart on its own.
 
 Once complete, you will be presented with a login screen. Move to the next part to continue.
-
-### Part 5: Hyper-V Client Management
 
 ## Investigation 4: Post-Installation Tasks *(client1*)
 
@@ -279,6 +292,25 @@ In this investigation, we'll log in for the first time and run through several p
 ### Part 1: First Login
 
 1. Enter your password to login. First-login may take a few minutes as your profile is set up.
+
+### Part 2: Network Configuration
+
+1. Click on the *Start* button and search for **Network Connections**. Open it when found.
+1. Find the only Ethernet adapter (it may have different names).
+1. Right-click it → Properties and do the following:
+    1. Internet Protocol Version 6 (TCP/IPv6): **Unchecked**
+    1. Internet Protocol Version 4 (TCP/IPv4): Select and click **Properties**
+        1. IPv4 address: **10.0.`UID`.11**
+        1. Subnet mask: **255.255.255.0**
+        1. Default gateway: 10.0.`UID`.1
+        1. Preferred DNS server: 10.0.`UID`.1
+        1. Alternate DNS server: 8.8.8.8
+        1. Leave all other fields blank and click OK.
+1. Open *Microsoft Edge* and nagivate to **eff.org**. If the page loads, you're done!
+
+> **Check it out:** You are now using RRAS+NAT on your Windows Server to make this Internet connection happen.
+>
+> In *srv1*, go back to the **Routing and Remote Access** application. Inside, go to *SRV1 > IPv4 > NAT*. The **External Network** entry now has non-zero numbers under the 'packets translated' columns. This is your routing and NAT from *client1* at work! Refresh the page to see the count go up.
 
 ### Part 2: Setting the Time Zone
 
@@ -320,17 +352,23 @@ A critical part of a security-conscious mindset is running regular updates. **Th
 1. Select all available updates that appear (you may have to expand some lists).
 1. Click **Download & install**.
 
-* Windows Activation
-* Theme Changes (Dark Mode)
-* Internet Connectivity Check w/IE
-* Install Firefox and Make Default
+## Investigation 5: Installing Windows Client 2 with Hyper-V *(client2)*
 
-## Investigation 5: Cloning *client1* to Create *client2*
+In this investigation, you'll create your second Hyper-V based virtual machine. This will be another Windows 11 client.
 
-### Part 1: Exporting *client 1*
+To conserve resources and speed up installation, it's helpful to shutdown *client1* while doing this.
 
-### Part 2: Renaming *client 1* to *client2*
+* Hypervisor: **Hyper-V**
+* Name: **client2-`SenecaUsername`**
+* RAM: **4 GB**
+* CPU: **2 processors**
+* Storage: **64 GB**
 
-### Part 3: Importing the New *client1*
+Set this up exactly as you did with *client1*, with *two important changes*:
 
-### Part 4: Final Checks - *client1* and *client2*
+1. Computer Name: **client2-`SenecaUsername`
+2. IP address: **10.0.`UID`.12**
+
+Don't forget to run your **Post-Installation Tasks**!
+
+Once *client2* is installed and has a working Internet connection, you're done!
