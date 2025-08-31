@@ -117,7 +117,7 @@ To run this course and its tech on a personal computer, it must meet the followi
 
 #### Part 2: Registering Your Broadcom Account
 
-Broadcom (formerly VMware) now requires account registration before you can download the VMware Workstation software. Follow the instructions below to do so. You only have to do this once. (If you already have an account using your Seneca e-mail, skip to Step 3.)
+Broadcom (formerly VMware) now requires account registration before you can download the VMware Workstation software. Follow the instructions below to do so. You only have to do this once. (If you already have an account using your Seneca e-mail, skip to Part 3.)
 
 1. Visit the Broadcom registration site: profile.broadcom.com/web/registration
 1. Provide your Seneca e-mail address and continue.
@@ -125,7 +125,7 @@ Broadcom (formerly VMware) now requires account registration before you can down
 1. On the *Complete your Registration* page, enter your information and click **Create Account.**
 1. On the *Registered Successfully!* page, you can skip the rest and simply click **I'll do it later**.
 1. At the top right of the screen, click on the **Login** button. (No, you aren't logged in automatically. Yes, it's annoying.)
-1. Enter your Seneca e-mail address as your username and the password you chose on Step 4 as your credentials.
+1. Enter your Seneca e-mail address as your username and the password you chose on Part 4 as your credentials.
 1. When complete, you should see your name in the top right of the screen instead of *Login.* If not, attempt to log in again or ask for help.
 
 ### Part 3: Downloading VMware Workstation
@@ -144,7 +144,7 @@ Broadcom (formerly VMware) now requires account registration before you can down
     1. Country: **Canada**
     1. Zip/Postal Code: **M2J 2X5**
 1. ***Finally*** click on the cloud icon again to begin the actual download.
-1. If you ever need to download the software again, you won't have to go through any of the registration mess. Follow Part 3, Steps 1-3, then Step 9.
+1. If you ever need to download the software again, you won't have to go through any of the registration mess. Follow Part 3, Steps 1-3, then Part 9.
 
 ### Part 4: Install VMware Workstation
 
@@ -241,7 +241,7 @@ Broadcom (formerly VMware) now requires account registration before you can down
 
 After installing a new operating system, there are always a number of **post-installation tasks** to complete. **These aren't optional!**
 
-### Step 1: Applying Time Zone Settings
+### Part 1: Applying Time Zone Settings
 
 This one is fairly straight-forward. Having the proper time zone set (EST) is essential for proper time keeping and ensuring encrypted webpages connect properly.
 
@@ -249,7 +249,7 @@ This one is fairly straight-forward. Having the proper time zone set (EST) is es
 1. In the main *Properties* area, on the right-hand column, look for the *Time Zone* line. It should say **(UTC-05:00) Eastern Time (US & Canada)**.
 1. If the *Time Zone* line item doesn't say the above, click on the displayed time zone and change it to UTC-05:00 as seen above.
 
-### Step 2: Server Name Change
+### Part 2: Server Name Change
 
 The default name applied to your new server will be semi-randomized. For proper identification (and to not wonder which server you're on when you have several), we're going to change this.
 
@@ -259,10 +259,10 @@ The default name applied to your new server will be semi-randomized. For proper 
 1. In the *System Properties* dialog box that pops up, find the **Change** button and click it. (Ignore the *Computer Description* field. It's tempting, but wrong!)
 1. In the new *Computer Name/Domain Changes* dialog box that pops up, find the *Computer name* field. Replace it with **srv1-SenecaUsername**.
 1. When you click **OK**, the system will warn you about restarting. Choose to restart the system when asked.
-1. Once you've restarted and logged back in, go back to the *Server Manager* from Step 1 and double-check your new computer name is correct. **Do not skip this step!**
+1. Once you've restarted and logged back in, go back to the *Server Manager* from Part 1 and double-check your new computer name is correct. **Do not skip this step!**
 1. If it is, you're done!
 
-### Step 3: Windows Activation
+### Part 3: Windows Activation
 
 Activating Windows unlocks certain settings and features. Since you've used your valid serial key (right?), you can activate with Microsoft easily.
 
@@ -271,7 +271,7 @@ Activating Windows unlocks certain settings and features. Since you've used your
 1. Click on the **Not activated** link.
 1. Follow the instructions in the popup dialog box. If unable to activate easily, **ask your professor for help**.
 
-### Step 4: Installing OS Updates
+### Part 4: Installing OS Updates
 
 A critical part of a security-conscious mindset is running regular updates. **This is NOT something you do only once at the start of installation.** You should be running these regularly to keep up to date with security fixes and zero-day exploits.
 
@@ -289,7 +289,7 @@ A critical part of a security-conscious mindset is running regular updates. **Th
 1. Select all available updates that appear (you may have to expand some lists).
 1. Click **Download & install**.
 
-### Step 5: Configuring Network Interface Card 2 (NIC2)
+### Part 5: Configuring Network Interface Card 2 (NIC2)
 
 We have two network interfaces on this virtual machine. NIC1 is set to DHCP and is our Internet connection. We don't touch that one. It's configuration is automatic.
 
@@ -323,7 +323,7 @@ We have two network interfaces on this virtual machine. NIC1 is set to DHCP and 
     1. Go back to *Server Manager > Local Server*, refresh, and confirm you can see the new *External Network* name.
     1. If you do, you're done!
 
-### Step 6: Internet Connectivity Check w/Edge
+### Part 6: Internet Connectivity Check w/Edge
 
 We'll double-check we can access the Internet using the built-in Microsoft Edge application.
 
@@ -332,7 +332,7 @@ We'll double-check we can access the Internet using the built-in Microsoft Edge 
 1. When able, use the browser to navigate to **eff.org**.
 1. If the website loads, move on to the next step. If not, **ask your professor for help**.
 
-### Step 7: Download and Install Firefox
+### Part 7: Download and Install Firefox
 
 There are a ton of feature and privacy reasons *not* to use Microsoft Edge. Instead, we'll download and install **Mozilla Firefox** and use that going forward.
 
@@ -425,7 +425,7 @@ There are a ton of feature and privacy reasons *not* to use Microsoft Edge. Inst
 
 After installing a new operating system, there are always a number of **post-installation tasks** to complete. **These aren't optional!**
 
-### Step 1: Applying Time Zone Settings
+### Part 1: Applying Time Zone Settings
 
 This one is fairly straight-forward. Having the proper time zone set (EST) is essential for proper time keeping and ensuring encrypted webpages connect properly.
 
@@ -434,9 +434,9 @@ This one is fairly straight-forward. Having the proper time zone set (EST) is es
 1. Look for the *Time Zone* line. It should say **(UTC-05:00) Eastern Time (US & Canada)**.
 1. If the *Time Zone* line item doesn't say the above, click on the *Change time zone...* button and change it to UTC-05:00 as seen above.
 1. Click **OK** to close out of *Date and Time*.
-1. Back in *SConfig*, choose Option 9 again to confirm your changes have stuck. If yes, continue to Step 2.
+1. Back in *SConfig*, choose Option 9 again to confirm your changes have stuck. If yes, continue to Part 2.
 
-### Step 2: Server Name Change
+### Part 2: Server Name Change
 
 The default name applied to your new server will be semi-randomized. For proper identification (and to not wonder which server you're on when you have several), we're going to change this.
 
@@ -444,10 +444,10 @@ The default name applied to your new server will be semi-randomized. For proper 
 1. In the new *Computer name* screen, enter your new computer name in the waiting text field: **srv2-SenecaUsername**
 1. Press **Enter** on your keyboard to confirm the change.
 1. The system now asks you about restarting. Enter **Y** to choose yes and hit the **Enter** key to confirm.
-1. Once you've restarted and logged back in, go back to the *Computer name* screen from Step 2 and double-check your new computer name is correct. **Do not skip this step!**
+1. Once you've restarted and logged back in, go back to the *Computer name* screen from Part 2 and double-check your new computer name is correct. **Do not skip this step!**
 1. If it is, you're done!
 
-### Step 3: Windows Activation
+### Part 3: Windows Activation
 
 Activating Windows unlocks certain settings and features. Since you've used your valid serial key (right?), you can activate with Microsoft easily.
 
@@ -455,7 +455,7 @@ Activating Windows unlocks certain settings and features. Since you've used your
 1. In the new *Windows activation* screen, enter **2** (*Activate Windows*) and hit **Enter** to begin the activation process with Microsoft.
 1. Follow the instructions on screen. If unable to activate easily, **ask your professor for help**.
 
-### Step 4: Installing OS Updates
+### Part 4: Installing OS Updates
 
 A critical part of a security-conscious mindset is running regular updates. **This is NOT something you do only once at the start of installation.** You should be running these regularly to keep up to date with security fixes and zero-day exploits.
 
@@ -471,7 +471,7 @@ A critical part of a security-conscious mindset is running regular updates. **Th
 1. After updates are complete, go through Steps 4-6 again. Do so until the system tells you there are no new updates. (It may take a few cycles to get them all.)
 1. When complete, shut down *srv2*. Use the on-screen menu options in *SConfig* to do so.
 
-### Step 5: Configuring Network Interface Card 2 (NIC2)
+### Part 5: Configuring Network Interface Card 2 (NIC2)
 
 We have two network interfaces on this virtual machine. NIC1 is set to DHCP and is our Internet connection. We don't touch that one. It's configuration is automatic.
 
