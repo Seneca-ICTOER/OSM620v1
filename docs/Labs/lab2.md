@@ -155,7 +155,7 @@ In this investigation, you'll create your first Hyper-V based virtual machines.
 
 These will be Windows 11 client machines. Think of these as typical workstations in a corporate office.
 
-### Part 1: Creating the Hyper-V Appliance
+### Part 1: Creating the Hyper-V Virtual Machine
 
 * Hypervisor: **Hyper-V**
 * Name: **client1-`SenecaUsername`**
@@ -358,17 +358,27 @@ In this investigation, you'll create your second Hyper-V based virtual machine. 
 
 To conserve resources and speed up installation, it's helpful to shutdown *client1* while doing this.
 
+### Part 1: Creating the Hyper-V Virtual Machine
+
+Create a second Hyper-V virtual machine with the following settings:
+
 * Hypervisor: **Hyper-V**
 * Name: **client2-`SenecaUsername`**
 * RAM: **4 GB**
 * CPU: **2 processors**
 * Storage: **64 GB**
+* Security: **Enable Trusted Platform Module**
+* ISO: **Windows 11**
+
+### Part 2: Installing Windows 11 (*client2*)
 
 Set this up exactly as you did with *client1*, with *two important changes*:
 
 1. Computer Name: **client2-`SenecaUsername`
 2. IP address: **10.0.`UID`.12**
 
-Don't forget to run your **Post-Installation Tasks**!
+### Part 3: Post-Installation Tasks (*client2*)
+
+Don't forget to run your **Post-Installation Tasks**! These are the same as for *client1*
 
 Once *client2* is installed and has a working Internet connection, you're done!
