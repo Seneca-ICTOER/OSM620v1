@@ -247,7 +247,41 @@ A critical part of a security-conscious mindset is running regular updates. **Th
 1. Select all available updates that appear (you may have to expand some lists).
 1. Click **Download & install**.
 
-### Step 5: Internet Connectivity Check w/Edge
+### Step 5: Configuring Network Interface Card 2 (NIC2)
+
+We have two network interfaces on this virtual machine. NIC1 is set to DHCP and is our Internet connection. We don't touch that one. It's configuration is automatic.
+
+**However, NIC2 requires manual configuration.** Why do we need NIC2? It's what we'll be using to communicate with *srv2* and our other VMs.
+
+1. In the *Server Manager* application, click on **Local Server** in the left-hand menubar.
+1. In the main *Properties* area, on the lef-hand column, look for the *Ethernet1* line.
+1. Click on the **IPv4 address assigned by DHCP** link.
+1. In the *Network Connections* window that pops up, right-click on the *Ethernet1* icon.
+1. Click *Rename* from the drop-down, and rename the adapter to: **Internal Network**
+1. If that doesn't work, select the *Ethernet1* icon and hit **F2** on your keyboard to rename as above.
+1. Right-click on the renamed *Internal Network* icon, and select *Properties* from the drop-down menu.
+1. In the new *Internal Network Properties* dialog box, find the *Internet Protocol Version 6 (TCP/IPv6)* entry and uncheck it.
+1. Now, look for the *Internet Protocol Version 4 (TCP/IPv4)* entry, select it (do not uncheck), and look for the **Properties** button just below and click it.
+1. In the new *Internet Protocol Version 4 (TCP/IPv4) Properties* dialog box, select the *Use the following IP address:* radio button.
+1. In the fields directly below, enter the following:
+    1. IP address: **10.0.*UID*.1**
+
+          > *UID* is a placeholder. In Blackboard in Grades, there is a UID column. Each student has been assigned a unique ID number for this course. You will use that number in the address above.
+          >
+          > For example, if my UID on Blackboard is *40*, then my address in the step above is **10.0.40.1**. (Yours will be different!)
+
+    1. Subnet mask: **255.255.255.0**
+    1. Leave all other fields blank.
+    1. Click **OK**.
+    1. Back in the *Internal Network Properties* dialog box, click **Close**.
+    1. Switch back to the *Server Manager > Local Server* application, and hit the *Refresh* icon. (It's the icon that looks like a music shuffle symbol to the left of the flag icon at the top right.)
+    1. You should now see: **Internal Network 10.0.*UID*.1**
+    1. Go back to the *Network Connections* window, and find the other adapter icon. (Likely called *Ethernet0*)
+    1. Rename this to: **External Network**
+    1. Go back to *Server Manager > Local Server*, refresh, and confirm you can see the new *External Network* name.
+    1. If you do, you're done!
+
+### Step 6: Internet Connectivity Check w/Edge
 
 We'll double-check we can access the Internet using the built-in Microsoft Edge application.
 
@@ -256,7 +290,7 @@ We'll double-check we can access the Internet using the built-in Microsoft Edge 
 1. When able, use the browser to navigate to **eff.org**.
 1. If the website loads, move on to the next step. If not, **ask your professor for help**.
 
-### Step 6: Download and Install Firefox
+### Step 7: Download and Install Firefox
 
 There are a ton of feature and privacy reasons *not* to use Microsoft Edge. Instead, we'll download and install **Mozilla Firefox** and use that going forward.
 
@@ -411,6 +445,7 @@ We have two network interfaces on this virtual machine. NIC1 is set to DHCP and 
     > *UID* is a placeholder. In Blackboard in Grades, there is a UID column. Each student has been assigned a unique ID number for this course. You will use that number in the address above.
     >
     > For example, if my UID on Blackboard is *40*, then my address in the step above is **10.0.40.2**. (Yours will be different!)
+
 1. In the *Enter subnet mask* field, stick with the default by keeping the field blank and hitting **Enter**.
 1. In the *Enter default gateway* field, use: **10.0.*UID*.1**
 1. Hit **Enter** once the configuration has complete.
