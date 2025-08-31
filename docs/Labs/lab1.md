@@ -3,9 +3,50 @@ id: lab1
 title: Lab 1 - Environment Setup
 sidebar_position: 1
 description: Lab 1 - Environment Setup
----
+--- 
 
 # Lab 1 - Environment Setup
+
+## Lab Preparations
+
+### Purpose of Lab 1
+
+In this lab you will stand up the base environment you’ll use for the course. You’ll obtain official installation media and keys, prepare VMware Workstation, and deploy two servers:
+
+* srv1:  Windows Server 2025 Datacenter, GUI (Desktop Experience)
+* srv2: Windows Server 2025 Datacenter, CLI (Core)
+
+You’ll complete essential post-install tasks (time zone, naming, activation, updates), then place both servers on a two-NIC layout so they can talk to each other on a private subnet while still reaching the internet for updates.
+
+By the end, the machines are clean, consistent, and ready for later labs (security hardening, DNS, DHCP, and eventually AD).
+
+### Objectives
+
+By the end of this lab, you will be able to:
+
+* Acquire **Windows Server 2025 Datacenter** installation media and your individual product key from Azure Education and store them securely.
+* Access **VMware Workstation** on a Seneca lab PC (locally or via MyApps) or install it on a personal PC.
+* Provision two VMs with the required specs and networks:
+  * srv1-`senecausername` (GUI) with NAT + VMnet10 NICs.
+  * srv2-`senecausername` (Core) with NAT + VMnet10 NICs.
+* Complete essential post-install tasks on each server.
+* Configure NIC2 on each server for the internal lab subnet 10.0.`UID`.0/24:
+  * srv1 → 10.0.`UID`.1/24
+  * srv2 → 10.0.`UID`.2/24
+* Verify basic Internet connectivity prerequisites for later labs within each VM.
+
+### Minimium Requirements
+
+Before beginning, you must have:
+
+1. Attended the Week 1 lecture.
+2. Read through the Week 1 slides, and have them handy as a reference for concepts.
+1. Working access to [portal.azure.com](https://portal.azure.com) with your Seneca credentials.
+1. Access to VMware Workstation (Seneca lab PC or personal PC meeting course specs).
+1. Your external SSD with at least 250 GB of dedicated space for this course.
+1. Your assigned **UID** (from Blackboard Grades) handy for addressing.
+1. Your physically printed **OSM620 Lab Logbook** for notetaking and saving commands.
+1. Optional, but recommended: Caffeine delivery system.
 
 ## Investigation 1: Downloading Installation Media
 
@@ -25,14 +66,15 @@ In this investigation, you will be downloading your Windows OS installation medi
 1. Click on **Download** first to begin downloading the Server 2025 ISO. You will need this for your operating system installation. (Don't forget where you've saved it!)
 1. While the ISO file is downloading, click on **View Key**.
 1. Copy this key into a text file that you save locally on your personal computer or personal USB key. You will need this for the Server installation and for any reinstalls later in the semester. **Do not lose this key and do NOT share it with anyone!**
+1. Repeat steps 8-14 for the **Windows 11 Education** ISO and serial key. You will need that for later.
 
-## Investigation 2: VMWare Workstation
+## Investigation 2: Using VMware Workstation
 
-The use of VMware Workstation is required for this course. You can either use a Seneca Lab computer (Option 1) or a personal computer (Option 2).
+The use of *VMware Workstation* is required for this course. You can either use a Seneca Lab computer (Option 1a / Option 1b) or a personal computer (Option 2).
 
 If you use an external SSD, you can use both!
 
-**WARNING: Seneca Lab computers erase any locally saved data when restarted from their internal drives. Save all work to an external drive or online storage.**
+> **WARNING:** Seneca Lab computers erase any locally saved data when restarted from their internal drives. Save all work to an external drive or online storage.
 
 ### Option 1a: Seneca Lab Computers w/VMware Workstation Installed Locally
 
@@ -66,12 +108,12 @@ How do you know if your particular Seneca Lab classroom has VMware Workstation i
 
 To run this course and its tech on a personal computer, it must meet the following minimum system requirements:
 
-1. CPU: **6-core Intel/AMD** (ARM/M1 and Snapdragon will not work)
+1. CPU: **6-core Intel/AMD**
 1. RAM: **32 GB**
 1. Storage: **250 GB SSD free**, *reserved for this course* (if external, USB3.0 or higher)
 1. Internet connection: **High speed, stable**
 
-**CPU architecture is vital. You cannot use ARM or SnapDragon based computers. This includes all Apple Silicon computers (M1/M2/M3/M4, etc).**
+> **CPU architecture is vital.** You *cannot* use ARM or SnapDragon based computers for this course. This includes all Apple Silicon computers (M1/M2/M3/M4, etc).
 
 #### Part 2: Registering Your Broadcom Account
 
@@ -89,7 +131,7 @@ Broadcom (formerly VMware) now requires account registration before you can down
 ### Part 3: Downloading VMware Workstation
 
 1. Go to this link: [Download VMware Workstation](https://support.broadcom.com/group/ecx/productdownloads?subfamily=VMware%20Workstation%20Pro&freeDownloads=true)
-1. Click on **WMware Workstation Pro 17 for Windows**
+1. Click on **VMware Workstation Pro 17 for Windows**
 1. Click on the highest version available. (17.6.3 as of last update)
 1. On the next screen, click on the blue link inside *I agree to the Terms and Conditions* to open a new tab with their terms and conditions. Do not close this window.
 1. Back in the previous window/tab that's still open, now click the checkbox for *I agree to the Terms and Conditions*.
@@ -193,7 +235,7 @@ Broadcom (formerly VMware) now requires account registration before you can down
     > Feel free to get some caffeine or make a sandwich.
 
 1. Eventually, you will be presented with the desktop and the VMware Tools installer having completed and asking if you'd like to restart. Choose **Yes**.
-1. Once you've restarted, you're installation is complete.
+1. Once you've restarted, your installation is complete.
 
 ## Investigation 4: Post-Installation Tasks (*srv1*)
 
@@ -254,7 +296,7 @@ We have two network interfaces on this virtual machine. NIC1 is set to DHCP and 
 **However, NIC2 requires manual configuration.** Why do we need NIC2? It's what we'll be using to communicate with *srv2* and our other VMs.
 
 1. In the *Server Manager* application, click on **Local Server** in the left-hand menubar.
-1. In the main *Properties* area, on the lef-hand column, look for the *Ethernet1* line.
+1. In the main *Properties* area, on the left-hand column, look for the *Ethernet1* line.
 1. Click on the **IPv4 address assigned by DHCP** link.
 1. In the *Network Connections* window that pops up, right-click on the *Ethernet1* icon.
 1. Click *Rename* from the drop-down, and rename the adapter to: **Internal Network**
@@ -318,7 +360,13 @@ There are a ton of feature and privacy reasons *not* to use Microsoft Edge. Inst
     1. Select *Installer disc image file (ISO):*
     1. Now click **Browse**.
        1. Navigate to where you saved your ***Windows Server 2025 Datacenter*** downloaded ISO and select it.
-       1. Once selected, the previous screen should now say *"Windows Server 2025 detected.* If it doesn't, you haven't selected the right file, or your download was corrupted. Ask for help.
+       1. Once selected, the previous screen should now say:
+
+          > **Windows Server 2025 detected.**
+          >
+          > This operating system will use Easy Install.
+
+       1. If it doesn't, you haven't selected the right file, or your download was corrupted. **Ask for help.**
     1. Click **Next**.
 1. On the "Easy Install Information" screen, do the following:
     1. Paste in your serial key.
@@ -370,12 +418,10 @@ There are a ton of feature and privacy reasons *not* to use Microsoft Edge. Inst
     >
     > Feel free to get some caffeine or make a sandwich.
 
-1. Eventually, you will be presented with the desktop and the VMware Tools installer having completed and asking if you'd like to restart. Choose **Yes**.
-1. Once you've restarted, you're installation is complete.
+1. Eventually, you will be presented with the Command Prompt window open to the *SConfig* text-based application, and the VMware Tools installer having completed and asking if you'd like to restart. Choose **Yes**.
+1. Once you've restarted, your installation is complete.
 
-### Part 2: Post-Installation Tasks
-
-## Investigation 4: Post-Installation Tasks (*srv2*)
+## Investigation 6: Post-Installation Tasks (*srv2*)
 
 After installing a new operating system, there are always a number of **post-installation tasks** to complete. **These aren't optional!**
 
@@ -387,7 +433,7 @@ This one is fairly straight-forward. Having the proper time zone set (EST) is es
 1. The *Date and Time* dialog box pops up.
 1. Look for the *Time Zone* line. It should say **(UTC-05:00) Eastern Time (US & Canada)**.
 1. If the *Time Zone* line item doesn't say the above, click on the *Change time zone...* button and change it to UTC-05:00 as seen above.
-1. Click **OK* to close out of *Date and Time*.
+1. Click **OK** to close out of *Date and Time*.
 1. Back in *SConfig*, choose Option 9 again to confirm your changes have stuck. If yes, continue to Step 2.
 
 ### Step 2: Server Name Change
@@ -432,7 +478,7 @@ We have two network interfaces on this virtual machine. NIC1 is set to DHCP and 
 **However, NIC2 requires manual configuration.** Why do we need NIC2? It's what we'll be using to communicate with *srv1* and our other VMs.
 
 1. In the *SConfig* application, select Option 8 (*Network Settings*).
-1. In the *Network settings* screen, look for the unconfigured network adapater. It's likely the second one, and will likely have an address starting with **169.** If you aren't sure, ask your professor for help.
+1. In the *Network settings* screen, look for the unconfigured network adapter. It's likely the second one, and will likely have an address starting with **169.** If you aren't sure, ask your professor for help.
 1. Select that adapter using the menu option and your keyboard, and hit **Enter** to confirm.
 1. In the *Network adapter settings* screen, select Option 4 (*Rename network adapter*).
 1. Enter the new network adapter name in the field: **Internal Network**
@@ -448,14 +494,14 @@ We have two network interfaces on this virtual machine. NIC1 is set to DHCP and 
 
 1. In the *Enter subnet mask* field, stick with the default by keeping the field blank and hitting **Enter**.
 1. In the *Enter default gateway* field, use: **10.0.*UID*.1**
-1. Hit **Enter** once the configuration has complete.
-1. Back in the **Network adapter settings* screen, confirm your changes from above. You should see them all displayed. If not, repeat the missing steps or as your professor for help.
+1. Hit **Enter** once the configuration has completed.
+1. Back in the *Network adapter settings* screen, confirm your changes from above. You should see them all displayed. If not, repeat the missing steps or as your professor for help.
 1. If everything looks good, hit **Enter** to go back to the main menu screen.
 1. Go back into *Network settings* and change the other network adapter's name to: **External Network**
 1. Make no other changes to this adapter.
 1. You're done!
 
-## Investigation 5: VM3 Installation - Windows 11 Client
+## Investigation 7: VM3 Installation - Windows 11 Client
 
 * Name: **client-cjohnson30**
 * RAM: **4 GB**
@@ -521,7 +567,7 @@ We have two network interfaces on this virtual machine. NIC1 is set to DHCP and 
     > Feel free to get some caffeine or make a sandwich.
 
 1. Eventually, you will be presented with the desktop and the VMware Tools installer having completed and asking if you'd like to restart. Choose **Yes**.
-1. Once you've restarted, you're installation is complete.
+1. Once you've restarted, your installation is complete.
 
 ### Part 2:  Installation Options
 
@@ -571,7 +617,7 @@ This process may take some time. Please be patient. Your VM may restart on its o
 
 Once complete, you will be presented with a login screen. Move to the next part to continue.
 
-## Investigation 6: Post-Installation Tasks - Windows 11
+## Investigation 8: Post-Installation Tasks - Windows 11
 
 In this investigation, we'll log in for the first time and run through several post-installation tasks both necessary and for user comfort.
 
