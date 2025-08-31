@@ -385,12 +385,42 @@ A critical part of a security-conscious mindset is running regular updates. **Th
 1. In the *SConfig* application, select Option 6 (*Install updates*). Use your keyboard.
 1. In the new *Install updates* screen, enter **1** (*All quality updates*) and hit **Enter** to confirm.
 1. After a short check, you are asked which updates to install. Select **a** to install all updates and hit **Enter** to confirm.
-1. As you might expect, this can take a while. Timing will depend on your Internet connection, how fast your computer is, how fast your SSD is, and how many updates there are. Please be patient. Your computer may restart.
+1. As you might expect, this can take a while. Timing will depend on your Internet connection, how fast your computer is, how fast your SSD is, and how many updates there are. Please be patient.
 1. Once updates have begun, take a break while it does its thing. Grab a drink, make a sandwich, text a friend.
+1. If asked to restart, choose **yes**.
 1. After updates are complete, go through Steps 4-6 again. Do so until the system tells you there are no new updates. (It may take a few cycles to get them all.)
 1. When complete, shut down *srv2*. Use the on-screen menu options in *SConfig* to do so.
 
-## Investigation 7: VM3 Installation - Windows 11 Client
+### Step 5: Configuring Network Interface Card 2 (NIC2)
+
+We have two network interfaces on this virtual machine. NIC1 is set to DHCP and is our Internet connection. We don't touch that one. It's configuration is automatic.
+
+**However, NIC2 requires manual configuration.** Why do we need NIC2? It's what we'll be using to communicate with *srv1* and our other VMs.
+
+1. In the *SConfig* application, select Option 8 (*Network Settings*).
+1. In the *Network settings* screen, look for the unconfigured network adapater. It's likely the second one, and will likely have an address starting with **169.** If you aren't sure, ask your professor for help.
+1. Select that adapter using the menu option and your keyboard, and hit **Enter** to confirm.
+1. In the *Network adapter settings* screen, select Option 4 (*Rename network adapter*).
+1. Enter the new network adapter name in the field: **Internal Network**
+1. Hit **Enter** twice to confirm.
+1. When the *Network adapter settings* screen refreshes, you should see the new name. If not, repeat Steps 4-6 again, or ask for help from your professor.
+1. Now, select Option 1 (*Set network adapter address*).
+1. Select **S** for *Static IP address*.
+1. Enter your new IP address for this machine. It will take the following form: **10.0.*UID*.2**
+
+    > *UID* is a placeholder. In Blackboard in Grades, there is a UID column. Each student has been assigned a unique ID number for this course. You will use that number in the address above.
+    >
+    > For example, if my UID on Blackboard is *40*, then my address in the step above is **10.0.40.2**. (Yours will be different!)
+1. In the *Enter subnet mask* field, stick with the default by keeping the field blank and hitting **Enter**.
+1. In the *Enter default gateway* field, use: **10.0.*UID*.1**
+1. Hit **Enter** once the configuration has complete.
+1. Back in the **Network adapter settings* screen, confirm your changes from above. You should see them all displayed. If not, repeat the missing steps or as your professor for help.
+1. If everything looks good, hit **Enter** to go back to the main menu screen.
+1. Go back into *Network settings* and change the other network adapter's name to: **External Network**
+1. Make no other changes to this adapter.
+1. You're done!
+
+## Investigation 5: VM3 Installation - Windows 11 Client
 
 * Name: **client-cjohnson30**
 * RAM: **4 GB**
@@ -506,7 +536,7 @@ This process may take some time. Please be patient. Your VM may restart on its o
 
 Once complete, you will be presented with a login screen. Move to the next part to continue.
 
-## Investigation 8: Post-Installation Tasks - Windows 11
+## Investigation 6: Post-Installation Tasks - Windows 11
 
 In this investigation, we'll log in for the first time and run through several post-installation tasks both necessary and for user comfort.
 
