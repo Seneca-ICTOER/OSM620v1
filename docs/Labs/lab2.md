@@ -372,9 +372,9 @@ Create a second Hyper-V virtual machine with the following settings:
 
 ### Part 2: Installing Windows 11 (*client2*)
 
-Set this up exactly as you did with *client1*, with *two important changes*:
+Set this up exactly as you did with *client1*, with **two important changes**:
 
-1. Computer Name: **client2-`SenecaUsername`
+1. Computer Name: **client2-`SenecaUsername`**
 2. IP address: **10.0.`UID`.12**
 
 ### Part 3: Post-Installation Tasks (*client2*)
