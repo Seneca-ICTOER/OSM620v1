@@ -287,7 +287,7 @@ A critical part of a security-conscious mindset is running regular updates. **Th
 1. Click **Download & install**.
 1. Once all updates are complete, restart your VM if asked, then move onto the next section.
 
-### Part 6: Internet Connectivity Check w/Edge
+### Part 5: Internet Connectivity Check w/Edge
 
 We'll double-check we can access the Internet using the built-in Microsoft Edge application.
 
@@ -296,7 +296,7 @@ We'll double-check we can access the Internet using the built-in Microsoft Edge 
 1. When able, use the browser to navigate to **eff.org**.
 1. If the website loads, move on to the next step. If not, **ask your professor for help**.
 
-### Part 7: Download and Install Firefox
+### Part 6: Download and Install Firefox
 
 There are a ton of feature and privacy reasons *not* to use Microsoft Edge. Instead, we'll download and install **Mozilla Firefox** and use that going forward.
 
