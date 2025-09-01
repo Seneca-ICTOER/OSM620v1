@@ -115,7 +115,7 @@ Welcome to Microsoft's **Routing and Remote Server (RRAS)**.
 
 You will now install the tools for routing and NAT bridging discussed at the top of this investigation using the **Routing and Remote Access Server** (RRAS) we've just installed.
 
-1. Open the **Server Manager** application and go to **Tools > Routing and Remote Acceess**.
+1. Open the **Server Manager** application and go to **Tools > Routing and Remote Access**.
 1. This opens the *Routing and Remote Access* application.
 1. In the right-hand column, find SRV1, right-click it, and select **Configure and Enable Routing and Remote Access**.
 1. The setup wizard appears. Click *Next*.
@@ -179,7 +179,7 @@ These will be Windows 11 client machines. Think of these as typical workstations
 1. **Connect Virtual Hard Disk:**
     * **Create a virtual hard disk** selected.
     * Size: **64 GB**
-    * Lave the rest at their defaults.
+    * Leave the rest at their defaults.
 1. **Installer Options:**
     * Select **Install an operating system from a bootable CD/DVD-ROM**
     * Select **Image file (.iso):**
