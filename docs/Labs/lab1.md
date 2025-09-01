@@ -13,12 +13,12 @@ description: Lab 1 - Environment Setup
 
 In this lab you will stand up the base environment you’ll use for the course. You’ll obtain official installation media and keys, prepare VMware Workstation, and deploy two servers:
 
-* srv1:  Windows Server 2025 Datacenter, GUI (Desktop Experience)
-* srv2: Windows Server 2025 Datacenter, CLI (Core)
+* srv1: **Windows Server 2025 Datacenter, GUI** (Desktop Experience)
+* srv2: **Windows Server 2025 Datacenter, CLI** (Core)
 
 You’ll complete essential post-install tasks (time zone, naming, activation, updates), then place both servers on a two-NIC layout so they can talk to each other on a private subnet while still reaching the internet for updates.
 
-By the end, the machines are clean, consistent, and ready for later labs (security hardening, DNS, DHCP, and eventually AD).
+By the end, the machines are clean, consistent, and ready for later labs (Hyper-V, security hardening, DNS, DHCP, and eventually AD).
 
 ### Objectives
 
@@ -30,9 +30,6 @@ By the end of this lab, you will be able to:
   * srv1-`senecausername` (GUI) with NAT + VMnet10 NICs.
   * srv2-`senecausername` (Core) with NAT + VMnet10 NICs.
 * Complete essential post-install tasks on each server.
-* Configure NIC2 on each server for the internal lab subnet 10.0.`UID`.0/24:
-  * srv1 → 10.0.`UID`.1/24
-  * srv2 → 10.0.`UID`.2/24
 * Verify basic Internet connectivity prerequisites for later labs within each VM.
 
 ### Minimium Requirements
@@ -288,40 +285,7 @@ A critical part of a security-conscious mindset is running regular updates. **Th
 1. Inside *Windows Update > Advanced options* scroll down to **Optional updates** and click it.
 1. Select all available updates that appear (you may have to expand some lists).
 1. Click **Download & install**.
-
-### Part 5: Configuring Network Interface Card 2 (NIC2)
-
-We have two network interfaces on this virtual machine. NIC1 is set to DHCP and is our Internet connection. We don't touch that one. It's configuration is automatic.
-
-**However, NIC2 requires manual configuration.** Why do we need NIC2? It's what we'll be using to communicate with *srv2* and our other VMs.
-
-1. In the *Server Manager* application, click on **Local Server** in the left-hand menubar.
-1. In the main *Properties* area, on the left-hand column, look for the *Ethernet1* line.
-1. Click on the **IPv4 address assigned by DHCP** link.
-1. In the *Network Connections* window that pops up, right-click on the *Ethernet1* icon.
-1. Click *Rename* from the drop-down, and rename the adapter to: **Internal Network**
-1. If that doesn't work, select the *Ethernet1* icon and hit **F2** on your keyboard to rename as above.
-1. Right-click on the renamed *Internal Network* icon, and select *Properties* from the drop-down menu.
-1. In the new *Internal Network Properties* dialog box, find the *Internet Protocol Version 6 (TCP/IPv6)* entry and uncheck it.
-1. Now, look for the *Internet Protocol Version 4 (TCP/IPv4)* entry, select it (do not uncheck), and look for the **Properties** button just below and click it.
-1. In the new *Internet Protocol Version 4 (TCP/IPv4) Properties* dialog box, select the *Use the following IP address:* radio button.
-1. In the fields directly below, enter the following:
-    1. IP address: **10.0.*UID*.1**
-
-          > *UID* is a placeholder. In Blackboard in Grades, there is a UID column. Each student has been assigned a unique ID number for this course. You will use that number in the address above.
-          >
-          > For example, if my UID on Blackboard is *40*, then my address in the step above is **10.0.40.1**. (Yours will be different!)
-
-    1. Subnet mask: **255.255.255.0**
-    1. Leave all other fields blank.
-    1. Click **OK**.
-    1. Back in the *Internal Network Properties* dialog box, click **Close**.
-    1. Switch back to the *Server Manager > Local Server* application, and hit the *Refresh* icon. (It's the icon that looks like a music shuffle symbol to the left of the flag icon at the top right.)
-    1. You should now see: **Internal Network 10.0.*UID*.1**
-    1. Go back to the *Network Connections* window, and find the other adapter icon. (Likely called *Ethernet0*)
-    1. Rename this to: **External Network**
-    1. Go back to *Server Manager > Local Server*, refresh, and confirm you can see the new *External Network* name.
-    1. If you do, you're done!
+1. Once all updates are complete, restart your VM if asked, then move onto the next section.
 
 ### Part 6: Internet Connectivity Check w/Edge
 
@@ -459,6 +423,8 @@ Activating Windows unlocks certain settings and features. Since you've used your
 
 A critical part of a security-conscious mindset is running regular updates. **This is NOT something you do only once at the start of installation.** You should be running these regularly to keep up to date with security fixes and zero-day exploits.
 
+> **IMPORTANT:** If Windows Update fails with errors, you may have Internet connectivity issues. Ask your professor for help!
+
 1. In the *SConfig* application, select Option 5 (*Update settings*). Use your keyboard.
 1. In the new *Update setting* screen, enter **5** (*Opt-in to Microsoft Update*) and hit **Enter** to confirm.
 1. The next screen will ask you confirm again. Enter **y** and hit **Enter** to continue. (Then, hit **Enter** again.)
@@ -471,32 +437,4 @@ A critical part of a security-conscious mindset is running regular updates. **Th
 1. After updates are complete, go through Steps 4-6 again. Do so until the system tells you there are no new updates. (It may take a few cycles to get them all.)
 1. When complete, shut down *srv2*. Use the on-screen menu options in *SConfig* to do so.
 
-### Part 5: Configuring Network Interface Card 2 (NIC2)
-
-We have two network interfaces on this virtual machine. NIC1 is set to DHCP and is our Internet connection. We don't touch that one. It's configuration is automatic.
-
-**However, NIC2 requires manual configuration.** Why do we need NIC2? It's what we'll be using to communicate with *srv1* and our other VMs.
-
-1. In the *SConfig* application, select Option 8 (*Network Settings*).
-1. In the *Network settings* screen, look for the unconfigured network adapter. It's likely the second one, and will likely have an address starting with **169.** If you aren't sure, ask your professor for help.
-1. Select that adapter using the menu option and your keyboard, and hit **Enter** to confirm.
-1. In the *Network adapter settings* screen, select Option 4 (*Rename network adapter*).
-1. Enter the new network adapter name in the field: **Internal Network**
-1. Hit **Enter** twice to confirm.
-1. When the *Network adapter settings* screen refreshes, you should see the new name. If not, repeat Steps 4-6 again, or ask for help from your professor.
-1. Now, select Option 1 (*Set network adapter address*).
-1. Select **S** for *Static IP address*.
-1. Enter your new IP address for this machine. It will take the following form: **10.0.*UID*.2**
-
-    > *UID* is a placeholder. In Blackboard in Grades, there is a UID column. Each student has been assigned a unique ID number for this course. You will use that number in the address above.
-    >
-    > For example, if my UID on Blackboard is *40*, then my address in the step above is **10.0.40.2**. (Yours will be different!)
-
-1. In the *Enter subnet mask* field, stick with the default by keeping the field blank and hitting **Enter**.
-1. In the *Enter default gateway* field, use: **10.0.*UID*.1**
-1. Hit **Enter** once the configuration has completed.
-1. Back in the *Network adapter settings* screen, confirm your changes from above. You should see them all displayed. If not, repeat the missing steps or as your professor for help.
-1. If everything looks good, hit **Enter** to go back to the main menu screen.
-1. Go back into *Network settings* and change the other network adapter's name to: **External Network**
-1. Make no other changes to this adapter.
-1. You're done!
+That's it! Now you're done. Congratulations!
