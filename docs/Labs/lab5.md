@@ -7,25 +7,13 @@ description: Lab 5 - Implementing DHCP
 
 # Lab 5 - Implementing DHCP
 
-## Investigation 1: Disabling VMware's NAT DHCP
+When you first created your two server VMs, you selected the built-in VMware NAT network. Along with providing Internet connectivity, it also provides a DHCP server to automatically assign each virtual machine its network information. (IP address, subnet mask, default gateway, DNS address)
 
-When you first created your three VMs, you selected the built-in VMware NAT network. Along with providing Internet connectivity, it also provides a DHCP server to automatically assign each virtual machine its network information.
+In this investigation, we are going to be rolling our own DHCP server on *srv1* and provide network information for *srv2*, *client1*, and *client2*.
 
-We are going to be rolling our own DHCP server on *srv1*. This means we have to **disable** the DHCP server in VMware Workstation. Otherwise, we'll have two DHCP servers by the end of this lab, causing all kinds of conflicts.
+We'll then switch those VMs from static to DHCP configuration to use the DHCP server on *srv1*!
 
-Your *srv2* and *client1* VMs will temporarily lose IP information until we complete this lab, but since we set *srv1* to static network configuration in Lab 3, it won't be affected!
-
-Let's disable the VMware DHCP server.
-
-### Part 1: Disable VMware DHCP
-
-1. Open **Virtual Network Editor** in VMware Workstation (needs to be run as Administrator).
-2. Find your NAT network (usually VMnet8).
-3. Uncheck or clear the DHCP option for this network.
-4. Save/apply your changes.
-5. You may need to restart your VMs or even the VMware NAT service for the change to take effect.
-
-## Investigation 2: Installing the DHCP Server Role on *srv1*
+## Investigation 1: Installing the DHCP Server Role on *srv1*
 
 ### Part 1: Add the DHCP Server Role
 
@@ -50,7 +38,7 @@ Let's disable the VMware DHCP server.
     1. Click **Commit**.
     2. Click **Close**.
 
-## Investigation 3: Configuring DHCP on srv1
+## Investigation 2: Configuring DHCP on srv1
 
 ### Part 1: Create a New IPv4 Scope
 
@@ -121,7 +109,7 @@ Normally, you'd only do this for other servers on your network and let basic cli
  6. Click **Add**.
  7. Verify your new reservation is there by looking inside the *Reservations* folder.
 
-## Investigation 4: Switching Clients to Use the New DHCP Server for DNS
+## Investigation 3: Switching Clients to Use the New DHCP Server for DNS
 
 Your *srv2* (Server Core) and *client1* (Windows 11) VMs are already set to receive their IP address via DHCP, but you previously set their DNS settings to point directly at *srv1* during Lab 3. Now that *srv1* is a fully working DHCP server, you’ll need to reset both VMs’ DNS settings to automatic so they get both their IP and DNS server from *srv1*.
 
@@ -179,7 +167,7 @@ ipconfig /all
 
 9. You should see your new IP address along with the same DNS address as before, but all supplied through DHCP.
 
-## Investigation 5: Testing DHCP Functionality
+## Investigation 4: Testing DHCP Functionality
 
 ### Part 1: Check Leases in DHCP Manager
 
