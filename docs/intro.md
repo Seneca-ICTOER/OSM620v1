@@ -43,8 +43,8 @@ The skills you develop here will stick with you because you’ll be the one doin
 ## Required Materials
 
 1. **Your Seneca-based Credentials** (username and password).
-3. **500 GB External SSD** or higher, using a USB-A or USB-C connection.
-4. [OSM620 Lab Logbook](/files/osm620-logbook.pdf) - A downloadable PDF template document to be printed out. This should be filled out as you complete each lab (handwritten). You can print this out and bring it to all tests.
+1. **500 GB External SSD** or higher, using a USB-A or USB-C connection.
+1. [OSM620 Lab Logbook](/files/osm620-logbook.pdf) - A downloadable PDF template document to be printed out. This should be filled out as you complete each lab (handwritten). You can print this out and bring it to all tests.
 
     > **NOTE:** If you've taken this class in a previous semester, you MAY NOT bring that version of the lab logbook to any testing.
 
@@ -76,11 +76,11 @@ This includes the following:
 * **It has a dark mode!** Click the Sun/Moon icon at the top of the screen to the left of the search bar to toggle it.
 * **A downloadable PDF version is available below.** However, content on this OER is subject to change without notice. When in doubt, redownload the PDF. The version below is always the latest one. (Your saved version may not be.)
 
-## PDF version of these notes:
+## PDF Version
 
-A pdf version of these notes can be found here:
+An up-to-date PDF version of these course notes can be found here: 
 
-[Downloadable PDF version](https://seneca-ictoer.github.io/OSM620/pdf/OSM620.pdf)
+> [Downloadable PDF version](https://seneca-ictoer.github.io/OSM620/pdf/OSM620.pdf)
 
 ## PDF Generator
 
