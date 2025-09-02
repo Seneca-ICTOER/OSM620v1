@@ -528,19 +528,3 @@ Name Protocol LocalPort
 > Your SSH connection will allow you to run the _sconfig_ Server Manager program and load it. However, many of it's functions fail over an SSH connection because it relies on background interactive processes that can't run on an SSH session. They must be run from the RDP connection, despite it _looking_ the same.  
 >
 > For an example of this, run `sconfig` from your SSH session and try to run Windows Updates. If it finds any and you try to install them, it will fail. This is an SSH+sconfig problem; run the same thing through RDP and it will work fine.
-
-## Investigation 5: Remote Management - Windows Server Core (srv2) with Visual Studio Code + SSH
-
-### Part 1 : Connecting to srv2 with Visual Studio Code
-
-(insert instructions on how to use the UI to connect, including saving the connection for future use)
-
-### Part 2: A Quick Tour of VS Code + Remote SSH
-
-(A brief tour of the three panes: File navigation, text editor, and PowerShell terminal)
-
-### Part 3: VS Code for Fun and Profit
-
-(Brief exercises having them do some file management with the navigation pane, opening and modifying a file, and then running a PowerShell command)
-
-(Insert caveat about most **sconfig** commands not working through SSH or VS Code, they must be done through RDP because of how interaction works.)
