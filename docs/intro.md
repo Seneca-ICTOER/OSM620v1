@@ -16,8 +16,8 @@ In OSM620, you’ll go far beyond clicking around in a desktop interface: you’
 
 This course gives you a deep, practical introduction to *Microsoft Windows Server 2025*, focusing on the real work that sysadmins do every day:
 
- * You’ll install, configure, and manage multiple servers and clients in a virtualized environment, using both graphical and command-line tools.
- * You’ll secure, network, and automate your systems—learning by doing, and sometimes by breaking (and fixing) things yourself.
+* You’ll install, configure, and manage multiple servers and clients in a virtualized environment, using both graphical and command-line tools.
+* You’ll secure, network, and automate your systems. Learning by doing, and sometimes by breaking (and fixing) things yourself.
 * By the end, you’ll have set up core infrastructure services (DNS, DHCP, routing, remote management, Active Directory, to name a few) and will be able to troubleshoot issues as they arise. Just like a real IT professional.
 
 Whether you’re aiming for a career in IT, cloud infrastructure, cybersecurity, or just want to know how things really work under the hood, OSM620 is your foundation.
@@ -65,23 +65,24 @@ To obtain a credit in this subject, a student must:
 
 * Satisfactorily complete all labs and assignments.
 * Achieve a weighted average of 50% or better for the tests.
- * Achieve an overall course grade of 50% or better.
+* Achieve an overall course grade of 50% or better.
 
 ## How To Use This Site
 
 This **Open Educational Resource** (OER) website has been designed for easy access, usability, and viewing on all devices.
 
 This includes the following:
+
 * **It automatically reformats for mobile devices**, including tablets and smartphones.
 * **It has a dark mode!** Click the Sun/Moon icon at the top of the screen to the left of the search bar to toggle it.
 * **A downloadable PDF version is available below.** However, content on this OER is subject to change without notice. When in doubt, redownload the PDF. The version below is always the latest one. (Your saved version may not be.)
 
 ## PDF Version
 
-An up-to-date PDF version of these course notes can be found here: 
+An up-to-date PDF version of these course notes can be found here:
 
 > [Downloadable PDF version](https://seneca-ictoer.github.io/OSM620/pdf/OSM620.pdf)
 
 ## PDF Generator
 
-The pdf version of these notes were created using pdf-prince plugin and Prince 14 which is available here: http://www.princexml.com/
+The pdf version of these notes were created using pdf-prince plugin and Prince 14 which is available here: <http://www.princexml.com/>
