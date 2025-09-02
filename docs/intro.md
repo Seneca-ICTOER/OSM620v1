@@ -85,4 +85,4 @@ An up-to-date PDF version of these course notes can be found here:
 
 ## PDF Generator
 
-The pdf version of these notes were created using pdf-prince plugin and Prince 14 which is available here: <http://www.princexml.com/>
+The pdf version of these notes were created using pdf-prince plugin and Prince 14 which is available here: [http://www.princexml.com/](http://www.princexml.com/)
