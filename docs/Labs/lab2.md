@@ -162,6 +162,9 @@ These will be Windows 11 client machines. Think of these as typical workstations
 * RAM: **4 GB**
 * CPU: **2 processors**
 * Storage: **64 GB**
+* NIC: **1** (default)
+* Security: **Enable Trusted Platform Module**
+* ISO: **Windows 11 Education**
 
 1. Drag and drop the *Microsoft Windows 11 ISO* file from Lab 1 onto the desktop of *srv1*. It should copy the file there. If it doesn't, ask your professor for help before continuing.
 1. Open the **Server Manager** application and go to **Tools > Hyper-V Manager**.
@@ -367,8 +370,9 @@ Create a second Hyper-V virtual machine with the following settings:
 * RAM: **4 GB**
 * CPU: **2 processors**
 * Storage: **64 GB**
+* NIC: **1** (default)
 * Security: **Enable Trusted Platform Module**
-* ISO: **Windows 11**
+* ISO: **Windows 11 Education**
 
 ### Part 2: Installing Windows 11 (*client2*)
 

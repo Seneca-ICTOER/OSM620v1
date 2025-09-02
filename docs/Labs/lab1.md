@@ -32,7 +32,7 @@ By the end of this lab, you will be able to:
 * Complete essential post-install tasks on each server.
 * Verify basic Internet connectivity prerequisites for later labs within each VM.
 
-### Minimium Requirements
+### Minimum Requirements
 
 Before beginning, you must have:
 
@@ -64,6 +64,8 @@ In this investigation, you will be downloading your Windows OS installation medi
 1. While the ISO file is downloading, click on **View Key**.
 1. Copy this key into a text file that you save locally on your personal computer or personal USB key. You will need this for the Server installation and for any reinstalls later in the semester. **Do not lose this key and do NOT share it with anyone!**
 1. Repeat steps 8-14 for the **Windows 11 Education** ISO and serial key. You will need that for later.
+
+> **Reminder:** Always store all serial keys in a secure location only you have access to.
 
 ## Investigation 2: Using VMware Workstation
 
@@ -162,6 +164,7 @@ Broadcom (formerly VMware) now requires account registration before you can down
 * CPU: **6 cores**
 * Storage: **250 GB**
 * Networking: **2 NICs**
+* ISO: **Windows Server 2025**
 
 ### Part 1: Setup Instructions
 
@@ -315,6 +318,7 @@ There are a ton of feature and privacy reasons *not* to use Microsoft Edge. Inst
 * CPU: **2 cores**
 * Storage: **250 GB**
 * Networking: **2 NICs**
+* ISO: **Windows Server 2025**
 
 ### Part 1: Setup Instructions
 
@@ -404,7 +408,7 @@ This one is fairly straight-forward. Having the proper time zone set (EST) is es
 
 The default name applied to your new server will be semi-randomized. For proper identification (and to not wonder which server you're on when you have several), we're going to change this.
 
-1. In the *SConfig* application, selection Option 2 (*Computer name*). Use your keyboard.
+1. In the *SConfig* application, select Option 2 (*Computer name*). Use your keyboard.
 1. In the new *Computer name* screen, enter your new computer name in the waiting text field: **srv2-SenecaUsername**
 1. Press **Enter** on your keyboard to confirm the change.
 1. The system now asks you about restarting. Enter **Y** to choose yes and hit the **Enter** key to confirm.
@@ -435,6 +439,6 @@ A critical part of a security-conscious mindset is running regular updates. **Th
 1. Once updates have begun, take a break while it does its thing. Grab a drink, make a sandwich, text a friend.
 1. If asked to restart, choose **yes**.
 1. After updates are complete, go through Steps 4-6 again. Do so until the system tells you there are no new updates. (It may take a few cycles to get them all.)
-1. When complete, shut down *srv2*. Use the on-screen menu options in *SConfig* to do so.
+1. When complete, shut down *srv2* safely. Use the on-screen menu options in *SConfig* to do so.
 
 That's it! Now you're done. Congratulations!
