@@ -60,7 +60,7 @@ html[data-theme='dark'] p img {
 }
 
 table {
-  margin-left: auto;
+  margin-left: 0 !important;
   margin-right: auto;
   width: fit-content;
 }
