@@ -67,13 +67,20 @@ To obtain a credit in this subject, a student must:
 * Achieve a weighted average of 50% or better for the tests.
  * Achieve an overall course grade of 50% or better.
 
+## How To Use This Site
 
+This **Open Educational Resource** (OER) website has been designed for easy access, usability, and viewing on all devices.
+
+This includes the following:
+* **It automatically reformats for mobile devices**, including tablets and smartphones.
+* **It has a dark mode!** Click the Sun/Moon icon at the top of the screen to the left of the search bar to toggle it.
+* **A downloadable PDF version is available below.** However, content on this OER is subject to change without notice. When in doubt, redownload the PDF. The version below is always the latest one. (Your saved version may not be.)
 
 ## PDF version of these notes:
 
 A pdf version of these notes can be found here:
 
-[pdf version of these notes](https://seneca-ictoer.github.io/OSM620/pdf/OSM620.pdf)
+[Downloadable PDF version](https://seneca-ictoer.github.io/OSM620/pdf/OSM620.pdf)
 
 ## PDF Generator
 
