@@ -198,7 +198,9 @@ Broadcom (formerly VMware) now requires account registration before you can down
         1. Select this new *srv1-cjohnson30* folder.
         1. Make sure you now see this change in the Location field.
 
-           > **Example:** *Z:/OSM620/Virtual Machines/srv1-cjohnson30*
+           > **Example:** *Z:\OSM620\Virtual Machines\srv1-cjohnson30*
+           >
+           > ![Fig 1. Proper VM location saving.](/img/srv1-save.png)
 
     1. Click **Next**.
 1. On the "Specify Disk Capacity" screen, do the following:
