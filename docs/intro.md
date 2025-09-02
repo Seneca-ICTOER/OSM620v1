@@ -16,7 +16,7 @@ Future location of OSM620 content.
 
 A pdf version of these notes can be found here:
 
-[pdf version of these notes](https://seneca-ictoer.github.io/OERTemplate/pdf/OERTemplate.pdf)
+[pdf version of these notes](https://seneca-ictoer.github.io/OSM620/pdf/OSM620.pdf)
 
 ## PDF Generator
 
