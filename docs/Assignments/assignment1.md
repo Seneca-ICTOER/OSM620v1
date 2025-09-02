@@ -6,3 +6,5 @@ description: TBD
 ---
 
 # Assignment 1
+
+To be released on Week 6.

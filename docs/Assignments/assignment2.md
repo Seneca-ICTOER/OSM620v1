@@ -6,3 +6,5 @@ description: TBD
 ---
 
 # Assignment 2
+
+To be released on Week 9.
