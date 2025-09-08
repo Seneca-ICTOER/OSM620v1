@@ -44,7 +44,7 @@ Before beginning, you must have:
 2. Read through the Week 1 slides, and have them handy as a reference for concepts.
 1. Working access to [portal.azure.com](https://portal.azure.com) with your Seneca credentials.
 1. Access to VMware Workstation (Seneca lab PC or personal PC meeting course specs).
-1. Your external SSD with at least 250 GB of dedicated space for this course.
+1. Your external SSD with at least 500 GB of dedicated space for this course.
 1. Your assigned **UID** (from Blackboard Grades) handy for addressing.
 1. Your physically printed **OSM620 Lab Logbook** for notetaking and saving commands.
 1. Optional, but recommended: Caffeine delivery system.
@@ -113,7 +113,7 @@ To run this course and its tech on a personal computer, it must meet the followi
 
 1. CPU: **6-core Intel/AMD**
 1. RAM: **32 GB**
-1. Storage: **250 GB SSD free**, *reserved for this course* (if external, USB3.0 or higher)
+1. Storage: **500 GB SSD free**, *reserved for this course* (if external, USB3.0 or higher)
 1. Internet connection: **High speed, stable**
 
 > **CPU architecture is vital.** You *cannot* use ARM or SnapDragon based computers for this course. This includes all Apple Silicon computers (M1/M2/M3/M4, etc).
