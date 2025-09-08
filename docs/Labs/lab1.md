@@ -27,10 +27,14 @@ By the end of this lab, you will be able to:
 * Acquire **Windows Server 2025 Datacenter** installation media and your individual product key from Azure Education and store them securely.
 * Access **VMware Workstation** on a Seneca lab PC (locally or via MyApps) or install it on a personal PC.
 * Provision two VMs with the required specs and networks:
-  * srv1-`senecausername` (GUI) with NAT + VMnet10 NICs.
-  * srv2-`senecausername` (Core) with NAT + VMnet10 NICs.
+  * srv1-`senecaUsername` (GUI) with NAT + VMnet10 NICs.
+  * srv2-`senecaUsername` (Core) with NAT + VMnet10 NICs.
 * Complete essential post-install tasks on each server.
 * Verify basic Internet connectivity prerequisites for later labs within each VM.
+
+Here's a basic flowchart of what we'll be doing with Lab 1 to give you a visual overview:
+
+> ![Fig 1. Lab 1 - Flowchart Visualization](/img/lab1-flowchart.png)
 
 ### Minimum Requirements
 
@@ -166,6 +170,10 @@ Broadcom (formerly VMware) now requires account registration before you can down
 * Networking: **2 NICs**
 * ISO: **Windows Server 2025**
 
+#### Flowchart Visualization of Investigation 3
+
+> ![Fig 2. Lab 1, Investigation - Flowchart Visualization](/img/lab1-investigation3-flowchart.png)
+
 ### Part 1: Setup Instructions
 
 1. In the main window, you should see a large + symbol icon titled **Create a New Virtual Machine**. Click it.
@@ -200,7 +208,7 @@ Broadcom (formerly VMware) now requires account registration before you can down
 
            > **Example:** *Z:\OSM620\Virtual Machines\srv1-cjohnson30*
            >
-           > ![Fig 1. Proper VM location saving.](/img/srv1-save.png)
+           > ![Fig 3. Proper VM location saving.](/img/srv1-save.png)
 
     1. Click **Next**.
 1. On the "Specify Disk Capacity" screen, do the following:
@@ -242,6 +250,12 @@ Broadcom (formerly VMware) now requires account registration before you can down
 ## Investigation 4: Post-Installation Tasks (*srv1*)
 
 After installing a new operating system, there are always a number of **post-installation tasks** to complete. **These aren't optional!**
+
+#### Overview Check-In: *srv1* Internet Connection
+
+Let's take a quick look at an overview of our NAT Internet connection as it currently stands. It's important to understand how everything is connected.
+
+> ![Fig 4. Lab 1, Investigation 4 - Network Diagram](/img/lab1-netdiag-srv1.png)
 
 ### Part 1: Applying Time Zone Settings
 
@@ -322,6 +336,10 @@ There are a ton of feature and privacy reasons *not* to use Microsoft Edge. Inst
 * Networking: **2 NICs**
 * ISO: **Windows Server 2025**
 
+#### Flowchart Visualization of Investigation 5
+
+> ![Fig 5. Lab 1, Investigation 5 - Flowchart Visualization](/img/lab1-investigation5-flowchart.png)
+
 ### Part 1: Setup Instructions
 
 1. In the main window, you should see a large + symbol icon titled **Create a New Virtual Machine**. Click it.
@@ -394,6 +412,12 @@ There are a ton of feature and privacy reasons *not* to use Microsoft Edge. Inst
 ## Investigation 6: Post-Installation Tasks (*srv2*)
 
 After installing a new operating system, there are always a number of **post-installation tasks** to complete. **These aren't optional!**
+
+### Overview Check-In: srv2 Internet Connection
+
+Let's take a quick look at an overview of our NAT Internet connection as it currently stands since our newest server addition. It's important to understand how everything is connected as we continue to build out our VMs.
+
+> ![Fig 6. Lab 1, Investigation 6 - Network Diagram](/img/lab1-netdiag-srv2.png)
 
 ### Part 1: Applying Time Zone Settings
 
