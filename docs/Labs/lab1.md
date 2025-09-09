@@ -468,3 +468,19 @@ A critical part of a security-conscious mindset is running regular updates. **Th
 1. When complete, shut down *srv2* safely. Use the on-screen menu options in *SConfig* to do so.
 
 That's it! Now you're done. Congratulations!
+
+## Lab 1 Sign-Off
+
+It is extremely important that you complete Lab 1 correctly as these Windows Server installs will be the platform on which the rest of the course will be completed.
+
+When you have completed Lab 1, ask your instructor to come and check your installation. This must be done in class. They will ask you to complete a set of tasks/commands. If everything has been completed correctly, your instructor will mark your Lab 1 as complete.
+
+### Sign-Off Checklist
+1. Open VMware Hardware Settings window for *srv1* and *srv2*.
+1. *srv1* is currently running and logged in.
+1. *srv2* is currently running and logged in.
+1. No new updates available for both VMs.
+1. Server names have been applied correctly.
+1. Time zone is in EST.
+1. Servers have been properly activated.
+1. *srv1*: Firefox installed and open.
