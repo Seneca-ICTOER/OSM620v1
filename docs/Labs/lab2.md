@@ -4,8 +4,36 @@ title: Lab 2 - Hyper-V, NAT, and Windows Clients
 sidebar_position: 2
 description: Lab 2 - Hyper-V, NAT, and Windows Clients
 --- 
-
 # Lab 2 - Hyper-V, NAT, and Windows Clients
+
+## Lab Preparations
+
+### Purpose of Lab 2
+
+In this lab, you’ll move beyond basic VM deployment and learn to create nested virtualization environments. This is a crucial skill for modern sysadmins and cloud architects. You’ll enable the Hyper-V role on your Windows Server, build a secure internal network using Hyper-V switches, and deploy Windows 11 client VMs within your existing server VM. You’ll also set up NAT and routing, allowing your nested clients to access the internet safely through your server.
+
+By the end, you’ll have a working mini-enterprise: one physical computer running a server VM, which itself is hosting client VMs. Just like real-world cloud and enterprise setups! You’ll gain hands-on experience with Hyper-V, RRAS, and NAT, and build a technical foundation for future labs in DHCP, DNS, and security.
+
+### Objectives
+
+By the end of this lab, you will be able to:
+  * Enable the Hyper-V role on a Windows Server 2025 VM and configure virtual networking.
+  * Build and configure a Hyper-V External Virtual Switch bound to a specific NIC.
+  * Set up Routing and Remote Access (RRAS) for network address translation (NAT) between internal and external networks.
+  * Deploy Windows 11 client VMs inside Hyper-V, configuring hardware and storage as needed.
+  * Assign static IPs and ensure that internal client VMs can reach the internet via NAT on your server.
+  * Practice real-world sysadmin tasks: managing nested VMs, routing, and internal networks.
+
+Minimum Requirements
+
+Before beginning, you must have:
+  1.	Completed Lab 1 in full, with both srv1 and srv2 working, activated, and updated.
+  2.	Attended the Week 2 lecture, or carefully read through the Week 2 slides.
+  3.	Downloaded the Windows 11 Education ISO and your product key (from Lab 1).
+  4.	Access to VMware Workstation and your external SSD with at least 200 GB of free space remaining.
+  5.	Your printed OSM620 Lab Logbook for notetaking and command recording.
+  6.	A basic understanding of server roles, virtual networking, and Windows installation processes.
+  7.	Caffeine or snack of your choice: nested virtualization can be a long process!
 
 ## Investigation 1: Hyper-V Role Installation and Switch Setup *(srv1)*
 
@@ -386,3 +414,25 @@ Set this up exactly as you did with *client1*, with **two important changes**:
 Don't forget to run your **Post-Installation Tasks**! These are the same as for *client1*
 
 Once *client2* is installed and has a working Internet connection, you're done!
+
+## Lab 2 Sign-Off
+
+It’s essential to complete Lab 2 correctly, as the nested virtualization setup will be the core environment for all advanced labs. Everything you do from this point (DHCP, DNS, security, and domain controller work) will depend on this structure being solid and consistent.
+
+When you finish Lab 2, ask your instructor for a sign-off. Your instructor will check your configuration, verify networking, and confirm all VMs are working as required.
+
+Sign-Off Checklist
+  1.	Hyper-V role is installed and running on srv1.
+  2.	HQ Network (External Virtual Switch) exists and is bound to the correct NIC.
+  3.	RRAS (Routing and Remote Access) is installed and NAT is configured for the two networks:
+        1. External Network: Internet access (DHCP-assigned)
+        1. vEthernet (HQ Network): 10.0.UID.1/24
+  4.	client1 and client2 are both running inside Hyper-V, with the following:
+        1.	Static IPs set: 10.0.UID.11 and 10.0.UID.12, respectively.
+        1.	Default gateway set to 10.0.UID.1
+        1.	Both can access the internet (test by browsing to eff.org).
+        1.	Both have correct computer names set.
+        1.	Both have time zone set to EST.
+        1.	Both are fully updated via Windows Update.
+	5. Graceful shutdown: You can demonstrate safe start, shutdown, and reset procedures for Hyper-V VMs.
+	6. All relevant steps, commands, and decisions are recorded in your Lab Logbook.
