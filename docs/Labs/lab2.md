@@ -24,7 +24,7 @@ By the end of this lab, you will be able to:
   * Assign static IPs and ensure that internal client VMs can reach the internet via NAT on your server.
   * Practice real-world sysadmin tasks: managing nested VMs, routing, and internal networks.
 
-Minimum Requirements
+### Minimum Requirements
 
 Before beginning, you must have:
   1.	Completed Lab 1 in full, with both srv1 and srv2 working, activated, and updated.
