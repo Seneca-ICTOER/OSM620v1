@@ -369,6 +369,12 @@ Get-NetIPAddress -InterfaceAlias "Internal Network"
 
 If it has the proper 10.x.x.x IP address, well done! Move on to **Part 2**.
 
+If the network information if wrong, you can remove it and try again by running:
+
+```powershell
+Remove-NetIPAddress -InterfaceAlias "Internal Network" -AddressFamily IPv4
+```
+
 > Tip: To return to `sfconfig`, either run that command or type `exit`.
 
 
