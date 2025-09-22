@@ -332,7 +332,47 @@ In this part, we'll verify our work by connecting to the server using our Window
 
 In this investigation, we'll set up remote access to our Windows Server Core (srv2) so we can connect to it using your Windows 11 Client VM.
 
-### Part 1: Enabling Remote Desktop Connections
+### Part 1: Setting Up *srv2*'s NIC2 - Internal Network
+
+In this part, we'll rename the second NIC and then give it a 10.x.x.x address so we can use it to communicate with our other servers and clients.
+
+1. Login to *srv2*.
+1. In the `sfconfig` application, select Option 8 (Network Settings).
+1. You will have two network adapters. We're going to change their names for easier identification.
+1. Find the adapter that has the external network IP address. It's usually the first one in the list. If you're not sure, ask.
+1. Select that entry's number from the first column to go into it's options.
+1. In *Network Adapter Settings*, select Option 4 (Rename network adapter).
+1. Type the following and hit Enter: `External Network`
+8. Repeat steps 3-7 for the second network adapter, and call it: `Internal Network`
+9. Go back to the main `sfconfig` screen.
+10. Select Option 15 to exit to the command line.
+
+We're now going to apply network settings to our Internal Network adapter using PowerShell.
+
+11. First, confirm the names of your adapters with the following command:
+
+```powershell
+Get-NetAdapter
+```
+
+12. Now, assuming they look correct, run the following:
+
+```powershell
+New-NetIPAddress -InterfaceAlias "Internal Network" -IPAddress 10.0.UID.2 -PrefixLength 24
+```
+
+13. Double-check your work by running:
+
+```powershell
+Get-NetIPAddress -InterfaceAlias "Internal Network"
+```
+
+If it has the proper 10.x.x.x IP address, well done! Move on to **Part 2**.
+
+> Tip: To return to `sfconfig`, either run that command or type `exit`.
+
+
+### Part 2: Enabling Remote Desktop Connections
 
 In this part, we'll turn on Remote Desktop (RDP) on the Core server (_srv2_).
 
@@ -347,7 +387,7 @@ In this part, we'll turn on Remote Desktop (RDP) on the Core server (_srv2_).
 9. If not, go through Steps 4-9 again.
 10. If yes, press **Enter** without entering any options to go back to the main screen without making any changes.
 
-### Part 2: Adding a RDP Firewall Rules
+### Part 3: Adding a RDP Firewall Rules
 
 In this part, we'll check that the RDP firewall rules have been enabled.
 
@@ -376,7 +416,7 @@ RemoteDesktop-UserMode-In-UDP Remote Desktop - User Mode (UDP-In)     Any    Tru
 3. Check that your output matches the above. This is the same as on _srv1_, just at the command line. Notice with are enabled and which are not?
 4. If you need to, grab the IP address for _srv2_ here by running this command in PowerShell: `ipconfig`
 
-### Part 3: Connecting to Windows Server (srv2) from Windows 11 via RDP
+### Part 4: Connecting to Windows Server (srv2) from Windows 11 via RDP
 
 In this part, we'll verify our work by connecting to _srv2_ using our Windows 11 client VM. This is essentially the same as our instructions for _srv1_, but with a different IP address.
 
@@ -392,12 +432,6 @@ In this part, we'll verify our work by connecting to _srv2_ using our Windows 11
 10. To quit the remote session, find the floating HUD at the top of the screen with the IP address and click on the **X** icon.
 11. Note: **This will not shutdown your _srv2_ VM. It only ends your remote session.**
 12. Note 2: A remote session will automatically lock your VM's direct session. You will need to unlock it again when you go back to it through VMware Workstation directly.
-
-### Part 4: File system navigation
-
-
-### Part 5: Editing a file
-
 
 ## Investigation 4: Remote Management - Windows Server Core (srv2) with SSH
 
@@ -512,9 +546,9 @@ Name Protocol LocalPort
 ### Part 3: Connecting to Windows Server Core (srv 2) from Windows 11 via SSH
 
 1. On your Windows 11 Client (_client1_), open Command Prompt.
-2. Enter the following command: `ssh Administrator@srv1ipaddress` (Where _srv2ipaddress_ is your actual _srv2_ IP address.)
+2. Enter the following command: `ssh Administrator@srv2ipaddress` (Where _srv2ipaddress_ is your actual _srv2_ IP address.)
 
-    > Example: `ssh Administrator@10.0.40.1`
+    > Example: `ssh Administrator@10.0.40.2`
 
 3. The first time you connect, a prompt will ask you if you are sure. Type **yes** and hit **Enter**.
 4. Type your password when asked and hit **Enter**.
