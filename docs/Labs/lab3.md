@@ -80,62 +80,61 @@ It should be noted that the Windows Defender firewall _should not be your only d
 
 These work together, though we will only be focusing (mostly) on the Windows firewall in this course.
 
-### Part 1: Windows Server GUI (srv1) - Configuring the IIS Role
+### Part 1: Windows Server GUI (srv1) - Testing the IIS Role
 
-On this server, we will configure our first server role, IIS (a web server). This will be used only for testing connectivity between your other VMs and working with the firewalls.
+On this server, we will take a look at a role that was installed in our last lab as part of RRAS, **IIS (a web server)**. This will be used only for testing connectivity between your other VMs and working with the firewalls.
 
-We will spend more time with Server Roles in a later lab. For now, simply follow the instructions.
+This role is already running after Lab 2 and doesn't need any configuration. We'll be using it later to test network connections and firewall rules.
 
-1. In the _Server Manager_ application, in the menu bar on the left side of the window, click on **Local Server**.
-2. Now, at the top right of the window, click **Manage** > **Add Roles and Features**.
-3. The _Add Roles and Features Wizard_ dialogue box pops up.
-4. On the first page, _Before you begin_, check the box next to **Skip this page by default**, then click **Next**. This allows us to skip this page any other time we want to add a role or feature in later labs.
-5. On the _Installation Type_ page, select **Role-based or feature-based installation** and click **Next**.
-6. On the _Server Selection_ page, select **Select a server from the server pool**, then **srv1-username**, and finally **Next.**
-1. Note: In later labs, we'll be able to target other servers for remotely installing features. Here, we're selecting the local server.
-7. On the _Server Roles_ page, this is where we'll select our IIS web server. Scroll through the listing until you find **Web Server (IIS)**, check the box next to it, and click **Next**.
-8. A secondary dialogue box, _Add features that are required for Web Server (IIS)?_, pops up. Make sure the **Include management tools (if applicable)** box is checked, then click **Add Features**.
-9. Back in the _Server Roles_ page, click **Next** again.
-10. On the _Features_ page, leave all settings as their defaults and click **Next**.
-11. On the _Web Server Role (IIS)_ page, click **Next**.
-12. On the _Role Services_ page, keep all defaults and click **Next**.
-13. Finally, on the _Confirmation_ page, click **Install**.
-14. This may take a few minutes. Please be patient.
-15. When the wizard has the status message _"Installation succeeded on srv1."_, setup is complete and you can click **Close**.
-16. Verify your local web server works by opening _Firefox_ and going to the following address: **127.0.0.1**
-17. If you see the **Internet Information Services** splash page, you've successfully completed the installation and can move on to the next part!
+Let's test it locally (from within the same machine). We'll do so by pointing a web browswer at ourselves.
 
-(Insert instructions for loading this page on the Windows 11 client to test connectivity.)
-(Insert instructions for loading this page on Windows Server Core if possible, even just unrendered HTML code.)
+1. Inside *srv1*, open Firefox.
+2. Navigate to: **http://127.0.0.1**
+
+If you see the *Internet Information Services* splash page, then this role is working. If you don't, ask your professor for help.
+
+> ℹ️ **A note about servers, clients, Server Roles, and IIS:**  
+> The IIS Server Role installs a **web server** inside of *srv1*. A web server is one that serves many clients (web browsers). This one-to-many concept is known as the client-server model in IT spaces. Other VMs and computers can also access this test web page (though it is blocked by default, see the Investigations below).
 
 ### Part 2: Testing VM Network Connectivity
 
 As part of your Lab 1 environment setup, you tested your connection to the Internet from each of your 3 virtual machines.
 
-It's now time to test if we can use each VM to connect to the others.
+It's now time to test if we can use each VM to connect to *each other*.
 
 1. On your Windows Server GUI (srv1) VM, open Command Prompt.
-2. Grab this VM's IP address with the following command and write it down: `ipconfig`
-3. On your Windows Client (client 1) VM, open Command Prompt.
-4. Enter the following command to test our ability to talk to srv1: `ping "srv1-ipaddress"` where _srv1-ipaddress_ is the IP address from Step 2.
-1. Example: `ping 192.168.1.14`
-5. It doesn't work, does it? That's normal at this stage and we'll fix it below. For now, we'll try connecting to our web server on srv1. That should show us the two VMs can talk to each other.
-6. Open _Firefox_ on your **Windows 11 Client (client1)** and use the IP address from Step 2 (your srv1 IP address) as the URL.
-1. Example: `http://192.168.1.14`
-7. Can you see the IIS splash page that you saw in Part 1, Step 17? If so, you have connectivity!
-8. Continue to Part 3.
+2. Grab this VM's **Internal Network** IP address with the following command and write it down: `ipconfig`
+
+    > Remember, your *Internal Network* is the non-Internet network you created with the 1**0.0.`UID`.1** address. We're running ipconfig to confirm it's still there.
+
+3. On your **Windows Client (client 1) VM**, open Command Prompt.
+4. Enter the following command to test our ability to talk to *srv1*: `ping "srv1-ipaddress"` where _srv1-ipaddress_ is the IP address from Step 2.
+
+      > Example: `ping 10.0.40.1`
+
+5. It doesn't work, does it? That's normal at this stage and we'll fix it below. For now, we'll try connecting to our web server on *srv1*. That should show us the two VMs can talk to each other.
+6. Open _Firefox_ on your **Windows 11 Client (client1)** and use the IP address from Step 2 (your *srv1* IP address) as the URL.
+
+      > Example: `http://10.0.40.1`
+
+7. Can you see the IIS splash page that you saw in *Investigation 1, Part 1, Step 2*? If so, you have connectivity!
+8. Continue to **Part 3**.
 
 ### Part 3: Windows Server GUI (srv1) - Applying Firewall Rules
 
-We will now apply our security-conscious policy by configuring our firewall on this server.
+We will now apply our security-conscious policy by configuring the firewall on this server.
 
-At the moment, the server's firewall is configured using defaults. As mentioned above, defaults are a security risk as they are known to everyone and can be used against you. If an attacker _doesn't_ know your configuration, it's harder for them to know what's open and what's not and how to attack.
+At the moment, the server's firewall is configured using defaults. As mentioned above, **defaults are a security risk** as they are known to everyone and can be used against you. If an attacker _doesn't_ know your configuration, it's harder for them to know what's open and what's not and how to attack.
 
-As you saw from Part 2, ping between client1 and srv1 didn't work. This is because, by default, the ability to ping a server is turned off. A ping (a type of ICMP packet) is typically used to see if you can get a response from a server. Having a server respond let's an attacker know there's a machine there that they can then try to break into.
+As you saw from **Part 2**, ping between *client1* and *srv1* didn't work.
+
+By default, the ability to ping a server is turned off. A ping (a type of ICMP packet) is typically used to see if you can get a response from a server. Having a server respond let's an attacker know there's a machine there that they can then try to break into.
+
+  > **Imagine a burglar knocks on a random brick wall (sends a ping).** If you (the server) knock back (send a ping reply), the burglar now knows there's a person there who probably has some nice stuff! Don't knock back, and the burglar has no idea what's on the other side of that wall and will move on.
 
 We want to turn on ping so we can test connections between our machines, but we have to be careful. Turning that on through the firewall too broadly opens us up to that vulnerability.
 
-We are going to turn it on _only_ for our local network. Our VMs will be allowed to ping each other, but anything outside of our subnet (192.168.1.0/24) can't. Best of both worlds.
+We are going to turn it on _only_ for our local network. Our VMs will be allowed to ping each other, but anything outside of our subnet (10.0.`UID`.0/24) can't. Best of both worlds.
 
 To do this, we're going to work with the **Windows Defender Firewall** on srv1.
 
@@ -185,12 +184,12 @@ To do this, we're going to work with the **Windows Defender Firewall** on srv1.
 
 Let's apply the same incoming ping firewall rule to our Server Core machine so we can check it's network connectivity as well.
 
-1. Login to your Server Core (srv2) machine.
+1. Login to your Server Core *(srv2)* machine.
 2. The _sfconfig_ text-based application automatically launches.
-3. Select option 8 to find this machine's IP address. Write it down.
-4. Back in your Windows 11 Client (client1), try to ping this address. Does it work?
-5. Just as in srv1, it doesn't.
-6. Go back to srv2.
+3. Select option 8 to find this machine's **Internal Network** IP address. Write it down.
+4. Back in your Windows 11 Client (*client1*), try to ping this address. Does it work?
+5. Just as in *srv1*, it doesn't.
+6. Go back to *srv2*.
 7. If you're still in the _Network settings_ page, leave the field blank and hit **Enter** to go back to the main screen.
 8. Select option 15 to exit to PowerShell.
 9. As there's no GUI, we need to use PowerShell for firewall management.
@@ -252,9 +251,9 @@ Core Networking Diagnostics - ICMP Echo Request (ICMPv4-In) Private, Public    T
 ```
 
 23. Now, let's test our ping. Switch over to your Windows 11 Client (client1).
-24. Open a Command Prompt window, and run the following command: `ping srv2-ipaddress` (Refer to Part 3, Step 3).
+24. Open a Command Prompt window, and run the following command: `ping srv2-ipaddress` (Refer to *Part 3, Step 3*).
 25. Does it work?
-26. It if does, congratulations! You've just enabled ping for connectivity checking to _srv2_ and gone through your first foray into the PowerShell!
+26. **It if does, congratulations!** You've just enabled ping for connectivity checking to *srv2* and gone through your first foray into the PowerShell!
 
 ### Part 5: Windows Client (client1) - Applying Firewall Rules
 
@@ -274,9 +273,9 @@ Finally, let's enable ping on our Windows Client machine.
 10. Open a _Command Prompt_ window and run the following to get your client's IP address: `ipconfig`
 11. Switch to your _Server Core (srv2)_ machine.
 12. In PowerShell, run the following command: `ping client1-ipaddress` (Where client1-ipaddress is the address from Step 10.)
-1. Example: `ping 192.168.1.15`
+1. Example: `ping 10.0.40.11`
 13. Does it work?
-14. It if does, congratulations! You've just enabled ping for connectivity checking to _client1_ and have full connectivity checking for your entire environment! This will become _**very**_ handy in Labs 3-4.
+14. **It if does, congratulations!** You've just enabled ping for connectivity checking to _client1_ and have full connectivity checking for your entire environment! This will become _**very**_ handy in Labs 3-4.
 
 ## Investigation 2: Remote Management - Windows Server GUI (srv1)
 
@@ -396,11 +395,9 @@ In this part, we'll verify our work by connecting to _srv2_ using our Windows 11
 
 ### Part 4: File system navigation
 
-(A primer on file system navigation in Windows. Have them create a few directories and empty files using CLI only.)
 
 ### Part 5: Editing a file
 
-(This is where we do the single example of using PowerShell to modify a text file.)
 
 ## Investigation 4: Remote Management - Windows Server Core (srv2) with SSH
 
@@ -516,10 +513,12 @@ Name Protocol LocalPort
 
 1. On your Windows 11 Client (_client1_), open Command Prompt.
 2. Enter the following command: `ssh Administrator@srv1ipaddress` (Where _srv2ipaddress_ is your actual _srv2_ IP address.)
-1. Example: `ssh Administrator@192.168.1.15`
+
+    > Example: `ssh Administrator@10.0.40.1`
+
 3. The first time you connect, a prompt will ask you if you are sure. Type **yes** and hit **Enter**.
 4. Type your password when asked and hit **Enter**.
-1. Note: You will _not_ see asterisks or other characters as you type. **This is normal.** It is taking your keyboard input. It may take you a few tries to get used to it.
+    > ℹ️ **Note:** By default, You will _not_ see asterisks or other characters as you type. **This is normal.** It is taking your keyboard input. It may take you a few tries to get used to it.
 5. Once logged in, you are now on _srv2_'s Command Prompt environment.
 6. To get back into PowerShell (which you should), run: `powershell`
 7. It is **not** recommended to run the _sconfig_ program over an SSH connection. If you need to use the _sconfig / Server Manager_ text-based program, connect through your RDP connection in Part 1.
