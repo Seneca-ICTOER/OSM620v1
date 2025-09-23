@@ -89,7 +89,7 @@ This role is already running after Lab 2 and doesn't need any configuration. We'
 Let's test it locally (from within the same machine). We'll do so by pointing a web browswer at ourselves.
 
 1. Inside _srv1_, open Firefox.
-2. Navigate to: **<http://127.0.0.1>**
+2. Navigate to: **http://127.0.0.1**
 
 If you see the _Internet Information Services_ splash page, then this role is working. If you don't, ask your professor for help.
 
@@ -577,9 +577,9 @@ When you finish Lab 3, ask your instructor for a sign-off.
 
 On _client1_:
 
-1. Ping _srv1_
-1. Ping _srv2_
-1. SSH into _srv2_
-1. RDP into _srv1_
+1. Ping *srv1*
+1. Ping *srv2*
+1. SSH into *srv2*
+1. RDP into *srv1*
 1. In Firefox, load the IIS test page at: **10.0.`UID`.1**
 1. In Firefox, test your Internet connection by loading: **eff.org**
