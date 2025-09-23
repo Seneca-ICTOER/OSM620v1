@@ -425,11 +425,11 @@ Sign-Off Checklist
   1.	Hyper-V role is installed and running on srv1.
   2.	HQ Network (External Virtual Switch) exists and is bound to the correct NIC.
   3.	RRAS (Routing and Remote Access) is installed and NAT is configured for the two networks:
-        1. External Network: Internet access (DHCP-assigned)
-        1. vEthernet (HQ Network): 10.0.UID.1/24
+        1. External Network: **Internet access (DHCP-assigned)**
+        1. vEthernet (HQ Network): **10.0.`UID`.1/24**
   4.	client1 and client2 are both running inside Hyper-V, with the following:
-        1.	Static IPs set: 10.0.UID.11 and 10.0.UID.12, respectively.
-        1.	Default gateway set to 10.0.UID.1
+        1.	Static IPs set: **10.0.UID.11** and **10.0.UID.12**, respectively.
+        1.	Default gateway set to **10.0.UID.1**
         1.	Both can access the internet (test by browsing to eff.org).
         1.	Both have correct computer names set.
         1.	Both have time zone set to EST.

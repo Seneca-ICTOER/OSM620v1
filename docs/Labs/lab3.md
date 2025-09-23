@@ -80,7 +80,52 @@ It should be noted that the Windows Defender firewall _should not be your only d
 
 These work together, though we will only be focusing (mostly) on the Windows firewall in this course.
 
-### Part 1: Windows Server GUI (srv1) - Testing the IIS Role
+### Part 1: Setting Up _srv2_'s NIC2 - Internal Network
+
+In this part, we'll rename the second NIC and then give it a 10.x.x.x address so we can use it to communicate with our other servers and clients.
+
+1. Login to _srv2_.
+1. In the `sfconfig` application, select Option 8 (Network Settings).
+1. You will have two network adapters. We're going to change their names for easier identification.
+1. Find the adapter that has the external network IP address. It's usually the first one in the list. If you're not sure, ask.
+1. Select that entry's number from the first column to go into it's options.
+1. In _Network Adapter Settings_, select Option 4 (Rename network adapter).
+1. Type the following and hit Enter: `External Network`
+8. Repeat steps 3-7 for the second network adapter, and call it: `Internal Network`
+9. Go back to the main `sfconfig` screen.
+10. Select Option 15 to exit to the command line.
+
+We're now going to apply network settings to our Internal Network adapter using PowerShell.
+
+11. First, confirm the names of your adapters with the following command:
+
+```powershell
+Get-NetAdapter
+```
+
+12. Now, assuming they look correct, run the following:
+
+```powershell
+New-NetIPAddress -InterfaceAlias "Internal Network" -IPAddress 10.0.UID.2 -PrefixLength 24
+```
+
+13. Double-check your work by running:
+
+```powershell
+Get-NetIPAddress -InterfaceAlias "Internal Network"
+```
+
+If it has the proper 10.x.x.x IP address, well done! Move on to **Part 2**.
+
+If the network information if wrong, you can remove it and try again by running:
+
+```powershell
+Remove-NetIPAddress -InterfaceAlias "Internal Network" -AddressFamily IPv4
+```
+
+> Tip: To return to `sfconfig`, either run that command or type `exit`.
+
+### Part 2: Windows Server GUI (srv1) - Testing the IIS Role
 
 On this server, we will take a look at a role that was installed in our last lab as part of RRAS, **IIS (a web server)**. This will be used only for testing connectivity between your other VMs and working with the firewalls.
 
@@ -96,7 +141,7 @@ If you see the _Internet Information Services_ splash page, then this role is wo
 > ℹ️ **A note about servers, clients, Server Roles, and IIS:**  
 > The IIS Server Role installs a **web server** inside of _srv1_. A web server is one that serves many clients (web browsers). This one-to-many concept is known as the client-server model in IT spaces. Other VMs and computers can also access this test web page (though it is blocked by default, see the Investigations below).
 
-### Part 2: Testing VM Network Connectivity
+### Part 3: Testing VM Network Connectivity
 
 As part of your Lab 1 environment setup, you tested your connection to the Internet from each of your 3 virtual machines.
 
@@ -120,7 +165,7 @@ It's now time to test if we can use each VM to connect to _each other_.
 7. Can you see the IIS splash page that you saw in _Investigation 1, Part 1, Step 2_? If so, you have connectivity!
 8. Continue to **Part 3**.
 
-### Part 3: Windows Server GUI (srv1) - Applying Firewall Rules
+### Part 4: Windows Server GUI (srv1) - Applying Firewall Rules
 
 We will now apply our security-conscious policy by configuring the firewall on this server.
 
@@ -180,7 +225,7 @@ To do this, we're going to work with the **Windows Defender Firewall** on srv1.
 >
 > Write down the name of the rule in your Lab Logbook when you find it (it’s not called IIS) and explain why you think you didn’t have to enable this rule yourself. Think back to when you installed the IIS Server Role.
 
-### Part 4: Windows Server Core (srv2) - Applying Firewall Rules
+### Part 5: Windows Server Core (srv2) - Applying Firewall Rules
 
 Let's apply the same incoming ping firewall rule to our Server Core machine so we can check it's network connectivity as well.
 
@@ -255,7 +300,7 @@ Core Networking Diagnostics - ICMP Echo Request (ICMPv4-In) Private, Public    T
 25. Does it work?
 26. **It if does, congratulations!** You've just enabled ping for connectivity checking to _srv2_ and gone through your first foray into the PowerShell!
 
-### Part 5: Windows Client (client1) - Applying Firewall Rules
+### Part 6: Windows Client (client1) - Applying Firewall Rules
 
 Finally, let's enable ping on our Windows Client machine.
 
@@ -332,52 +377,7 @@ In this part, we'll verify our work by connecting to the server using our Window
 
 In this investigation, we'll set up remote access to our Windows Server Core (srv2) so we can connect to it using your Windows 11 Client VM.
 
-### Part 1: Setting Up _srv2_'s NIC2 - Internal Network
-
-In this part, we'll rename the second NIC and then give it a 10.x.x.x address so we can use it to communicate with our other servers and clients.
-
-1. Login to _srv2_.
-1. In the `sfconfig` application, select Option 8 (Network Settings).
-1. You will have two network adapters. We're going to change their names for easier identification.
-1. Find the adapter that has the external network IP address. It's usually the first one in the list. If you're not sure, ask.
-1. Select that entry's number from the first column to go into it's options.
-1. In _Network Adapter Settings_, select Option 4 (Rename network adapter).
-1. Type the following and hit Enter: `External Network`
-8. Repeat steps 3-7 for the second network adapter, and call it: `Internal Network`
-9. Go back to the main `sfconfig` screen.
-10. Select Option 15 to exit to the command line.
-
-We're now going to apply network settings to our Internal Network adapter using PowerShell.
-
-11. First, confirm the names of your adapters with the following command:
-
-```powershell
-Get-NetAdapter
-```
-
-12. Now, assuming they look correct, run the following:
-
-```powershell
-New-NetIPAddress -InterfaceAlias "Internal Network" -IPAddress 10.0.UID.2 -PrefixLength 24
-```
-
-13. Double-check your work by running:
-
-```powershell
-Get-NetIPAddress -InterfaceAlias "Internal Network"
-```
-
-If it has the proper 10.x.x.x IP address, well done! Move on to **Part 2**.
-
-If the network information if wrong, you can remove it and try again by running:
-
-```powershell
-Remove-NetIPAddress -InterfaceAlias "Internal Network" -AddressFamily IPv4
-```
-
-> Tip: To return to `sfconfig`, either run that command or type `exit`.
-
-### Part 2: Enabling Remote Desktop Connections
+### Part 1: Enabling Remote Desktop Connections
 
 In this part, we'll turn on Remote Desktop (RDP) on the Core server (_srv2_).
 
@@ -392,7 +392,7 @@ In this part, we'll turn on Remote Desktop (RDP) on the Core server (_srv2_).
 9. If not, go through Steps 4-9 again.
 10. If yes, press **Enter** without entering any options to go back to the main screen without making any changes.
 
-### Part 3: Adding a RDP Firewall Rules
+### Part 2: Adding a RDP Firewall Rules
 
 In this part, we'll check that the RDP firewall rules have been enabled.
 
@@ -421,7 +421,7 @@ RemoteDesktop-UserMode-In-UDP Remote Desktop - User Mode (UDP-In)     Any    Tru
 3. Check that your output matches the above. This is the same as on _srv1_, just at the command line. Notice with are enabled and which are not?
 4. If you need to, grab the IP address for _srv2_ here by running this command in PowerShell: `ipconfig`
 
-### Part 4: Connecting to Windows Server (srv2) from Windows 11 via RDP
+### Part 3: Connecting to Windows Server (srv2) from Windows 11 via RDP
 
 In this part, we'll verify our work by connecting to _srv2_ using our Windows 11 client VM. This is essentially the same as our instructions for _srv1_, but with a different IP address.
 
