@@ -40,7 +40,7 @@ Generally, we apply the concept of [Principle of Least Privilege](https://en.wik
 
 We also take a look at defaults. Most systems and software come with pre-configured defaults to make out-of-the-box setup easy. This can take the form of a default username and password, default ports, etc. In a well secured system, these are often changed to avoid hack attempts. If you know the default, there's a high chance that hackers know it as well. You'll be changing some defaults in this lab.
 
-This is not an exhaustive list of applied security, but it does give use a bit of working knowledge. You'll need it for this lab as well as in our later work.
+This is not an exhaustive list of applied security, but it does give us a bit of working knowledge. You'll need it for this lab as well as in our later work.
 
 ### Firewalls
 
@@ -68,7 +68,7 @@ However, Notepad is not available in Server Core. To edit a text file in that en
 
 1. Use PowerShell's object-oriented programming to send an edit directly into a text file. This is cumbersome and is not interactive (you don't see the text file on screen), but it is the only built-in option.
 2. Transferring the file to a different computer that does have a text editor (like your Windows 11 client), modifying the file there, and transferring it back to your Server Core machine.
-3. Using **Visual Studio Code** to connect remotely the the environment. This is by far the coolest and most convenient option.
+3. Using **Visual Studio Code** to connect remotely the environment. This is by far the coolest and most convenient option.
 
 We'll be doing all three in this lab to show you how, but going forward, VS Code will be our go-to for interacting with Server Core in most instances. (You will be tested on all three options, so don't skip them!)
 
@@ -117,7 +117,7 @@ Get-NetIPAddress -InterfaceAlias "Internal Network"
 
 If it has the proper 10.x.x.x IP address, well done! Move on to **Part 2**.
 
-If the network information if wrong, you can remove it and try again by running:
+If the network information is wrong, you can remove it and try again by running:
 
 ```powershell
 Remove-NetIPAddress -InterfaceAlias "Internal Network" -AddressFamily IPv4
@@ -131,10 +131,10 @@ On this server, we will take a look at a role that was installed in our last lab
 
 This role is already running after Lab 2 and doesn't need any configuration. We'll be using it later to test network connections and firewall rules.
 
-Let's test it locally (from within the same machine). We'll do so by pointing a web browswer at ourselves.
+Let's test it locally (from within the same machine). We'll do so by pointing a web browser at ourselves.
 
 1. Inside _srv1_, open Firefox.
-2. Navigate to: **http://127.0.0.1**
+2. Navigate to: **<http://127.0.0.1>**
 
 If you see the _Internet Information Services_ splash page, then this role is working. If you don't, ask your professor for help.
 
@@ -163,7 +163,7 @@ It's now time to test if we can use each VM to connect to _each other_.
       > Example: `http://10.0.40.1`
 
 7. Can you see the IIS splash page that you saw in _Investigation 1, Part 1, Step 2_? If so, you have connectivity!
-8. Continue to **Part 3**.
+8. Continue to **Part 4**.
 
 ### Part 4: Windows Server GUI (srv1) - Applying Firewall Rules
 
@@ -194,7 +194,7 @@ To do this, we're going to work with the **Windows Defender Firewall** on srv1.
 9. On the first page, you'll notice the same three profiles: _Domain Profile_, _Private Profile_, and _Public Profile_.
 10. All three have the same overall rules:
 1. **Windows Defender Firewall is on**: This just confirms the firewall is active for this network profile.
-2. **Inbound connections that do not match a rule are blocked**: This means that all incoming connections and requests (like trying to ping this machine) are blocked _by default_. If you want to allow a certain type of connection or service into your server, you have to make a specific rule for it. This is whitelisting and our _Principle of Least Priviledge_ in action.
+2. **Inbound connections that do not match a rule are blocked**: This means that all incoming connections and requests (like trying to ping this machine) are blocked _by default_. If you want to allow a certain type of connection or service into your server, you have to make a specific rule for it. This is whitelisting and our _Principle of Least Privilege_ in action.
 3. **Outbound connections that do not match a rule are allowed**: This means all network data leaving the server is automatically allowed. The logic here is that if the server is the one deciding the send out information, it's likely fine. (Note: The only time we ever whitelist outbound connections is for specialized security settings like government compliance.)
 11. At the moment, we're dealing with the _Public Profile_ context. Let's allow ICMP ping!
 12. On the left-hand menu bar, click **Inbound Rules**.
@@ -209,7 +209,7 @@ To do this, we're going to work with the **Windows Defender Firewall** on srv1.
 20. You've enabled ICMP ping! Let's go test it.
 21. Switch back to your client1 machine, and run the same ping you ran earlier pointing to srv1. (Refer to _Part 2, Step 4_.)
 22. Does it work?
-23. It if does, congratulations! You've just enabled ping for connectivity checking to _srv1_ and gone through your first foray into the Windows Firewall.
+23. If it does, congratulations! You've just enabled ping for connectivity checking to _srv1_ and gone through your first foray into the Windows Firewall.
 
 > ℹ️ **A note for later labs:**
 > By default, this rule is set to only allow incoming pings (ICMP requests) from computers on your **VM network**—that is, other virtual machines on the same VMware NAT or host-only network as your server—not from the wider Internet or any physical computers in the classroom.
@@ -298,7 +298,7 @@ Core Networking Diagnostics - ICMP Echo Request (ICMPv4-In) Private, Public    T
 23. Now, let's test our ping. Switch over to your Windows 11 Client (client1).
 24. Open a Command Prompt window, and run the following command: `ping srv2-ipaddress` (Refer to _Part 3, Step 3_).
 25. Does it work?
-26. **It if does, congratulations!** You've just enabled ping for connectivity checking to _srv2_ and gone through your first foray into the PowerShell!
+26. **If it does, congratulations!** You've just enabled ping for connectivity checking to _srv2_ and gone through your first foray into the PowerShell!
 
 ### Part 6: Windows Client (client1) - Applying Firewall Rules
 
@@ -418,7 +418,7 @@ RemoteDesktop-UserMode-In-TCP Remote Desktop - User Mode (TCP-In)     Any    Tru
 RemoteDesktop-UserMode-In-UDP Remote Desktop - User Mode (UDP-In)     Any    True
 ```
 
-3. Check that your output matches the above. This is the same as on _srv1_, just at the command line. Notice with are enabled and which are not?
+3. Check that your output matches the above. This is the same as on _srv1_, just at the command line. Notice which are enabled and which are not?
 4. If you need to, grab the IP address for _srv2_ here by running this command in PowerShell: `ipconfig`
 
 ### Part 3: Connecting to Windows Server (srv2) from Windows 11 via RDP
@@ -428,7 +428,7 @@ In this part, we'll verify our work by connecting to _srv2_ using our Windows 11
 1. Make sure you've got your _srv2_ IP address from earlier. (You wrote it down, _right_?)
 2. On _client1_, click the **Start** menu.
 3. Search for and open: **Remote Desktop Connection**
-4. In the newly opened application, in the _Computer_ field, enter the IP address for _srv1_.
+4. In the newly opened application, in the _Computer_ field, enter the IP address for _srv2_.
 5. Click **Connect**.
 6. Enter your _srv2_ username and password, then click **OK**.
 7. A security dialogue box pops up. **Check the box next to _"Don't ask me again for connections to this computer"_ before the next step.**
@@ -577,9 +577,9 @@ When you finish Lab 3, ask your instructor for a sign-off.
 
 On _client1_:
 
-1. Ping *srv1*
-1. Ping *srv2*
-1. SSH into *srv2*
-1. RDP into *srv1*
+1. Ping _srv1_
+1. Ping _srv2_
+1. SSH into _srv2_
+1. RDP into _srv1_
 1. In Firefox, load the IIS test page at: **10.0.`UID`.1**
 1. In Firefox, test your Internet connection by loading: **eff.org**
