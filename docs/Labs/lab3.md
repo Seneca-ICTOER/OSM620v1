@@ -134,7 +134,7 @@ This role is already running after Lab 2 and doesn't need any configuration. We'
 Let's test it locally (from within the same machine). We'll do so by pointing a web browser at ourselves.
 
 1. Inside _srv1_, open Firefox.
-2. Navigate to: **<http://127.0.0.1>**
+2. Navigate to: `http://127.0.0.1`
 
 If you see the _Internet Information Services_ splash page, then this role is working. If you don't, ask your professor for help.
 
