@@ -13,17 +13,13 @@ description: Lab 4 - Implementing DNS
 
 In this lab, you will deploy and validate a local DNS service on your Windows Server GUI VM (srv1), then configure all machines in your lab environment to use it. By the end, you will be able to:
 
-1. Install and configure the **DNS Server Role** on Windows Server.
-
-1. Create a *primary forward lookup zone* for your domain (e.g., yourSenecaUsername.com).
-
-1. Add **A records** for all lab hosts and configure DNS forwarders for Internet resolution.
-
-1. Point servers/clients to your DNS, including proper use of loopback on *srv1*.
-
-1. Create a *reverse lookup zone* and generate **PTR records**.
-
-1. Verify name resolution end-to-end with `nslookup`, ping, and browser tests.
+1. Install the **DNS Server** role on *srv1*.
+1. Create a **Forward Lookup Zone** for *yourSenecaUsername.com*.
+1. Add *A records* for *srv1, srv2, client1* and *client2*.
+1. Configure forwarders so *srv1* can resolve Internet names.
+1. Point *srv1* to itself via loopback (127.0.0.1) for DNS.
+1. Reconfigure *srv2*, *client1*, and *client2* to use *srv1* as their DNS.
+1. Create a **Reverse Lookup Zone** and **PTR records**. Verify forward and reverse resolution with `nslookup`, `ping`, and browser tests.
 
 If you encounter technical issues, please contact your professor via e-mail or in your section's Microsoft Teams group.
 
@@ -38,17 +34,87 @@ Before beginning, you must have:
 5. Your VM login credentials.
 6. Optional, but recommended: Caffeine delivery system.
 
-### Key Concepts (Quick Reference)
+### Key Concepts
 
-1. **FQDN**: Fully Qualified Domain Name (e.g., srv1.cjohnson30.com).
-1. **Zones**: Authoritative datasets for a namespace portion (e.g., forward zone yourname.com, reverse zone for 10.0.UID.x).
-1. **Records:**
-    1. A / AAAA → Name → IP (v4/v6)
-    1. PTR → IP → Name (reverse lookups)
-1. **Forwarders vs. Root Hints:** Forwarders explicitly send unresolved queries to upstream DNS servers; root hints walk the DNS hierarchy. We’ll use forwarders for simplicity and speed.
-1. **TTL:** Cache lifetime for a DNS answer. Lower TTLs change faster; higher TTLs cache longer.
-1. **Loopback (127.0.0.1):** Only valid on the local host (used on *srv1* itself, not on *srv2/clients*).
-1. *Authoritative vs. Recursive:* Your srv1 is authoritative for your zone. It’s also a recursive resolver for your lab via forwarders.
+#### What DNS Does - Domain Name System
+
+DNS maps names to IP addresses. Humans remember reddit.com. The Internet only understands how to route to 151.101.193.140. It’s hierarchical and distributed, so no single server knows everything. **Authoritative servers** answer for their zones and resolvers figure the rest out.
+
+#### Forward vs. Reverse Lookups
+
+1. **Forward:** URL to IP (e.g., srv1.yourSenecaUsername.com converts to 10.0.UID.1) using A/AAAA records.
+1. **Reverse:** IP to URL (e.g., 10.0.UID.1 to srv1.yourSenecaUsername.com) using PTR records in a Reverse Lookup Zone.
+
+Reverse lookup is gold for troubleshooting and clean logs.
+
+#### Zones and Authority
+
+A zone is the authoritative dataset for a chunk of namespace. In this lab you create:
+
+1. **Forward zone:** yourSenecaUsername.com
+1. **Reverse zone:** 10.0.UID.0/24 (IPv4 reverse)
+
+Each zone has an SOA (start of authority) and NS records defining who’s in charge. We keep dynamic updates disabled here for control and repeatability.
+
+#### Authoritative vs. Recursive (srv1 does both)
+
+1. **Authoritative:** Answers with authority for names inside its zones.
+1. **Recursive:** Chases down answers it doesn’t know yet.
+
+In our setup, *srv1* is **authoritative for your lab domain** and recursive for everything else (via forwarders).
+
+#### Forwarders vs. Root Hints (and Conditional Forwarders)
+
+1. **Forwarders:** send unknown queries to specific upstream resolvers (what we configure for the classroom).
+1. **Root hints:** the built-in map to the DNS root—slower to “warm up.”
+1. **Conditional forwarders:** send only certain domains to specific DNS servers (handy in enterprises; not needed here).
+
+We will only be using forwarders in this lab for ease of set up.
+
+#### Records You’ll Actually Touch
+
+1. A: Hostname to IPv4.
+1. PTR: IPv4 address to hostname (reverse).
+1. CNAME (alias): points a name to another name.
+1. Rule of thumb: a CNAME can’t live alongside other records at the same name (no A+MX+CNAME pileups).
+
+#### FQDNs and the DNS Suffix
+
+1. Fully-Qualified Domain Name (FQDN): Full path (e.g., srv1.yourname.com.).
+1. **Short names** (e.g., ping srv1) rely on a DNS suffix search list. To keep tests deterministic, we use FQDNs in this lab.
+
+#### Caching and TTL
+
+DNS answers are cached to reduce load. The TTL controls how long.
+
+Tips:
+
+1. After changing records, clear caches where relevant:
+1. **Client:** `ipconfig /flushdns`
+1. **Server:** DNS Manager > right-click server > Clear Cache
+
+#### Ports and Firewall
+
+DNS uses **UDP/53** for most queries, **TCP/53** for large responses and zone transfers. With the DNS Server Role installed, inbound DNS rules should be enabled (Private/Public).
+
+Verify. Never assume.
+
+#### Loopback and Why We Use It on *srv1*
+
+The loopback interface (127.0.0.1) sends traffic to the local host. It is immune to network interface card (NIC) misconfigurations. Pointing *srv1* at **127.0.0.1** ensures it always asks itself first, which simplifies troubleshooting.
+
+> Loop: srv1 > 127.0.0.1 > srv1
+
+#### Split-Horizon (a.k.a. Split-Brain) DNS (just awareness)
+
+Enterprises often serve different answers internally VS externally for the same name. In this lab your domain is internal-only. Don’t register it publicly.
+
+Troubleshooting Toolkit
+
+1. **nslookup** (classic): Quick forward/reverse tests.
+1. **Resolve-DnsName** (PowerShell): Richer diagnostics (optional).
+1. **Get-DnsClientServerAddress**: Confirm which DNS your client is using.
+1. If names resolve but pings fail, think firewall (Lab 3), not DNS.
 
 ## Investigation 1: Configuring DNS on Windows Server (*srv1*)
 
@@ -63,10 +129,11 @@ Let's confirm our work:
 1. Open **Command Prompt**.
 1. Run the following command: `ipconfig`
 1. Confirm the *Internal Network* adapter uses: **10.0.`UID`.1**
+1. Find the *External Network* adapter's current DNS address. **Write this down**. You will need it later in this lab.
 
 Static IP addressing is always required for a computer or device providing network services. Remember that.
 
-If the proper static IP ic confirmed, move on to *Part 2*.
+If the proper static IP is confirmed, move on to *Part 2*.
 
 ### Part 2: Installing the DNS Server Role on *srv1*
 
@@ -117,7 +184,7 @@ If the proper static IP ic confirmed, move on to *Part 2*.
         - Name: `client1`
         - IP address: `(Use the IPv4 address of client1)`
         - Click **Add Host**
-    4. **client1**
+    4. **client2**
         - Name: `client2`
         - IP address: `(Use the IPv4 address of client2)`
         - Click **Add Host**
@@ -127,7 +194,7 @@ If the proper static IP ic confirmed, move on to *Part 2*.
 
 We want *srv1* to answer local names (your zone which contains srv1, srv2, etc.) and resolve Internet names. If *srv1* isn’t authoritative for a name (i.e. doesn't have a definition for it), it *should* forward the query upstream.
 
-At the moment, it's only setup to give the IP addresses of our VMs, not the Internet.
+At the moment, it's only set up to give the IP addresses of our VMs, not the Internet.
 
 To fix this, we have to tell *this* server where to look if it doesn't have the answer locally. If it can't answer locally, it will forward the request to an Internet-based DNS server.
 
@@ -137,7 +204,8 @@ This is called a *Forwarder*. Let's set it up:
 2. Select **Properties**.
 3. Go to the **Forwarders** tab.
 4. Click **Edit…**
-5. In the *IP address* field, enter the IP address from your earlier list, then hit **Enter** for it to verified. If it can reach it, you should see a domain name populate next to the IP address.
+Investigation 1, Part 1, Step 4.
+5. In the *IP address* field, enter the IP address from *Investigation 1, Part 1, Step 4*, then hit **Enter** for it to be verified. If it can reach it, you should see a domain name populate next to the IP address.
 6. Add a second DNS for fallback, using CIRA's DNS:
     - **149.112.121.20**
 7. Make sure CIRA's DNS is the **second** entry in the list.
@@ -176,7 +244,7 @@ If you do, move on to the next part!
 Our first task is to confirm this works locally by telling the server to talk to itself first for DNS resolution. This lets us test our DNS service and records while removing the network and firewall pieces. (See the explanation above in Part 6.)
 
 1. Open **Command Prompt**.
-2. To test DNS resolution functionality on your local network, run the following commands one at a time:
+1. To test DNS resolution functionality on your local network, run the following commands one at a time:
 
 ```powershell
 nslookup srv1.cjohnson30.com
@@ -192,9 +260,9 @@ nslookup eff.org
 nslookup reddit.com
 ```
 
-7. If each returns the proper IP address value, you're done! If not, revisit your earlier configuration steps and check to see what might be missing.
-8. Don't be afraid to ask for help!
-9. **If *any* of your lookups above failed, ask for help! Do not move onto the next Investigation if failed.**
+4. If each returns the proper IP address value, you're done! If not, revisit your earlier configuration steps and check to see what might be missing.
+1. Don't be afraid to ask for help!
+1. **If *any* of your lookups above failed, ask for help! Do not move onto the next Investigation if failed.**
 
 ## Investigation 2: Configuring Other Machines For DNS Use
 
@@ -328,7 +396,7 @@ You'll also see how it helps for self-identification a little later.
 4. If the box was already checked, uncheck it, click **Apply**, check it again, then click **Apply** again. This forces the PTR generation.
 5. This should automatically create PTR records in your new reverse zone.
 6. Double-check your work. Click on the folder inside *Reverse Lookup Zone* to see its contents. If empty, right-click on the folder and click *Refresh*.
-7. They should now appear. If they do not, retrace your steps of ask for help.
+7. They should now appear. If they do not, retrace your steps or ask for help.
 
 ### Part 3: Test Reverse DNS Resolution
 
@@ -337,6 +405,7 @@ You'll also see how it helps for self-identification a little later.
 
 ```powershell
 nslookup 10.0.UID.1
+nslookup 10.0.UID.2
 nslookup 10.0.UID.11
 nslookup 10.0.UID.12
 ```
@@ -349,7 +418,13 @@ Example Output:
 Server:  srv1.cjohnson30.com
 Address:  10.0.45.1
 
+Server:  srv2.cjohnson30.com
+Address:  10.0.45.2
+
 Name:    client1.cjohnson30.com
+Address:  10.0.45.11
+
+Name:    client2.cjohnson30.com
 Address:  10.0.45.12
 ```
 
@@ -379,18 +454,21 @@ Please have the following on screen and ready to show.
 On srv1:
 
 1. `nslookup srv1.yourdomain`: Returns 10.0.`UID`.1
-2. `nslookup eff.org`: Returns a public IP (forwarder working)
-3. Both adapters show 127.0.0.1 as DNS in `ipconfig /all`
+1. `nslookup eff.org`: Returns a public IP (forwarder working)
+1. Both adapters show 127.0.0.1 as DNS in `ipconfig /all`
+1. Your **Forward Lookup Zone** page open for review.
+1. Your **PTR Records** page open for review.
 
 On srv2:
 
 1. `Get-DnsClientServerAddress`: Shows 10.0.`UID`.1 for Internal and External network adapters.
 1. `nslookup client1.yourdomain` and `nslookup client2.yourdomain`: Correct IPs
-1. `nslookup 10.0.UID.11` and `nslookup 10.0.UID.12`: Correct PTR to FQDN.
+1. `nslookup 10.0.UID.1`, `nslookup 10.0.UID.11` and `nslookup 10.0.UID.12`: Correct PTR to FQDN.
 
 On client1:
 
 1. DNS set to 10.0.`UID`.1 (Manual/IPv4)
-1. `nslookup srv1.yourdomain`: Resolves to 10.0.`UID`.1
-1. In Firefox: `http://srv1.yourdomain.com` loads the IIS splash page
+1. `nslookup srv1.yourSenecaUsername.com`: Resolves to 10.0.`UID`.1
+1. In Firefox: `http://srv1.yourSenecaUsername.com` loads the IIS splash page.
 1. `nslookup reddit.com`: Resolves a public IP (forwarder working)
+1. In Firefox: `http://www.reddit.com` loads the Reddit main page.
