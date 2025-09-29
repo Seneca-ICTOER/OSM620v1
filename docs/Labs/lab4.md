@@ -138,7 +138,7 @@ This is called a *Forwarder*. Let's set it up:
 3. Go to the **Forwarders** tab.
 4. Click **Edit…**
 5. In the *IP address* field, enter the IP address from your earlier list, then hit **Enter** for it to verified. If it can reach it, you should see a domain name populate next to the IP address.
-6. Add a second DNS for fallback, using [CIRA's DNS](https://www.cira.ca/en/canadian-shield):
+6. Add a second DNS for fallback, using [CIRA DNS](https://www.cira.ca/en/canadian-shield) :
     - **149.112.121.20**
 7. Make sure CIRA's DNS is the **second** entry in the list.
 8. Click **OK** to add.
