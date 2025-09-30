@@ -349,9 +349,9 @@ In this part, we'll add a firewall rule to allow the connection over the local n
 
 1. On _srv1_, open **Windows Defender Firewall with Advanced Security**.
 2. In the _Inbound Rules_ section, look for the following rules:
-1. Remote Desktop - Shadow (TCP-In)
-2. Remote Desktop - User Mode (TCP-In)
-3. Remote Desktop - User Mode (UDP-In)
+    1. **Remote Desktop - Shadow (TCP-In)**
+    2. **Remote Desktop - User Mode (TCP-In)**
+    3. **Remote Desktop - User Mode (UDP-In)**
 3. If they're all enabled (they should be), you're good to go!
 4. Why check? Always check your firewall rules when enabling a new service, even if it _usually_ enables the associated firewall rule automatically. **Never assume!**
 5. If these rules are **not** enabled, enable them now.
@@ -488,14 +488,14 @@ New-NetFirewallRule -Name sshd -DisplayName 'OpenSSH Server (sshd)' -Enabled Tru
 ```
 
 3. This rule sets the following:
-1. Name: sshd
-2. Display Name: OpenSSH Server (sshd)
-3. Enabled: True
-4. Profile: Private, Public
-5. Direction: Inbound
-6. Action: Allow
-7. Protocol: TCP
-8. Port: 22
+    1. Name: sshd
+    2. Display Name: OpenSSH Server (sshd)
+    3. Enabled: True
+    4. Profile: Private, Public
+    5. Direction: Inbound
+    6. Action: Allow
+    7. Protocol: TCP
+    8. Port: 22
 4. Verify your work! First, let's look at the firewall object by running the following command:
 5. Now, let's verify the protocol and port with the following command:
 
