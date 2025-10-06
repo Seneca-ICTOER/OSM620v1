@@ -3,8 +3,8 @@
 id: lab5
 title: Lab 5 - Implementing DHCP
 sidebar_position: 5
-description: Lab 5 - Implementing DHCP (Revised)
-------------------------------------------------
+description: Lab 5 - Implementing DHCP
+---
 
 # Lab 5 - Implementing DHCP
 
@@ -12,7 +12,9 @@ description: Lab 5 - Implementing DHCP (Revised)
 
 ### Purpose / Objectives of Lab 5
 
-In this lab, you will deploy **DHCP** on *srv1* to automatically provide IP configuration for your internal lab network. By the end, you will:
+In this lab, you will deploy **DHCP** on *srv1* to automatically provide IP configuration for your internal lab network.
+
+By the end, you will:
 
 1. Install the **DHCP Server** role on *srv1*.
 2. Create an IPv4 **scope** for your internal subnet **10.0.`UID`.0/24** with proper **options** (Router, DNS servers, DNS Suffix).
