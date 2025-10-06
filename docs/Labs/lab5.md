@@ -1,195 +1,213 @@
 ---
+
 id: lab5
 title: Lab 5 - Implementing DHCP
 sidebar_position: 5
-description: Lab 5 - Implementing DHCP
----
+description: Lab 5 - Implementing DHCP (Revised)
+------------------------------------------------
 
 # Lab 5 - Implementing DHCP
 
-When you first created your two server VMs, you selected the built-in VMware NAT network. Along with providing Internet connectivity, it also provides a DHCP server to automatically assign each virtual machine its network information. (IP address, subnet mask, default gateway, DNS address)
+## Lab Preparation
 
-In this investigation, we are going to be rolling our own DHCP server on *srv1* and provide network information for *srv2*, *client1*, and *client2*.
+### Purpose / Objectives of Lab 5
 
-We'll then switch those VMs from static to DHCP configuration to use the DHCP server on *srv1*!
+In this lab, you will deploy **DHCP** on *srv1* to automatically provide IP configuration for your internal lab network. By the end, you will:
 
-## Investigation 1: Installing the DHCP Server Role on *srv1*
+1. Install the **DHCP Server** role on *srv1*.
+2. Create an IPv4 **scope** for your internal subnet **10.0.`UID`.0/24** with proper **options** (Router, DNS servers, DNS Suffix).
+3. Create **reservations** so *srv2*, *client1*, and *client2* receive predictable addresses that match prior labs.
+4. Flip *srv2*, *client1*, and *client2* from **static** addressing to **DHCP**, then verify leases.
+5. Validate **DHCP + DNS** end‑to‑end with `ipconfig`, `nslookup`, and `ping`.
+
+### Minimum Requirements
+
+Before beginning, you must have:
+
+* Successfully completed **Lab 4 – Implementing DNS**, with *srv1* resolving internal names and using loopback for local DNS testing.
+* Your **UID** value handy.
+* All four VMs present from earlier labs: *srv1* (GUI), *srv2* (Core), *client1*, *client2*.
+
+### Key Concepts
+
+* **DHCP** automatically assigns IP addressing (IPv4 address, subnet mask), **Default Gateway (Option 003)**, **DNS servers (Option 006)**, and **DNS Suffix (Option 015)** to clients on a subnet.
+* **Scope** defines the usable address pool on a network. **Reservations** ensure specific MAC addresses always receive the same IP.
+* In this course, your internal network remains **10.0.`UID`.0/24**; *srv1* is the router at **10.0.`UID`.1**.
+
+> **Design Note:** We will keep client addresses consistent with Labs 2–4 using **reservations** so your existing DNS host records remain correct.
+
+---
+
+## Investigation 1: Install the DHCP Server Role on *srv1*
 
 ### Part 1: Add the DHCP Server Role
 
 1. **Login to srv1** with your Administrator account.
-2. Open **Server Manager**.
-3. In the left menu, click on **Local Server** if you’re not already there.
-4. At the top right, click **Manage > Add Roles and Features**.
-5. In the **Add Roles and Features Wizard**:
-    1. On *Installation Type*, choose **Role-based or feature-based installation**. Click **Next**.
-    2. On *Server Selection*, confirm **Select a server from the server pool** and choose **srv1**. Click **Next**.
-    3. On *Server Roles*, scroll down and check **DHCP Server**.
-    4. If prompted, click **Add Features**.
-    5. Click **Next** through *Features* and *DHCP Server* pages.
-    6. On *Confirmation*, click **Install**.
-    7. Wait for installation to finish (may take a few minutes).
-    8. When you see *Installation succeeded on srv1*, click **Close**.
+2. Open **Server Manager** → **Manage > Add Roles and Features**.
+3. **Installation Type**: *Role-based or feature-based installation* → **Next**.
+4. **Server Selection**: choose **srv1** → **Next**.
+5. **Server Roles**: check **DHCP Server** → **Add Features** if prompted → **Next** through *Features* and *DHCP Server* pages.
+6. **Confirmation**: **Install** and wait for completion.
 
-### Part 2: Post-Install Configuration
+### Part 2: Post‑Install Configuration
 
-1. In **Server Manager**, at the top, a yellow exclamation (!) triangle will appear. Click it, then click **Complete DHCP configuration**.
-2. In the **DHCP Post-Install Configuration Wizard**:
-    1. Click **Commit**.
-    2. Click **Close**.
+1. In **Server Manager**, click the yellow **!** → **Complete DHCP configuration**.
+2. In the wizard, click **Commit** → **Close**.
 
-## Investigation 2: Configuring DHCP on srv1
+---
+
+## Investigation 2: Create Scope and Options (10.0.`UID`.0/24)
 
 ### Part 1: Create a New IPv4 Scope
 
-1. In **Server Manager**, at the top right, click **Tools > DHCP**.
-2. In **DHCP**, expand your server’s name (srv1) under **IPv4**.
-3. Right-click **IPv4** and choose **New Scope…**
-4. In the **New Scope Wizard**:
-    1. Click **Next**.
-    2. For *Scope Name*, enter: **OSM620 Lab Scope**
-    3. Click **Next**.
-    4. For *IP Address Range*:
-     1. **Start IP address:** 192.168.245.100
-     2. **End IP address:** 192.168.245.199
-     3. **Subnet mask:** 255.255.255.0
-     4. Click **Next**.
-    5. For *Add Exclusions*, leave blank. Click **Next**.
-    6. For *Lease Duration*, leave default (8 days). Click **Next**.
-    7. For *Configure DHCP Options*, select **Yes, I want to configure these options now**. Click **Next**.
+1. **Tools > DHCP**.
+2. Expand your server (srv1) → **IPv4** → **Right‑click > New Scope…**
+3. **Scope Name**: `OSM620 HQ`
+4. **IP Address Range**:
 
-### Part 2: Configure DHCP Options
+   * **Start**: `10.0.UID.2`
+   * **End**: `10.0.UID.199`
+   * **Subnet mask**: `255.255.255.0`
+5. **Add Exclusions and Delay**: leave blank (we will use **Reservations** for fixed addresses).
+6. **Lease Duration**: default (8 days) → **Next**.
+7. **Configure DHCP Options**: choose **Yes, I want to configure these options now** → **Next**.
 
-1. **Router (Default Gateway):**
- 1. Enter your gateway IP from Lab 3, click **Add**, then **Next**.
-  1. You can also check it now by opening Command Prompt and running: `ipconfig`
-2. **Domain Name and DNS Servers:**
- 1. For *Parent domain*, enter your DNS domain (e.g., cjohnson30.com).
- 2. For *DNS Servers*, your earlier DNS IP addresses should already be present.
- 3. Click **Next**.
-3. **WINS Servers:**
- 1. Leave blank. Click **Next**.
-4. **Activate Scope:**
- 1. Select **Yes, I want to activate this scope now**. Click **Next**.
- 2. Click **Finish**.
+### Part 2: Configure Scope Options
 
-### Part 3: Confirm DHCP Scope and Settings
+1. **Router (Default Gateway) – Option 003**: `10.0.UID.1` → **Add** → **Next**.
+2. **Domain Name and DNS Servers – Option 006/015**:
 
-1. In the DHCP console, expand **IPv4 > OSM620 Lab Scope > Address Pool**.
-2. Make sure the address range is correct (should be .100 to .199).
-3. Under **Address Leases**, you won’t see anything yet—leases will appear as clients connect.
+   * **Parent domain** (Option 015): `yourSenecaUsername.com` *(replace with your lab domain from Lab 4)*
+   * **DNS Servers** (Option 006): `10.0.UID.1` *(srv1)* → **Add** → **Next**.
+3. **WINS Servers**: leave blank → **Next**.
+4. **Activate Scope**: select **Yes, I want to activate this scope now** → **Finish**.
 
-### Part 4: Setting DHCP Reservations
+> **Why start at `.2`?** `.1` is the gateway on *srv1*. We’ll reserve `.2`, `.11`, and `.12` for *srv2*, *client1*, and *client2* to preserve continuity with earlier labs.
 
-Any servers on our network should have unchanging IP addresses so they can always be found. We did this manually with *srv1*, but we can use **Reservations** to give our other machines specific IP addresses.
+---
 
-When one of our VMs first boots up, it will go through the four-way DHCP handshake with the DHCP server to get networking information. By default, the DHCP server on *srv1* will assign a randomly chosen, currently-unused IP address from our address pool (.100 to .199).
+## Investigation 3: Reservations for Predictable Addresses
 
-An IP reservation will cause the DHCP server to, instead, *always* give a specific machine the exact IP address we tell it to, and never give it out to others.
+We’ll bind specific IPs to each machine’s **MAC address** so they keep the same addresses used in Labs 2–4.
 
-Normally, you'd only do this for other servers on your network and let basic clients receive a random address, but we'll reserve addresses for both *srv2* and *client1* for proof-of-concept.
+### Part 1: Collect MAC addresses
 
-1. On *srv2*, run `ipconfig /all` and write down the value on the *Physical Address* line. We'll need this shortly.
-2. Do the same thing on *client1*.
-3. Back on *srv1*, right-click on the *Reservations* folder and select **New Reservation**.
-4. For *srv2*:
- 1. Reservation name: **srv2-senecaUsername** (Ex: srv2-cjohnson30)
- 2. IP address: **192.168.245.102**
- 3. MAC address: **00-0C-29-7F-45-47**
- 4. Description: **Windows Server 2025 Datacenter Core**
- 5. Supported types: **Both**
- 6. Click **Add**.
- 7. Verify your new reservation is there by looking inside the *Reservations* folder.
-5. For client1:
- 1. Reservation name: **client1-senecaUsername** (Ex: client1-cjohnson30)
- 2. IP address: **192.168.245.103**
- 3. MAC address: **00-0C-29-88-7E-73**
- 4. Description: **Windows 11 Education Client**
- 5. Supported types: **Both**
- 6. Click **Add**.
- 7. Verify your new reservation is there by looking inside the *Reservations* folder.
+1. On **srv2** (Core): `ipconfig /all` → record the **Physical Address** for the **Internal** adapter.
+2. On **client1**: `ipconfig /all` → record Physical Address.
+3. On **client2**: `ipconfig /all` → record Physical Address.
 
-## Investigation 3: Switching Clients to Use the New DHCP Server for DNS
+### Part 2: Create reservations on *srv1*
 
-Your *srv2* (Server Core) and *client1* (Windows 11) VMs are already set to receive their IP address via DHCP, but you previously set their DNS settings to point directly at *srv1* during Lab 3. Now that *srv1* is a fully working DHCP server, you’ll need to reset both VMs’ DNS settings to automatic so they get both their IP and DNS server from *srv1*.
+In **DHCP Manager** → **IPv4 > OSM620 HQ > Reservations** → **Right‑click > New Reservation…**
 
-### Part 1: Set srv2 (Server Core) DNS to DHCP
+Create the following (replace `UID` and MACs):
 
-1. Log in as Administrator.
-2. At the prompt, run:
+* **srv2**
 
-```powershell
-Get-NetIPInterface
-```
+  * **IP address**: `10.0.UID.2`
+  * **MAC**: `<srv2 MAC>`
+  * **Description**: `Windows Server 2025 Datacenter Core`
+  * **Supported types**: **Both** → **Add**
+* **client1**
 
-3. Note the **InterfaceIndex** for your network adapter. (Likely 4, but check!)
-4. Set the DNS server to automatic (DHCP):
+  * **IP address**: `10.0.UID.11`
+  * **MAC**: `<client1 MAC>`
+  * **Description**: `Windows 11 Education`
+  * **Supported types**: **Both** → **Add**
+* **client2**
 
-```powershell
-Set-DnsClientServerAddress -InterfaceIndex 4 -ResetServerAddresses
-```
+  * **IP address**: `10.0.UID.12`
+  * **MAC**: `<client2 MAC>`
+  * **Description**: `Windows 11 Education`
+  * **Supported types**: **Both** → **Add**
 
-5. To apply changes, renew your DHCP lease:
+Verify all three appear under **Reservations**.
 
-```powershell
-ipconfig /release
-ipconfig /renew
-```
+---
 
-6. Verify that the new DNS server is set by running:
+## Investigation 4: Switch from Static to DHCP
 
-```powershell
-Get-DnsClientServerAddress
-```
+### Part 1: *srv2* (Server Core)
 
-7. You should see the *srv1* IP address listed as the DNS server.
+1. Login as **Administrator**.
+2. Identify interface index:
 
-### Part 2: Set *client1* (Windows 11) DNS to DHCP
+   ```powershell
+   Get-NetIPInterface
+   ```
+3. Enable DHCP for IPv4 (replace `4` with your **InterfaceIndex** on the Internal adapter):
 
-1. Login as Administrator.
-2. Right-click the **Network** icon in the system tray, click **Network and Internet settings**.
-3. Click **Ethernet**.
-4. Scroll down to *DNS server assignment* and click the **Edit** button next to it.
-5. In the *Edit DNS settings* pop-up window, click the drop-down menu to change it from *Manual* to **Automatic (DHCP)**.
-6. Leave all others on their defaults and click **Save**.
-7. Open Command Prompt and run:
+   ```powershell
+   Set-NetIPInterface -InterfaceIndex 4 -Dhcp Enabled
+   Set-DnsClientServerAddress -InterfaceIndex 4 -ResetServerAddresses
+   ipconfig /release
+   ipconfig /renew
+   ipconfig /all
+   ```
+4. Confirm **IPv4 Address = 10.0.UID.2**, **Default Gateway = 10.0.UID.1**, **DNS = 10.0.UID.1**.
 
-```ms-dos
-ipconfig /release
-ipconfig /renew
-```
+### Part 2: *client1* (Windows 11)
 
-8. Verify your IP settings, including DNS:
+1. **Settings > Network & Internet > Ethernet > Edit** next to **IP assignment** → **Automatic (DHCP)** → **Save**.
+2. **Edit** next to **DNS server assignment** → **Automatic (DHCP)** → **Save**.
+3. Command Prompt:
 
-```ms-dos
-ipconfig /all
-```
+   ```
+   ipconfig /release
+   ipconfig /renew
+   ipconfig /all
+   ```
+4. Confirm **IPv4 = 10.0.UID.11**, **Gateway 10.0.UID.1**, **DNS 10.0.UID.1**.
 
-9. You should see your new IP address along with the same DNS address as before, but all supplied through DHCP.
+### Part 3: *client2* (Windows 11)
 
-## Investigation 4: Testing DHCP Functionality
+Repeat the exact steps as client1. Confirm **IPv4 = 10.0.UID.12**.
+
+> If a machine doesn’t pick up the reserved address, re‑check the MAC you entered in the reservation and ensure the NIC you changed to DHCP is the **Internal** (HQ) adapter.
+
+---
+
+## Investigation 5: Verify Leases and Name Resolution
 
 ### Part 1: Check Leases in DHCP Manager
 
-1. On *srv1*, open **DHCP Manager**.
-2. Expand **IPv4 > OSM620 Lab Scope > Address Leases**.
-3. Confirm you see entries for *srv2* and *client1* with their assigned IPs.
+1. On *srv1*: **DHCP Manager** → **IPv4 > OSM620 HQ > Address Leases**.
+2. Confirm entries for **srv2**, **client1**, **client2** with correct **Reservation** type and IPs.
 
-### Part 2: Test DHCP & DNS Functionality
+### Part 2: Test DHCP + DNS
 
-1. On both *srv2* and *client1*, run:
-
-```powershell
-ipconfig
-```
-
-2. Confirm both the **IPv4 address** and **DNS server** match your DHCP scope and *srv1*’s IP address.
-3. Try resolving and pinging your servers:
+From **client1** (or **client2**):
 
 ```powershell
-nslookup srv1.cjohnson30.com
+ipconfig /all
+nslookup srv1.yourSenecaUsername.com
+nslookup client2.yourSenecaUsername.com
 nslookup eff.org
-ping srv1.cjohnson30.com
+ping srv1.yourSenecaUsername.com
 ```
 
-4. If everything works, you’re done! (If it doesn’t, double-check your steps or ask for help.)
+* All should resolve and ping (ICMP allowed per Lab 3). If `nslookup` for Internet names fails, revisit **DNS Forwarders** on *srv1*.
+
+---
+
+## Troubleshooting
+
+* **Client keeps old static IP**: ensure **IP assignment = Automatic (DHCP)**; on Core, run `Set-NetIPInterface -Dhcp Enabled` then `ipconfig /release` + `/renew`.
+* **Gets wrong pool address**: verify the **reservation MAC** matches the **Internal adapter**; remove/re‑add reservation if needed.
+* **No default gateway**: re‑check **Option 003** in scope options.
+* **DNS wrong**: verify **Option 006** points to `10.0.UID.1` and **Option 015** is your lab domain.
+* **No Internet**: confirm *srv1* still NATs traffic between Internal and External (Lab 2 RRAS) and that **Forwarders** work (Lab 4).
+
+---
+
+## Lab 5 Sign‑Off
+
+To complete Lab 5, show your instructor:
+
+1. **Scope** `10.0.UID.2–199` active with Options **003**, **006**, **015** set.
+2. **Reservations** for **srv2 (10.0.UID.2)**, **client1 (10.0.UID.11)**, **client2 (10.0.UID.12)**.
+3. On each client, `ipconfig /all` showing **DHCP Enabled = Yes** and the correct leased address.
+4. In Address Leases, entries for all three machines marked as **Reservation**.
+5. `nslookup` for `srv1.yourSenecaUsername.com` **and** an Internet site returns addresses successfully.
+
+> **You’re done.** Your lab enterprise now uses **DHCP** correctly while keeping earlier labs’ addressing and DNS intact.
