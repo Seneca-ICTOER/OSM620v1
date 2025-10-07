@@ -67,10 +67,13 @@ Before beginning, you must have:
 3. **Scope Name**: `OSM620 HQ`
 4. **IP Address Range**:
 
-   * **Start**: `10.0.UID.2`
-   * **End**: `10.0.UID.199`
+   * **Start**: `10.0.UID.1`
+   * **End**: `10.0.UID.254`
    * **Subnet mask**: `255.255.255.0`
-5. **Add Exclusions and Delay**: leave blank (we will use **Reservations** for fixed addresses).
+5. **Add Exclusions and Delay**: Add the following:
+    * `10.0.UID.1`
+    * `10.0.UID.200` to `10.0.UID.254`
+    * Leave the delay blank.
 6. **Lease Duration**: default (8 days) → **Next**.
 7. **Configure DHCP Options**: choose **Yes, I want to configure these options now** → **Next**.
 
@@ -80,7 +83,9 @@ Before beginning, you must have:
 2. **Domain Name and DNS Servers – Option 006/015**:
 
    * **Parent domain** (Option 015): `yourSenecaUsername.com` *(replace with your lab domain from Lab 4)*
-   * **DNS Servers** (Option 006): `10.0.UID.1` *(srv1)* → **Add** → **Next**.
+   * **DNS Servers** (Option 006): 
+       * `10.0.UID.1` *(srv1)*
+       * **149.112.121.20** *(CIRA)*
 3. **WINS Servers**: leave blank → **Next**.
 4. **Activate Scope**: select **Yes, I want to activate this scope now** → **Finish**.
 
