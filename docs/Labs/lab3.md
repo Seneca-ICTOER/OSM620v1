@@ -566,6 +566,6 @@ On _client1_:
 1. Ping _srv1_
 1. Ping _srv2_
 1. SSH into _srv2_
-1. RDP into _srv1_
+1. RDP into _srv2_
 1. In Firefox, load the IIS test page at: **10.0.`UID`.1**
 1. In Firefox, test your Internet connection by loading: **eff.org**
