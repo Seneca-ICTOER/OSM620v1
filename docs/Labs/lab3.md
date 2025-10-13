@@ -464,6 +464,20 @@ Start-Service sshd
 Set-Service -Name sshd -StartupType 'Automatic'
 ```
 
+ 6. As with our other work, let's confirm the SSH service is running:
+
+  ```powershell
+  Get-Service sshd
+  ```
+
+7. You should have a response that looks like this:
+
+```powershell
+Status   Name               DisplayName
+------   ----               -----------
+Running  sshd               OpenSSH SSH Server
+```
+
 ### Part 2: Adding an SSH Firewall Rule
 
 1. We'll now add an SSH rule. One already exists, but it's only attached to the _Private_ profile and would not work for us.
