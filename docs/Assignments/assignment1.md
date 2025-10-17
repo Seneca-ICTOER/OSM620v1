@@ -139,17 +139,17 @@ Let's see if we can access all the HQ resources we were able to with our other V
 2. Open *Command Prompt*.
 3. Reset DNS cache: `ipconfig /flushdns`
 4. Let's check DNS resolution. Run the following:
- 1. `nslookup srv1.YourSenecaUsername.com`
- 2. `nslookup srv2.YourSenecaUsername.com`
- 3. `nslookup eff.org`
+1. `nslookup srv1.YourSenecaUsername.com`
+2. `nslookup srv2.YourSenecaUsername.com`
+3. `nslookup eff.org`
 5. Now, let's confirm we have connections to these resources:
- 1. `ping srv1.cjohnson30.com`
- 2. `ping srv2.cjohnson30.com`
- 3. `ping eff.org`
+1. `ping srv1.cjohnson30.com`
+2. `ping srv2.cjohnson30.com`
+3. `ping eff.org`
 6. Finally, let's take a look at the **path through the network** that our connection to these resources is taking:
- 1. `tracert srv1.cjohnson30.com`
- 2. `tracert srv2.cjohnson30.com`
- 3. `tracert eff.org`
+1. `tracert srv1.cjohnson30.com`
+2. `tracert srv2.cjohnson30.com`
+3. `tracert eff.org`
 
 > **Reflection:** Why do these tests work? Be specific.
 
@@ -178,8 +178,8 @@ We will be connecting to the following services from *laptop1*:
 6. If you see the Server2 desktop with the `sconfig` window, congrats! Close the RDP connection.
 7. Open **Command Prompt** and login to *srv2*'s SSH connection: `ssh Administrator@srv2.YourSenecaUsername.com`
 8. To confirm your work, run the following commands in your SSH session:
- 1. `hostname`
- 2. `whoami`
+1. `hostname`
+2. `whoami`
 9. Close the connection.
 10. In Firefox, navigate to: `http://srv1.cjohnson30.com`
 11. In Firefox, navigate to: `http://www.eff.org`
@@ -209,8 +209,8 @@ Check the following on *srv1* when online:
 
 1. In **Network Connections**, all three adapters (*External Network*, *Internal Network*, and *vEthernet (HQ Network)*) have ***IPv6 disabled***.
 2. At the VMware level, check the hardware settings for *srv1*:
- 1. NIC1: **NAT** (Internet)
- 2. NIC2: **VMnet10** (local network)
+1. NIC1: **NAT** (Internet)
+2. NIC2: **VMnet10** (local network)
 3. DNS is running.
 4. DHCP is running.
 5. RRAS is running.
@@ -226,21 +226,21 @@ Let's begin.
 1. Open the **Routing and Remote Access** window. (*Server Manager application -> Tools -> Routing and Remote Access*)
 2. Find your local server in the column list on the left (likely *SRV1-SENECAUSERNAME (local)*).
 3. Right-click it and select **Disable Routing and Remote Access**.
- 1. You will get a warning that this will remove its configuration. This is what we want. Select **Yes**.
- 2. This may take a few moments. Be patient.
+1. You will get a warning that this will remove its configuration. This is what we want. Select **Yes**.
+2. This may take a few moments. Be patient.
 4. Once complete, the left-hand column list should refresh, showing almost nothing aside from the server name. The server name will also have a **red status icon** next to it showing you it's disabled. (If the left-hand column list is unchanged, refresh the view.)
 5. Right-click *SRV1* and select **Configure and Enable Routing and Remote Access**
 6. You're brought back into the *Routing and Remote Access Server Setup Wizard* from earlier in the course.
 7. Select **Next** on the first info page. You are now in the **Configuration** page.
 8. In the **Configuration** page, select: *Custom configuration* and click **Next**.
 9. In the **Custom Configuration** page, select the following options and click **Next**:
- 1. VPN Access
- 2. NAT
- 3. LAN routing
+1. VPN Access
+2. NAT
+3. LAN routing
 10. The last page is the confirmation page. If the above selections show up in the display, click **Finish** to complete. (If not, hit the **Back** button and fix your selection. Feel free to ask for help!)
 11. A popup window will appear asking if you'd like to start the service. **Select *Cancel***. We have more configuration to do before starting it up.
 
->  **Note:** Keeping the RRAS server offline for now allows us to make additional changes without having to restart the service every time we make a change. This saves us a ton of time and frustration.
+> **Note:** Keeping the RRAS server offline for now allows us to make additional changes without having to restart the service every time we make a change. This saves us a ton of time and frustration.
 
 12. You should now see the familiar list of items in the left-hand menu column, with two new additions:
  1. Ports
@@ -254,8 +254,8 @@ In this part, we'll reconfigure NAT to what we had set up before.
 1. In the left-hand column, click on and expand the **IPv4** entry.
 2. Click on **IPv4 -> NAT**.
 3. Inside the NAT main window, right-click in the white space and select *New Interface*. Add the following:
- 1. External Network -> Interface Type: Public interface connected to the Internet -> Enable NAT on this interface checked.
- 2. vEthernet (HQ Network) -> Interface Type: Private interface connected to private network
+1. External Network -> Interface Type: Public interface connected to the Internet -> Enable NAT on this interface checked.
+2. vEthernet (HQ Network) -> Interface Type: Private interface connected to private network
 
 ### Part 3: Configuring the Server for IPv4 and Local Networks
 
@@ -264,11 +264,11 @@ In this part, we'll configure the RRAS service to only use IPv4 and to take netw
 4. Back in the left-hand column, right-click on **SRV1** and select **Properties**.
 5. In the *Properties* window, click on the **IPv6** tab.
 6. Disable those pesky IPv6 options by ***unchecking*** the following:
- 1. Enable IPv6 Forwarding
- 2. Enable Default Route Advertisement
+1. Enable IPv6 Forwarding
+2. Enable Default Route Advertisement
 7. Click in the **IPv4** tab.
 8. Near the bottom of the tab, look for the *Adapter* entry and click on the drop-down menu.
- 1. Select **vEthernet (HQ Network)**
+1. Select **vEthernet (HQ Network)**
 9. Click **Apply** (not **OK**!). We have more work to do here.
 
 ### Part 4: Assigning IP Ranges for VPN Clients
@@ -283,15 +283,15 @@ Remember in our DHCP lab where we specified that the DHCP could only use 10.0.`U
 
 1. In RRAS, open the **Properties** window of *SRV1-SENECAUSERNAME (local)* and click on the **IPv4** tab. (If this is already open from *Part 3*, skip to Step 2.)
 2. Look for the *IPv4 address assignment* section in this tab.
- 1. Change the selection from **Dynamic Host Configuration Protocol (DHCP)** to **Static address pool**.
- 2. Below that, click the **Add** button.
- 3. The *New IPv4 Address Range* window pops up.
- 4. Enter the following:
-  1. Start IP address: **10.0.`UID`.200**
-  2. End IP address: **10.0.`UID`.209**
-  3. This should give you **10** in the field below automatically. Click **OK**.
- 5. You should now see that IP address range in the *Static Address pool* table.
- 6. Click **Apply** (not **OK**!). We have just a little more work to do here.
+1. Change the selection from **Dynamic Host Configuration Protocol (DHCP)** to **Static address pool**.
+2. Below that, click the **Add** button.
+3. The *New IPv4 Address Range* window pops up.
+4. Enter the following:
+1. Start IP address: **10.0.`UID`.200**
+2. End IP address: **10.0.`UID`.209**
+3. This should give you **10** in the field below automatically. Click **OK**.
+5. You should now see that IP address range in the *Static Address pool* table.
+6. Click **Apply** (not **OK**!). We have just a little more work to do here.
 
 ### Part 5: VPN Security and Authentication
 
@@ -311,12 +311,12 @@ We'll use a more sophisticated version towards the end of the semester that is m
 4. Just below that, there's a button labelled **Authentication Methods...**. Click it.
 5. The *Authentication Methods* pop-up window appears. We're going to be changing a few settings here
 6. Verify the following settings, and change the ones on your setup that don't match the values below:
- 1. Extensible authentication protocol (EAP): **Unchecked**
- 2. Microsoft encrypted authentication version 2 (MS-CHAP v2): **Checked**
- 3. Encrypted authentication (CHAP): **Unchecked**
- 4. Unencrypted password: **Unchecked**
- 5. Allow machine certificate authentication for IKEv2: **Unchecked**
- 6. Allow remote systems to connect without authentication: **Unchecked**
+1. Extensible authentication protocol (EAP): **Unchecked**
+2. Microsoft encrypted authentication version 2 (MS-CHAP v2): **Checked**
+3. Encrypted authentication (CHAP): **Unchecked**
+4. Unencrypted password: **Unchecked**
+5. Allow machine certificate authentication for IKEv2: **Unchecked**
+6. Allow remote systems to connect without authentication: **Unchecked**
 7. Click **OK** when done.
 8. Click **OK** on the *Properties -> Security* tab to close the window.
 
@@ -331,8 +331,8 @@ First, let's start up the RRAS service.
 3. When complete, the local server entry should now have a green icon.
 4. Right-click *SRV1* again and select **Properties**.
 5. In the **Security** tab, change the following:
- 1. Allow custom IPsec policy for L2TP/IKEv2 connection: **Checked**
- 2. Preshared Key: **OSM620-2025F-L2TP-ONLY-DoNotReuse!**
+1. Allow custom IPsec policy for L2TP/IKEv2 connection: **Checked**
+2. Preshared Key: **OSM620-2025F-L2TP-ONLY-DoNotReuse!**
 6. Click **OK** to apply and close the window.
 7. It may ask you to restart the service. Click **OK**.
 
@@ -358,15 +358,15 @@ Let's set this up.
 3. The *Ports Properties* window appears.
 4. We have some major changes to make here. To make changes, you'll click on one of the entries and then select the **Configure...** button. When you change the number of ports, a popup asking if you're sure will appear when you hit **OK**. Select **Yes**.
 5. Verify the following settings, and change the *Number of ports* on your setup that don't match the values below:
- 1. WAN Miniport (SSTP): **0**
- 2. WAN Miniport (IKEv2): **0**
- 3. WAN Miniport (PPTP): **0**
- 4. WAN Miniport (PPPoE): **1** (Though we don't need it, server will not let you set this to zero.)
- 5. WAN Miniport (GRE): **0**
- 6. WAN Miniport (L2TP): **10**
-  1. **Note:** Select *Remote access connections (inbound only)* in this window.
-  2. **Note:** When you make this change, a popup will ask if you want to restart the RRAS server. Select **Yes**.
-  3. Your *srv1* computer will restart. This is normal.
+1. WAN Miniport (SSTP): **0**
+2. WAN Miniport (IKEv2): **0**
+3. WAN Miniport (PPTP): **0**
+4. WAN Miniport (PPPoE): **1** (Though we don't need it, server will not let you set this to zero.)
+5. WAN Miniport (GRE): **0**
+6. WAN Miniport (L2TP): **10**
+1. **Note:** Select *Remote access connections (inbound only)* in this window.
+2. **Note:** When you make this change, a popup will ask if you want to restart the RRAS server. Select **Yes**.
+3. Your *srv1* computer will restart. This is normal.
 6. When you've finished restarting and logged back in, reopen the RRAS application.
 7. In the main *Ports* window, the list in the main window should only contain the 10 L2TP ports (and 1 PPoE).
 
@@ -457,11 +457,13 @@ Let's trick *laptop1*:
 3. Copy the `hosts` file to your *laptop1* desktop.
 4. Double-click it to open it. The system will ask you what application to use. Choose **Notepad**.
 5. At the very bottom of the text document, add the following line (and change it according to your setup!):
- 1. *srv1 External NIC IP address*        vpn.`YourSenecaUsername`.com
+1. *srv1 External NIC IP address*        vpn.`YourSenecaUsername`.com
+
   > **Example:** `192.168.122.105     vpn.cjohnson30.com`
+
 6. Save this file. When the dialog box comes up asking for a name, use this:
- 1. `"hosts"`
- 2. Those double-quotes are necessary.
+1. `"hosts"`
+2. Those double-quotes are necessary.
 7. Copy the file back to: `C:\Windows\System32\drivers\etc`
 8. Check your work by opening *Command Prompt* and running the following command: `ping vpn.YourSenecaUserID.com`
 9. If you received a response pointing for your *srv1* external IP address, congrats! Move to **Part 2**.
@@ -478,15 +480,15 @@ In this part, we'll use our *laptop1* client VM to connect to the VPN on *srv1*.
 1. On *laptop1*, open: *Settings* > *Network & internet* > *VPN*
 2. Click on **Add VPN**
 3. Use the following settings:
- 1. VPN Provider: **Windows (built-in)**
- 2. Connection name: **SRV1 VPN**
- 3. Server name or address: **vpn.cjohnson30.com**
- 4. VPN type: **L2TP/IPsec with pre-shared key**
- 5. Pre-shared key: **OSM620-2025F-L2TP-ONLY-DoNotReuse!**
- 6. Type of sign-in info: **Username and password**
- 7. Username: **`firstname.lastname`**
- 8. Password: **`password you used for the above account on srv1`**
- 9. Remember my sign-in info: **Checked**
+1. VPN Provider: **Windows (built-in)**
+2. Connection name: **SRV1 VPN**
+3. Server name or address: **vpn.cjohnson30.com**
+4. VPN type: **L2TP/IPsec with pre-shared key**
+5. Pre-shared key: **OSM620-2025F-L2TP-ONLY-DoNotReuse!**
+6. Type of sign-in info: **Username and password**
+7. Username: **`firstname.lastname`**
+8. Password: **`password you used for the above account on srv1`**
+9. Remember my sign-in info: **Checked**
 4. Double-check the above information, then click **Save**.
 5. Back in the *VPN* window, a new entry has appeared: **SRV1 VPN**
 6. Click the **Connect** button.
@@ -510,17 +512,17 @@ This is the fun part. Let's test our connection to HQ network resources, things 
 1. On *laptop1*, open *Command Prompt*.
 2. Reset DNS cache: `ipconfig /flushdns`
 3. Let's check DNS resolution. Run the following:
- 1. `nslookup srv1.YourSenecaUsername.com`
- 2. `nslookup srv2.YourSenecaUsername.com`
- 3. `nslookup eff.org`
+1. `nslookup srv1.YourSenecaUsername.com`
+2. `nslookup srv2.YourSenecaUsername.com`
+3. `nslookup eff.org`
 4. Now, let's confirm we have connections to these resources:
- 1. `ping srv1.cjohnson30.com`
- 2. `ping srv2.cjohnson30.com`
- 3. `ping eff.org`
+1. `ping srv1.cjohnson30.com`
+2. `ping srv2.cjohnson30.com`
+3. `ping eff.org`
 5. Finally, let's take a look at the **path through the network** that our connection to these resources is taking:
- 1. `tracert srv1.cjohnson30.com`
- 2. `tracert srv2.cjohnson30.com`
- 3. `tracert eff.org`
+1. `tracert srv1.cjohnson30.com`
+2. `tracert srv2.cjohnson30.com`
+3. `tracert eff.org`
 
 > **Reflection:** How are these results different from when you ran them in *Investigation 2*? How are they not?
 > How are these results different from when you ran them in *Part 2* above?
@@ -551,8 +553,8 @@ We will be connecting to the following services from *laptop1*:
 6. If you see the Server2 desktop with the `sconfig` window, congrats! Close the RDP connection.
 7. Open **Command Prompt** and login to *srv2*'s SSH connection: `ssh Administrator@srv2.YourSenecaUsername.com`
 8. To confirm your work, run the following commands in your SSH session:
- 1. `hostname`
- 2. `whoami`
+1. `hostname`
+2. `whoami`
 9. Close the connection.
 10. Open Firefox and navigate to: `http://srv1.YourSenecaUsername.com`
 11. Open Firefox and navigate to: `http://www.eff.org`
@@ -561,20 +563,20 @@ We will be connecting to the following services from *laptop1*:
 > **Reflection:** Why did these connections only work while the VPN was running? What still works with the VPN off?
 > What's happening when the VPN is connected? *Hint: Think about the `ipconfig` and `tracert` results you saw earlier.*
 
-### Submission
+## Submission
 
 Submission for assignments is a bit different from labs. Instead of live checks, you will be submitting a **report**.
 
 You will submit to Blackboard with a single PDF document that includes the following:
 
 1. Title page that includes:
- 1. Full name
- 2. Student ID Number
- 3. Course code and section
- 4. Calendar Semester (Fall 2025)
- 5. Date
+1. Full name
+2. Student ID Number
+3. Course code and section
+4. Calendar Semester (Fall 2025)
+5. Date
 2. For each Investigation:
- 1. The requested screenshots.
- 2. The reflection questions and your answers to each.
- 3. Each Investigation should start on a new page, and screenshots/reflection answers should be placed in the appropriate Investigation pages.
- 4. Number your pages!
+1. The requested screenshots.
+2. The reflection questions and your answers to each.
+3. Each Investigation should start on a new page, and screenshots/reflection answers should be placed in the appropriate Investigation pages.
+4. Number your pages!
