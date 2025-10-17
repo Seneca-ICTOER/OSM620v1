@@ -306,13 +306,15 @@ Remember in our DHCP lab where we specified that the DHCP could only use 10.0.`U
 
 Here, we'll decide how clients (like *laptop1*) will authenticate to *srv1* when using VPN. These are security settings and must match on both the server and the client.
 
-We'll be using an older protocol called **L2TP** and a **Shared passphrase**. This is an older, deprecated setup with security flaws and should not be used in normal production environments! We're using it here in an educational environment for simplicity.
-
-We'll use a more sophisticated version towards the end of the semester that is more secure.
+> **NOTE:** We'll be using an older protocol called **L2TP** and a **Shared passphrase**. This is an older, deprecated setup with security flaws and should not be used in normal production environments! We're using it here in an educational environment for simplicity.
+>
+> In a production environment, we'd use certificate-based **IKEv2** instead of L2TP. It's more sophisticated, secure, and Microsoft recommended. We'll look at this briefly after Active Directory is installed in a later lab.
 
 > **Screenshots:** Take full-desktop screenshots of the following:
 >
 > 1. Step 6 (when all changes complete)
+
+Let's begin our setup.
 
 1. In RRAS, open the **Properties** window of *SRV1-SENECAUSERNAME (local)*. (If this is already open from *Part 3*, skip to Step 2.)
 2. Change to the **Security** tab.
