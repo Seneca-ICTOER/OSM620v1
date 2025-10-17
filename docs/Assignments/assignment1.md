@@ -1,10 +1,3 @@
----
-id: assignment1
-title: Assignment 1
-sidebar_position: 1
-description: Assignment 1 - Roaming Employee Laptop
----
-
 # Assignment 1 - Roaming Employee Laptop
 
 ## Lab Preparation
@@ -160,7 +153,7 @@ Let's see if we can access all the HQ resources we were able to with our other V
 
 > **Reflection:** Why do these tests work? Be specific.
 
-### Part 5: Connecting to HQ Network Resources
+### Part 3: Connecting to HQ Network Resources
 
 In this part, we'll connect to actual resources on the HQ network. Remember, in this scenario, we are at in the office and connected to the HQ network directly.
 
@@ -504,7 +497,7 @@ In this part, we'll use our *laptop1* client VM to connect to the VPN on *srv1*.
 > **Reflection:** What do you notice that's different? Why do you think this is?
 > What might this mean?
 
-### Part 4: Testing Connections to HQ Network Resources
+### Part 5: Testing Connections to HQ Network Resources
 
 This is the fun part. Let's test our connection to HQ network resources, things that *aren't* accessible through a normal Internet connection.
 
