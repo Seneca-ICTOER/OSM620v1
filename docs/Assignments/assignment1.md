@@ -16,6 +16,7 @@ In this assignment, you will provision a new Windows 11 “office laptop,” val
 **Scenario Overview:** A new employee has been hired and you are in charge of onboarding them. This means provisioning a new company laptop for them to use for their work.
 
 	**Scenario 1 - On-Premises:** Your employee will be in the office with their new company laptop, physically connected to the internal network.
+
 	**Scenario 2 - Remote:** Your new employee also needs to work from home. Their remote work requires access to the company's internal network resources.
 
 **This is a technical assignment with a reflection component.** Your deliverable will be online inside a single PDF through Blackboard. (Check the *Submission* section at the end of this assignment.)
@@ -296,7 +297,7 @@ In this part, we're going to assign IP addresses that the VPN can use. When a cl
 Remember in our DHCP lab where we specified that the DHCP could only use 10.0.`UID`.2-10.0.`UID`.199, even though we could have gone up to .254? That wasn't arbitrary! We'll use those remaining addresses here.
 
 > **Screenshots:** Take screenshots of the following:
-> 1. Step 5 (Screenshot 9)
+> 1. Step 2.v (Screenshot 9)
 
 1. In RRAS, open the **Properties** window of *SRV1-SENECAUSERNAME (local)* and click on the **IPv4** tab. (If this is already open from *Part 3*, skip to Step 2.)
 2. Look for the *IPv4 address assignment* section in this tab.
