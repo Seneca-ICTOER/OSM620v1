@@ -311,7 +311,7 @@ Remember in our DHCP lab where we specified that the DHCP could only use 10.0.`U
 	5. You should now see that IP address range in the *Static Address pool* table. (See *Figure 4* below.)
 	6. Click **Apply** (not **OK**!). We have just a little more work to do here.
 
-> ![Fig 4. Completed IPv4 tab.](/img/RRAS-IPv4-complete.png)
+> ![Fig 4. Completed IPv4 tab.](/img/RRAS-IPv4-complete.png)  
 > *Figure 4. Completed IPv4 tab.*
 
 ### Part 5: VPN Security and Authentication
