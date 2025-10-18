@@ -11,12 +11,12 @@ description: Assignment 1 - Roaming Employee Laptop
 
 ### Purpose of Assignment 1
 
-In this assignment, you will provision a new Windows 11 “office laptop,” validate how it behaves **on premises** (HQ network) versus **remote** (over the Internet via VPN), and explain routing/DNS differences between the two scenarios.
+In this assignment, you will provision a new Windows 11 “office laptop,” validate how it behaves **on premises** (HQ Network) versus **remote** (over the Internet via VPN), and explain routing/DNS differences between the two scenarios.
 
 **Scenario Overview:** A new employee has been hired and you are in charge of onboarding them. This means provisioning a new company laptop for them to use for their work.
 
-**Scenario 1 - On-Premises:** Your employee will be in the office with their new company laptop, physically connected to the internal network.
-**Scenario 2 - Remote:** Your new employee also needs to work from home. Their remote work requires access to the company's internal network resources.
+	**Scenario 1 - On-Premises:** Your employee will be in the office with their new company laptop, physically connected to the internal network.
+	**Scenario 2 - Remote:** Your new employee also needs to work from home. Their remote work requires access to the company's internal network resources.
 
 **This is a technical assignment with a reflection component.** Your deliverable will be online inside a single PDF through Blackboard. (Check the *Submission* section at the end of this assignment.)
 
@@ -207,7 +207,8 @@ We will be connecting to the following services from *laptop1*:
 
 ## Investigation 3: Virtual Private Networking (VPN)
 
-In this investigation, you will configure a VPN service on *srv1*. This will allow *laptop1* to log into the local HQ network over the Internet and access internal office resources like *srv2* from outside the office..
+In this investigation, you will configure a VPN service on *srv1*. This will allow *laptop1* to log into the local HQ network over the Internet and access internal office resources like *srv2* from outside the office.
+
 ### Before You Begin
 
 Only the following VMs need to be turned on:
@@ -223,6 +224,7 @@ Check the following on *srv1* when online:
 3. DNS is running.
 4. DHCP is running.
 5. RRAS is running.
+
 ### Part 1: Adding VPN to RRAS
 
 **Routing and Remote Access (RRAS)** is a service you worked with in previous labs to set up NAT. It also offers VPN services, but our earlier setup didn't include it.
@@ -248,7 +250,7 @@ Let's begin.
 10. The last page is the confirmation page. If the above selections show up in the display, click **Finish** to complete. (If not, hit the **Back** button and fix your selection. Feel free to ask for help!)
 11. A popup window will appear asking if you'd like to start the service. **Select *Cancel***. We have more configuration to do before starting it up.
 
-![[RRAS-donotstart.png]]
+> ![Fig 2. Select CANCEL on this screen!](/img/RRAS-donotstart.png)
 *Figure 2. **Select CANCEL on this screen!***
 
 > 	**Note:** Keeping the RRAS server offline for now allows us to make additional changes without having to restart the service every time we make a change. This saves us a ton of time and frustration.
@@ -258,10 +260,11 @@ Let's begin.
 	2. Remote Access Clients
 13. **Check:** The RRAS service should still be offline. Look for the red status icon over SRV1.
 
-![[RRAS-offline.png]]
+> ![Fig 3. RRAS service offline with red status icon.](/img/RRAS-offline.png)
 *Figure 3. RRAS service offline with red status icon.*
 
 14. If the service is online (green), right-click it and go to: **All Tasks > Stop**
+
 ### Part 2: Reconfiguring NAT
 
 In this part, we'll reconfigure NAT to what we had set up before.
@@ -303,12 +306,12 @@ Remember in our DHCP lab where we specified that the DHCP could only use 10.0.`U
 	4. Enter the following:
 		1. Start IP address: **10.0.`UID`.200**
 		2. End IP address: **10.0.`UID`.209**
-		3. ![[RRAS-IP-range-mini.png]] 
+		3. ![Example IP range.](/img/RRAS-IP-range-mini.png) 
 		4. This should give you **10** in the field below automatically. Click **OK**.
 	5. You should now see that IP address range in the *Static Address pool* table. (See *Figure 4* below.)
 	6. Click **Apply** (not **OK**!). We have just a little more work to do here.
 
-![[RRAS-IPv4-complete.png]]
+> ![Fig 4. Completed IPv4 tab.](/img/RRAS-IPv4-complete.png)
 *Figure 4. Completed IPv4 tab.*
 
 ### Part 5: VPN Security and Authentication
@@ -339,7 +342,7 @@ Let's begin our setup.
 7. Click **OK** when done.
 8. Click **OK** on the *Properties -> Security* tab to close the window.
 
-![[RRAS-auth-methods-complete.png]]
+> ![Fig 5. Properly selected authentication methods.](/img/RRAS-auth-methods-complete.png)
 *Figure 5. Properly selected authentication methods.*
 
 ### Part 6: Starting up the RRAS service with VPN
@@ -355,11 +358,12 @@ First, let's start up the RRAS service.
 	1. Allow custom IPsec policy for L2TP/IKEv2 connection: **Checked**
 	2. Preshared Key: **OSM620-2025F-L2TP-ONLY-DoNotReuse!**
 
-![[RRAS-PSK.png]]
+> ![Fig 6. Example of an entered Preshared Key value.](/img/RRAS-PSK.png)
 *Figure 6. Example of an entered Preshared Key value.*
 
 6. Click **OK** to apply and close the window.
 7. It may ask you to restart the service. Click **OK**.
+
 ### Part 7: Creating Available Ports for VPN Connections
 
 In this part, we'll create a pool of ports that can be used for individual VPN client connections. Each connection must have its own unshared port. These are recycled after disconnect.
@@ -394,8 +398,9 @@ Let's set this up.
 7. When you've finished restarting and logged back in, reopen the RRAS application.
 8. In the main *Ports* window, the list in the main window should only contain the 10 L2TP ports (and 1 PPPoE).
 
-![[RRAS-ports-complete.png]]
+> ![Fig 7. Completed L2TP ports listing.](/img/RRAS-ports-complete.png)
 *Figure 7. Completed L2TP ports listing.*
+
 ### Part 8: Network Policy Server
 
 In this section, we'll open the **Network Policy Server** application and enable the profile that allows VPN authentication. This is an easy security task. This feature is installed by default through our previous lab work.
@@ -405,7 +410,7 @@ In this section, we'll open the **Network Policy Server** application and enable
 3. In the *Network Policy Server* application, use the left-hand column to go to **Policies > Network Policies**.
 4. In the main window, find the policy entry listed as **Connections to Microsoft Routing and Remote Access Server**.
 
-![[NPS-application.png]]
+> ![Fig 8. CNetwork Policy Server application with the correct profile selected to edit.](/img/NPS-application.png)
 *Figure 8. Network Policy Server application with the correct profile selected to edit.*
 
 5. Double-click this entry.
@@ -413,7 +418,7 @@ In this section, we'll open the **Network Policy Server** application and enable
 7. Find the section on that tab labelled *Access Permission*.
 8. Select: **Grant access. Grant access if the connection matches this policy.**
 
-![[NPS-grant-access.png]]
+> ![Fig 9. Granting access to the defined policy we're editing.](/img/NPS-grant-access.png)
 *Figure 9. Granting access to the defined policy we're editing.*
 
 9. Click **OK** to apply and close the window.
@@ -434,7 +439,7 @@ For the employee to connect to *srv1*, we need to give them an account on that s
 3. In the *Computer Management* application, use the left-hand column to go to **Local Users and Groups > Users**.
 4. Right-click the *Users* folder and select **New User...**
 
-![[New Local User.png]]
+> ![Fig 10. New User selection from context menu.](/img/new-local-user.png)
 *Figure 10. New User selection from context menu.*
 
 5. In the *New User* popup window, fill out the following values:
@@ -448,19 +453,21 @@ For the employee to connect to *srv1*, we need to give them an account on that s
 	8. Password never expires: **Checked**
 	9. Account is disabled: **Unchecked**
 
-![[Local User Dialog.png]]
+> ![Fig 11. New User Dialog Box - Filled Out.](/img/local-user-dialog.png)
 *Figure 11. New User Dialog Box - Filled Out.*
 
 6. Confirm your settings are correct and click **Create**.
 7. Confirm you can see your new user in the list. If so, move on to the next Investigation!
 
-![[New User Added to List.png]]
+> ![Fig 12. New user successfully added to list.](/img/new-user-added-to-list.png)
 *Figure 12. New user successfully added to list.*
+
 ## Investigation 4: Connecting to the VPN with *laptop1*
 
 In this investigation, we will set up *laptop1* to connect to the VPN service we configured on *srv1*.
 
 **Scenario:** Our new employee wants to connect to office resources from home. Let's make sure they can.
+
 ### Before You Begin:
 
 Turn on the following VMs:
@@ -472,6 +479,7 @@ Check the following on *laptop1*:
 1. In **Network Connections**, the single adapter **Ethernet0** has ***IPv6 disabled***.
 
 This should already be set from previous labs, but now is a good time to check. Missing this will break this investigation in interesting and very frustrating ways.
+
 ### Part 1: Switching *laptop1*'s Network
 
 Here, we'll emulate taking our new laptop home. This means removing it from the HQ network and putting it on NAT. Basically, giving it a standard Internet connection you'd get if you used it at home with your normal setup.
@@ -537,7 +545,7 @@ Let's trick *laptop1*:
 2. Over on *laptop1*: Open the folder: `C:\Windows\System32\drivers\etc`
 3. There are several files here, including one called: `hosts`
 
-![[hosts-folder-location.png]]
+> ![Fig 13. List of files in: C:\Windows\System32\drivers\etc](/img/hosts-folder-location.png)
 *Figure 13. List of files in: C:\Windows\System32\drivers\etc*
 
 4. Copy the `hosts` file to your *laptop1* desktop.
@@ -546,7 +554,7 @@ Let's trick *laptop1*:
 	1. *srv1 External Network IP address*        vpn.`YourSenecaUsername`.com
 		> **Example:** `192.168.122.105     vpn.cjohnson30.com`
 
-![[hosts-file.png]]
+> ![Fig 14. Example VPN entry in hosts file.](/img/hosts-file.png)
 *Figure 14. Example VPN entry in hosts file.*
 
 7. Save this file. When the dialog box comes up asking for a name, use this:
@@ -577,7 +585,7 @@ In this part, we'll use our *laptop1* client VM to connect to the VPN on *srv1*.
 	8. Password: **`password you used for the above account on srv1`**
 	9. Remember my sign-in info: **Checked**
 
-![[vpn-client-settings.png]]
+> ![Fig 15. Example of filled out VPN client information.](/img/vpn-client-settings.png)
 *Figure 15. Example of filled out VPN client information.*
 
 4. Double-check the above information, then click **Save**.
@@ -585,7 +593,7 @@ In this part, we'll use our *laptop1* client VM to connect to the VPN on *srv1*.
 6. Click the **Connect** button.
 7. After a few moments, it should say *Connected*.
 
-![[vpn-connected.png]]
+> ![Fig 16. VPN connected.](/img/vpn-connected.png)
 *Figure 16. VPN connected.*
 
 8. If not, review your previous settings and/or ask for help.
