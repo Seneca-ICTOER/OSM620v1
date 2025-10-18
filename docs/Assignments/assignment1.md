@@ -1,18 +1,22 @@
 # Assignment 1 - Roaming Employee Laptop
 
+
 ## Lab Preparation
 
 ### Purpose of Assignment 1
 
 In this assignment, you will provision a new Windows 11 “office laptop,” validate how it behaves **on premises** (HQ network) versus **remote** (over the Internet via VPN), and explain routing/DNS differences between the two scenarios.
 
-**Scenario 1:** You have an employee laptop in the physical office connected to the internal network.
-**Scenario 2:** You have the same employee laptop at home, wanting to access office resources over the Internet.
+**Scenario Overview:** A new employee has been hired and you are in charge of onboarding them. This means provisioning a new company laptop for them to use for their work.
 
-This is a technical assignment and a reflection paper. Your deliverable will be online inside a single PDF through Blackboard. (Check the *Submission* section at the end of this assignment.)
+**Scenario 1 - On-Premises:** Your employee will be in the office with their new company laptop, physically connected to the internal network.
+**Scenario 2 - Remote:** Your new employee also needs to work from home. Their remote work requires access to the company's internal network resources.
+
+**This is a technical assignment with a reflection component.** Your deliverable will be online inside a single PDF through Blackboard. (Check the *Submission* section at the end of this assignment.)
 
 You will produce screenshots and short written explanations (“why/why not?”) to prove each step. The assignment instructs you when to do each with the following notes:
-> **Screenshots:** Warning you of screenshots you will need to take shortly with a list of which steps the screenshots should be taken.
+
+> **Screenshots:** Heads up of screenshots you will need to take shortly, with a list at which steps each screenshot should be taken.
 > 
 > **Reflection:** Questions you will answer to show some thought and understanding of the overall effects of what you're doing.
 
@@ -22,10 +26,11 @@ If you encounter technical issues, please contact your professor via e-mail or i
 
 By the end, you will:
 
-1. Distinguish **on-prem** vs **remote** access paths and when VPN is required.
+1. Distinguish **on-prem** VS **remote** access paths and when VPN is required.
 2. **Enable and configure L2TP/IPsec (PSK)** in RRAS (RRAS is already installed).
-3. Prove DNS/web reachability to internal services **using FQDNs**.
-4. Read/interpret tracert and nslookup to explain routing/DNS behavior.
+3. Connect a client to your server using VPN over the Internet.
+4. Prove DNS/web reachability to internal services **using FQDNs**.
+5. Use `tracert` and `nslookup` output to explain routing/DNS behavior.
 
 ### Minimum Progression Requirements
 
@@ -79,9 +84,11 @@ Do not continue until the copy has fully completed.
 
 ----
 
-Only the following VMs need to be turned on:
-* *srv1*
 ### Part 1: Creating *laptop1* VM
+
+In this part, you will create a new Windows 11 virtual machine using the hardware specifications below.
+
+> **Note:** Keep all other VMs off until told otherwise.
 
 Virtual Machine Specifications:
 * Hypervisor: **VMware Workstation**
@@ -94,6 +101,8 @@ Virtual Machine Specifications:
 
 ### Part 2: OS Installation and Configuration
 
+Use the following instructions to install the OS and run post-installation tasks on your new *laptop1* VM.
+
 1. Create the VM with the specifications above.
 2. When creating the user, use `firstname.lastname`
 3. Run through the standard **Post-Installation Tasks** you ran in *Lab 2*.
@@ -101,17 +110,18 @@ Virtual Machine Specifications:
 
 ## Investigation 2: Add `laptop1` to Local HQ Network
 
-Here, we'll connect our new `laptop1` machine to to office HQ network and access some local resources.
+Here, we'll connect our new `laptop1` machine to office HQ network and access some local resources.
 
-**Scenario:** A physical laptop connected to WiFi inside our company's physical office.
+**Scenario:** A physical laptop connected to Ethernet inside our company's physical office.
 ### Before You Begin
 
-We will *not* be using our Hyper-V VMs in this assignment. To make things easier, change *srv1*'s hardware settings in VMware Workstation while the VM is powered off:
+We will *not* be using our Hyper-V VMs in this assignment. To make things easier, change *srv1*'s hardware settings in VMware Workstation while the VM is powered off.
+On *srv1:*
 1. CPU: **Change from 6-cores to 4-cores.**
 2. RAM: **Change from 16 GB to 8 GB**
 
 On *srv2*:
-1. Disconnect the NAT NIC, leaving only the NIC with the 10.0.`UID`.2 NIC online.
+1. Disconnect the NAT NIC, leaving only the NIC with the 10.0.`UID`.2 online. *srv2* should only be reachable though the 10.0.`UID`.0/24 network (HQ Network).
 
 ### Part 1: Switching the Network
 
@@ -127,9 +137,9 @@ We need to switch `laptop1`'s network connection from the basic Internet to our 
 Let's see if we can access all the HQ resources we were able to with our other VMs in previous labs.
 
 > **Screenshots:** Take full desktop screenshots of the end of the following steps:
-> 1. Step 5
-> 2. Step 6
-> 3. Step 8
+> 1. Step 4 (Screenshot 1)
+> 2. Step 5 (Screenshot 2)
+> 3. Step 6 (Screenshot 3)
 
 1. Switch to `laptop1`.
 2. Open *Command Prompt*.
@@ -138,37 +148,42 @@ Let's see if we can access all the HQ resources we were able to with our other V
 	1. `nslookup srv1.YourSenecaUsername.com`
 	2. `nslookup srv2.YourSenecaUsername.com`
 	3. `nslookup eff.org`
+
+![[nslookup-srv1.png]]
+*Figure 1. Example of a successful DNS lookup using srv1.*
+
 5. Now, let's confirm we have connections to these resources:
 	1. `ping srv1.cjohnson30.com`
 	2. `ping srv2.cjohnson30.com`
 	3. `ping eff.org`
-6. Finally, let's take a look at the **path through the network** that our connection to these resources is taking:
+6. Finally, let's take a look at the **path through the network** that our connection to these resources is taking. `tracert` is a utility that tracks each hop taken between your computer and the destination and shows any others it travelled through to get there. Run the following:
 	1. `tracert srv1.cjohnson30.com`
 	2. `tracert srv2.cjohnson30.com`
 	3. `tracert eff.org`
 
-> **Reflection:** Why do these tests work? Be specific.
+> **Reflection 1:** Why do these tests work? Be specific.
 
 ### Part 3: Connecting to HQ Network Resources
 
-In this part, we'll connect to actual resources on the HQ network. Remember, in this scenario, we are at in the office and connected to the HQ network directly.
+In this part, we'll connect to actual resources on the HQ network. Remember, in this scenario, we are in the office and connected to the HQ network directly.
 
 We will be connecting to the following services from *laptop1*:
 * RDP
 * SSH
 * Webpage
 
-> **Screenshots:** Take full-desktop screenshots of the following:
-> 1. Step 3
-> 2. Step 5
-> 3. Step 7
-> 4. Step 10
+> **Screenshots:** Take screenshots of the following:
+> 1. Step 3 (Screenshot 4)
+> 2. Step 5 (Screenshot 5)
+> 3. Step 8 (Screenshot 6)
+> 4. Step 10 (Screenshot 7)
+> 5. Step 11 (Screenshot 8)
 
 1. Power on `laptop1` and login.
 2. Open the **Remote Desktop Connection** application.
-3. Connect to *srv1* with: `srv1.YourUserName.com`
+3. Connect with to *srv1* with: `srv1.YourSenecaUsername.com`
 4. If you see the Server1 desktop, congrats! Close the RDP connection.
-5. Back on *laptop1*, open an RDP connection directly to: `srv2.YourUserName.com`
+5. Back on *laptop1*: Open an RDP connection directly to: `srv2.YourSenecaUsername.com`
 6. If you see the Server2 desktop with the `sconfig` window, congrats! Close the RDP connection.
 7. Open **Command Prompt** and login to *srv2*'s SSH connection: `ssh Administrator@srv2.YourSenecaUsername.com`
 8. To confirm your work, run the following commands in your SSH session:
@@ -178,23 +193,19 @@ We will be connecting to the following services from *laptop1*:
 10. In Firefox, navigate to: `http://srv1.cjohnson30.com`
 11. In Firefox, navigate to: `http://www.eff.org`
 
-> **Reflection:** Why did these connections only work? Be specific.
-> What's happening when we connect to `srv2`?
+> **Reflection 2:** Why did these connections work? Be specific.
+> What's happening when we connect to `srv2` based on our `tracert` output? 
 > What's happening when we connect to `eff.org`?
 
 ## Investigation 3: Virtual Private Networking (VPN)
 
-In this investigation, you will configure a VPN service on *srv1*. This will allow *laptop1* to log into the local HQ network over the Internet and access internal office resources like *srv2*.
+In this investigation, you will configure a VPN service on *srv1*. This will allow *laptop1* to log into the local HQ network over the Internet and access internal office resources like *srv2* from outside the office..
 ### Before You Begin
 
 Only the following VMs need to be turned on:
 * *srv1*
 
-Shut down the rest for now.
-
-We will *not* be using our Hyper-V VMs in this assignment. To make things easier, change *srv1*'s hardware settings in VMware Workstation while the VM is powered off:
-1. CPU: **Change from 6-cores to 4-cores**
-2. RAM: **Change from 16 GB to 8 GB**
+Shut down the rest for now (including *laptop1*).
 
 Check the following on *srv1* when online:
 1. In **Network Connections**, all three adapters (*External Network*, *Internal Network*, and *vEthernet (HQ Network)*) have ***IPv6 disabled***.
@@ -229,6 +240,9 @@ Let's begin.
 10. The last page is the confirmation page. If the above selections show up in the display, click **Finish** to complete. (If not, hit the **Back** button and fix your selection. Feel free to ask for help!)
 11. A popup window will appear asking if you'd like to start the service. **Select *Cancel***. We have more configuration to do before starting it up.
 
+![[RRAS-donotstart.png]]
+*Figure 2. **Select CANCEL on this screen!***
+
 > 	**Note:** Keeping the RRAS server offline for now allows us to make additional changes without having to restart the service every time we make a change. This saves us a ton of time and frustration.
 
 12. You should now see the familiar list of items in the left-hand menu column, with two new additions:
@@ -236,6 +250,10 @@ Let's begin.
 	2. Remote Access Clients
 13. **Check:** The RRAS service should still be offline. Look for the red status icon over SRV1.
 
+![[RRAS-offline.png]]
+*Figure 3. RRAS service offline with red status icon.*
+
+14. If the service is online (green), right-click it and go to: **All Tasks > Stop**
 ### Part 2: Reconfiguring NAT
 
 In this part, we'll reconfigure NAT to what we had set up before.
@@ -250,24 +268,24 @@ In this part, we'll reconfigure NAT to what we had set up before.
 
 In this part, we'll configure the RRAS service to only use IPv4 and to take network information from our vEthernet (HQ Network) where our DHCP and DNS live.
 
-4. Back in the left-hand column, right-click on **SRV1** and select **Properties**.
-5. In the *Properties* window, click on the **IPv6** tab.
-6. Disable those pesky IPv6 options by ***unchecking*** the following:
+1. Back in the left-hand column, right-click on **SRV1** and select **Properties**.
+2. In the *Properties* window, click on the **IPv6** tab.
+3. Disable those pesky IPv6 options by ***unchecking*** the following:
 	1. Enable IPv6 Forwarding
 	2. Enable Default Route Advertisement
-7. Click in the **IPv4** tab.
-8. Near the bottom of the tab, look for the *Adapter* entry and click on the drop-down menu.
+4. Click in the **IPv4** tab.
+5. Near the bottom of the tab, look for the *Adapter* entry and click on the drop-down menu.
 	1. Select **vEthernet (HQ Network)**
-9. Click **Apply** (not **OK**!). We have more work to do here.
+6. Click **Apply** (not **OK**!). We have more work to do here.
 
 ### Part 4: Assigning IP Ranges for VPN Clients
 
-In the part, we're going to assign IP addresses that the VPN can use. When a client (like *laptop1*) connects to the server using VPN, it'll be given an internal 10.0.`UID`.x address so it's part of the local network. That's how *laptop1* will be able to access internal network resources.
+In this part, we're going to assign IP addresses that the VPN can use. When a client (like *laptop1*) connects to the server using VPN, it'll be given an internal 10.0.`UID`.x address so it's part of the local network. That's how *laptop1* will be able to access internal network resources.
 
 Remember in our DHCP lab where we specified that the DHCP could only use 10.0.`UID`.2-10.0.`UID`.199, even though we could have gone up to .254? That wasn't arbitrary! We'll use those remaining addresses here.
 
-> **Screenshots:** Take full-desktop screenshots of the following:
-> 1. Step 5
+> **Screenshots:** Take screenshots of the following:
+> 1. Step 5 (Screenshot 9)
 
 1. In RRAS, open the **Properties** window of *SRV1-SENECAUSERNAME (local)* and click on the **IPv4** tab. (If this is already open from *Part 3*, skip to Step 2.)
 2. Look for the *IPv4 address assignment* section in this tab.
@@ -277,20 +295,24 @@ Remember in our DHCP lab where we specified that the DHCP could only use 10.0.`U
 	4. Enter the following:
 		1. Start IP address: **10.0.`UID`.200**
 		2. End IP address: **10.0.`UID`.209**
-		3. This should give you **10** in the field below automatically. Click **OK**.
-	5. You should now see that IP address range in the *Static Address pool* table.
+		3. ![[RRAS-IP-range-mini.png]] 
+		4. This should give you **10** in the field below automatically. Click **OK**.
+	5. You should now see that IP address range in the *Static Address pool* table. (See *Figure 4* below.)
 	6. Click **Apply** (not **OK**!). We have just a little more work to do here.
+
+![[RRAS-IPv4-complete.png]]
+*Figure 4. Completed IPv4 tab.*
 
 ### Part 5: VPN Security and Authentication
 
 Here, we'll decide how clients (like *laptop1*) will authenticate to *srv1* when using VPN. These are security settings and must match on both the server and the client.
 
-> **NOTE:** We'll be using an older protocol called **L2TP** and a **Shared passphrase**. This is an older, deprecated setup with security flaws and should not be used in normal production environments! We're using it here in an educational environment for simplicity.
+> **PROD NOTE:** We'll be using an older protocol called **L2TP** and a **Shared passphrase**. This is an older, deprecated setup with security flaws and should not be used in normal production environments! We're using it here in an educational environment for simplicity.
 > 
 > In a production environment, we'd use certificate-based **IKEv2** instead of L2TP. It's more sophisticated, secure, and Microsoft recommended. We'll look at this briefly after Active Directory is installed in a later lab.
 
-> **Screenshots:** Take full-desktop screenshots of the following:
-> 1. Step 6 (when all changes complete)
+> **Screenshots:** Take screenshots of the following:
+> 1. Step 6 (when all changes complete) (Screenshot 10)
 
 Let's begin our setup.
 
@@ -299,7 +321,7 @@ Let's begin our setup.
 3. One of the first things you can see is *Authentication provider*. It's set to **Windows Authentication**. Leave it as is.
 4. Just below that, there's a button labelled **Authentication Methods...**. Click it.
 5. The *Authentication Methods* pop-up window appears. We're going to be changing a few settings here
-6. Verify the following settings, and change the ones on your setup that don't match the values below:
+6. Verify the following settings, and change the ones on your setup that don't match the values below (Refer to *Figure 5* below):
 	1. Extensible authentication protocol (EAP): **Unchecked**
 	2. Microsoft encrypted authentication version 2 (MS-CHAP v2): **Checked**
 	3. Encrypted authentication (CHAP): **Unchecked**
@@ -309,18 +331,25 @@ Let's begin our setup.
 7. Click **OK** when done.
 8. Click **OK** on the *Properties -> Security* tab to close the window.
 
+![[RRAS-auth-methods-complete.png]]
+*Figure 5. Properly selected authentication methods.*
+
 ### Part 6: Starting up the RRAS service with VPN
 
 In this part, we'll start up the RRAS service, check our VPN work, and make a small change to our VPN configuration we couldn't do until the service was running.
 
 First, let's start up the RRAS service.
-1. In RRAS, find the *SRV1-USERNAME (local)* entry and right-click it.
+1. In RRAS, find the *SRV1-SENECAUSERNAME (local)* entry and right-click it.
 2. In the drop-down context menu, click **All tasks**, then **Start**. This may take a few moments to start up.
 3. When complete, the local server entry should now have a green icon.
 4. Right-click *SRV1* again and select **Properties**.
 5. In the **Security** tab, change the following:
 	1. Allow custom IPsec policy for L2TP/IKEv2 connection: **Checked**
 	2. Preshared Key: **OSM620-2025F-L2TP-ONLY-DoNotReuse!**
+
+![[RRAS-PSK.png]]
+*Figure 6. Example of an entered Preshared Key value.*
+
 6. Click **OK** to apply and close the window.
 7. It may ask you to restart the service. Click **OK**.
 ### Part 7: Creating Available Ports for VPN Connections
@@ -334,16 +363,17 @@ For us, we're going to stick with a demo number of 10 ports. **That means we wil
 > **IMPORTANT:** The RRAS service must be in a *Started* state (green icon)!
 > Adding the ports below when the service is disabled will cause configuration damage that is very difficult to fix.
 
-> **Screenshots:** Take full-desktop screenshots of the following:
-> 1. Step 7
+> **Screenshots:** Take screenshots of the following:
+> 1. Step 8 (Screenshot 11)
 
 Let's set this up.
 
-1. In RRAS, find the *Ports* entry.
-2. Right-click and select **Properties**.
-3. The *Ports Properties* window appears.
-4. We have some major changes to make here. To make changes, you'll click on one of the entries and then select the **Configure...** button. When you change the number of ports, a popup asking if you're sure will appear when you hit **OK**. Select **Yes**. 
-5. Verify the following settings, and change the *Number of ports* on your setup that don't match the values below:
+1. In RRAS, verify that the service is online (look for the green icon.) If it isn't, right-click and select: **All Tasks > Start**.
+2. Find the *Ports* entry.
+3. Right-click and select **Properties**.
+4. The *Ports Properties* window appears.
+5. We have some major changes to make here. To make changes, you'll click on one of the entries and then select the **Configure...** button. When you change the number of ports, a popup asking if you're sure will appear when you hit **OK**. Select **Yes**. 
+6. Verify the following settings, and change the *Number of ports* on your setup that don't match the values below:
 	1. WAN Miniport (SSTP): **0**
 	2. WAN Miniport (IKEv2): **0**
 	3. WAN Miniport (PPTP): **0**
@@ -352,39 +382,53 @@ Let's set this up.
 	6. WAN Miniport (L2TP): **10**
 		1. **Note:** Select *Remote access connections (inbound only)* in this window.
 		2. **Note:** When you make this change, a popup will ask if you want to restart the RRAS server. Select **Yes**.
-		3. Your *srv1* computer will restart. This is normal.
-6. When you've finished restarting and logged back in, reopen the RRAS application.
-7. In the main *Ports* window, the list in the main window should only contain the 10 L2TP ports (and 1 PPoE).
+		3. **Your *srv1* computer will restart.** This is normal.
+7. When you've finished restarting and logged back in, reopen the RRAS application.
+8. In the main *Ports* window, the list in the main window should only contain the 10 L2TP ports (and 1 PPPoE).
 
+![[RRAS-ports-complete.png]]
+*Figure 7. Completed L2TP ports listing.*
 ### Part 8: Network Policy Server
 
-In this section, we'll open the **Network Access Policy** application and enable the profile that allows VPN authentication. This is an easy security task. This feature is installed by default through our previous lab work.
+In this section, we'll open the **Network Policy Server** application and enable the profile that allows VPN authentication. This is an easy security task. This feature is installed by default through our previous lab work.
 
 1. Open **Server Manager**.
 2. Click *Tools* -> *Network Policy Server*
 3. In the *Network Policy Server* application, use the left-hand column to go to **Policies > Network Policies**.
 4. In the main window, find the policy entry listed as **Connections to Microsoft Routing and Remote Access Server**.
+
+![[NPS-application.png]]
+*Figure 8. Network Policy Server application with the correct profile selected to edit.*
+
 5. Double-click this entry.
 6. In the new *Properties* window, stay on the *Overview* tab.
 7. Find the section on that tab labelled *Access Permission*.
 8. Select: **Grant access. Grant access if the connection matches this policy.**
+
+![[NPS-grant-access.png]]
+*Figure 9. Granting access to the defined policy we're editing.*
+
 9. Click **OK** to apply and close the window.
 10. The policy name in the main window should now have a green icon next to it.
 11. You can now close the *Network Policy Server* application.
 
 ### Part 9: Creating a Local User
 
-Up to this point, you've been using the basic **Administrator** account. As the name implies, it has administrative privilegess and can modify the system and access other users' files. The laptop we've set up is for a normal employee, not someone on the admin team. Giving our normal employee admin access is a ***terrible*** security choice, so we won't!
+Up to this point, you've been using the basic **Administrator** account. As the name implies, it has administrative privileges and can modify the system and access other users' files. The laptop we've set up is for a normal employee, not someone on the admin team. Giving our normal employee admin access is a ***terrible*** security choice, so we won't!
 
-For the employee to connect to *srv1*, we need to give him an account on that server. We'll create one for them below. It's a quick process. (There are other ways of creating VPN users, but this is easiest.) A new local account is, by default, not an admin.
+For the employee to connect to *srv1*, we need to give them an account on that server. We'll create one for them below. It's a quick process. (There are other ways of creating VPN users, but this is easiest.) A new local account is, by default, not an admin.
 
-> **Screenshots:** Take full-desktop screenshots of the following:
-> 1. Step 7
+> **Screenshots:** Take screenshots of the following:
+> 1. Step 7 (Screenshot 12)
 
 1. On *srv1*, open **Server Manager**.
 2. Click *Tools -> Computer Management*
 3. In the *Computer Management* application, use the left-hand column to go to **Local Users and Groups > Users**.
 4. Right-click the *Users* folder and select **New User...**
+
+![[New Local User.png]]
+*Figure 10. New User selection from context menu.*
+
 5. In the *New User* popup window, fill out the following values:
 	1. User name: **`firstname.lastname`** (This is the same as you used for *laptop1*)
 	2. Full name: **Enter your full name** (Example: Chris Johnson)
@@ -395,9 +439,15 @@ For the employee to connect to *srv1*, we need to give him an account on that se
 	7. User cannot change password: **Unchecked**
 	8. Password never expires: **Checked**
 	9. Account is disabled: **Unchecked**
+
+![[Local User Dialog.png]]
+*Figure 11. New User Dialog Box - Filled Out.*
+
 6. Confirm your settings are correct and click **Create**.
 7. Confirm you can see your new user in the list. If so, move on to the next Investigation!
 
+![[New User Added to List.png]]
+*Figure 12. New user successfully added to list.*
 ## Investigation 4: Connecting to the VPN with *laptop1*
 
 In this investigation, we will set up *laptop1* to connect to the VPN service we configured on *srv1*.
@@ -418,9 +468,9 @@ This should already be set from previous labs, but now is a good time to check. 
 
 Here, we'll emulate taking our new laptop home. This means removing it from the HQ network and putting it on NAT. Basically, giving it a standard Internet connection you'd get if you used it at home with your normal setup.
 
-> **Screenshots:** Take full-desktop screenshots of the following:
-> 1. Step 2
-> 2. Step 8
+> **Screenshots:** Take screenshots of the following:
+> 1. Step 2 (Screenshot 13)
+> 2. Step 8 (Screenshot 14)
 
 1. Turn on *laptop1*.
 2. Once logged in, open Command Prompt and run: `ipconfig`
@@ -432,12 +482,29 @@ Here, we'll emulate taking our new laptop home. This means removing it from the 
 8. Back inside *laptop1*, run the `ipconfig` command again.
 9. Has the IP address changed from the 10.0.`UID`.x address? Good!
 
-> **Reflection question:** Why has the IP address changed and what does it mean for what *laptop1* can now access compared to *Investigation 2*?
-> Can you ping `srv2.YourSenecaUsername.com`? Why or why not? What about **eff.org**?
+> **Reflection 3:** Why has the IP address changed and what does it mean for what *laptop1* can now access compared to *Investigation 2*?
 
 ### Part 2: Testing Connections to Resources Under NAT
 
-We will now check our ability to connect to several HQ network and Internet resources to see the different between our on-premises (ie. in office) connection and a typical out-of-office Internet connection.
+We will now check our ability to connect to several HQ network and Internet resources to see the difference between our on-premises (ie. in office) connection and a typical out-of-office Internet connection.
+
+> **Screenshots:** Take screenshots of the following:
+> 1. Step 3 (Screenshot 15)
+> 2. Step 4 (Screenshot 16)
+
+1. On *laptop1*, open *Command Prompt*.
+2. Reset DNS cache: `ipconfig /flushdns`
+3. Let's check DNS resolution. Run the following: 
+	1. `nslookup srv1.YourSenecaUsername.com`
+	2. `nslookup srv2.YourSenecaUsername.com`
+	3. `nslookup eff.org`
+4. Now, let's check our connections to these resources:
+	1. `ping srv1.cjohnson30.com`
+	2. `ping srv2.cjohnson30.com`
+	3. `ping eff.org`
+
+> **Reflection 4:** Why can't you connect to certain things but can connect to others?
+
 ### Part 3: Creating the FQDN: vpn.`YourSenecaUsername`.com
 
 In this part, we'll create a local entry on *laptop1* that points a new FQDN (URL), **vpn.`YourSenecaUsername`.com** to *srv1*. **This is necessary for our VPN connection in *Part 3*.**
@@ -448,67 +515,85 @@ Normally, in a production or corporate environment, we'd have a registered domai
 
 We don't have a purchased domain name like `cjohnson30.com`. We're doing everything local. So, we have to cheat a little.
 
-We trick *laptop1* into thinking `vpn.YourSenecaUsername` is a valid Internet address.
+We trick *laptop1* into thinking `vpn.YourSenecaUsername.com` is a valid Internet address.
 
-> **NOTE**: This is only done in lab testing environments! Never do this on production.
+> **PROD NOTE**: This is only done in lab testing environments! Never do this on production.
 
-> **Screenshots:** Take full-desktop screenshots of the following:
-> 1. Step 8
+> **Screenshots:** Take screenshots of the following:
+> 1. Step 9 (Screenshot 17)
 
 Let's trick *laptop1*:
 
-1. On *laptop1*, open the folder: `C:\Windows\System32\drivers\etc`
-2. There are several files here, including one called: `hosts`
-3. Copy the `hosts` file to your *laptop1* desktop.
-4. Double-click it to open it. The system will ask you what application to use. Choose **Notepad**.
-5. At the very bottom of the text document, add the following line (and change it according to your setup!):
-	1. *srv1 External NIC IP address*        vpn.`YourSenecaUsername`.com
+1. First, on *srv1*: Open *Command Prompt* and run: `ipconfig`
+	1. Write down the IP address of the **External Network**. We'll need this shortly.
+2. Over on *laptop1*: Open the folder: `C:\Windows\System32\drivers\etc`
+3. There are several files here, including one called: `hosts`
+
+![[hosts-folder-location.png]]
+*Figure 13. List of files in: C:\Windows\System32\drivers\etc*
+
+4. Copy the `hosts` file to your *laptop1* desktop.
+5. Double-click it to open it. The system will ask you what application to use. Choose **Notepad**.
+6. At the very bottom of the text document, add the following line (and change it according to your setup!):
+	1. *srv1 External Network IP address*        vpn.`YourSenecaUsername`.com
 		> **Example:** `192.168.122.105     vpn.cjohnson30.com`
-6. Save this file. When the dialog box comes up asking for a name, use this:
+
+![[hosts-file.png]]
+*Figure 14. Example VPN entry in hosts file.*
+
+7. Save this file. When the dialog box comes up asking for a name, use this:
 	1. `"hosts"`
-	2. Those double-quotes are necessary.
-7. Copy the file back to: `C:\Windows\System32\drivers\etc`
-8. Check your work by opening *Command Prompt* and running the following command: `ping vpn.YourSenecaUserID.com`
-9. If you received a response pointing for your *srv1* external IP address, congrats! Move to **Part 2**.
+	2. **Those double-quotes are necessary.** This ensures it doesn't add *.txt* to the end.
+8. Copy the file back to: `C:\Windows\System32\drivers\etc`
+9. Check your work by opening *Command Prompt* and running the following command: `ping vpn.YourSenecaUsername.com`
+10. If you received a response pointing for your *srv1* external IP address, congrats! Move to **Part 4**.
 
 ### Part 4: Configuring a VPN Connection on *laptop1*
 
 In this part, we'll use our *laptop1* client VM to connect to the VPN on *srv1*. This involves creating a VPN profile and then connecting.
 
-> **Screenshots:** Take full-desktop screenshots of the following:
-> 1. Step 3 (completed)
-> 2. Step 7
+> **Screenshots:** Take screenshots of the following:
+> 1. Step 3 (completed) (Screenshot 18)
+> 2. Step 7 (Screenshot 19)
 
 1. On *laptop1*, open: *Settings* > *Network & internet* > *VPN*
 2. Click on **Add VPN**
 3. Use the following settings:
 	1. VPN Provider: **Windows (built-in)**
 	2. Connection name: **SRV1 VPN**
-	3. Server name or address: **vpn.cjohnson30.com**
+	3. Server name or address: **vpn.YourSenecaUsername.com** (replace with *your* domain)
 	4. VPN type: **L2TP/IPsec with pre-shared key**
 	5. Pre-shared key: **OSM620-2025F-L2TP-ONLY-DoNotReuse!**
 	6. Type of sign-in info: **Username and password**
 	7. Username: **`firstname.lastname`**
 	8. Password: **`password you used for the above account on srv1`**
 	9. Remember my sign-in info: **Checked**
+
+![[vpn-client-settings.png]]
+*Figure 15. Example of filled out VPN client information.*
+
 4. Double-check the above information, then click **Save**.
 5. Back in the *VPN* window, a new entry has appeared: **SRV1 VPN**
 6. Click the **Connect** button.
 7. After a few moments, it should say *Connected*.
+
+![[vpn-connected.png]]
+*Figure 16. VPN connected.*
+
 8. If not, review your previous settings and/or ask for help.
 9. Check your work once more by opening *Command Prompt* and running: `ipconfig`
 
-> **Reflection:** What do you notice that's different? Why do you think this is?
+> **Reflection 5:** What do you notice that's different? Why do you think this is?
 > What might this mean?
 
 ### Part 5: Testing Connections to HQ Network Resources
 
 This is the fun part. Let's test our connection to HQ network resources, things that *aren't* accessible through a normal Internet connection.
 
-> **Screenshots:** Take full-desktop screenshots of the following:
-> 1. Step 3
-> 2. Step 4
-> 3. Step 5
+> **Screenshots:** Take screenshots of the following:
+> 1. Step 3 (Screenshot 20)
+> 2. Step 4 (Screenshot 21)
+> 3. Step 5 (Screenshot 22)
 
 1. On *laptop1*, open *Command Prompt*.
 2. Reset DNS cache: `ipconfig /flushdns`
@@ -525,30 +610,33 @@ This is the fun part. Let's test our connection to HQ network resources, things 
 	2. `tracert srv2.cjohnson30.com`
 	3. `tracert eff.org`
 
-> **Reflection:** How are these results different from when you ran them in *Investigation 2*? How are they not?
+These should all work! If they don't, start troubleshooting.
+
+> **Reflection 6:** How are these results different from when you ran them in *Investigation 2*? How are they not?
 > How are these results different from when you ran them in *Part 2* above?
 > ***Why?***
 
-### Part 5: Connecting to HQ Network Resources
+### Part 6: Connecting to HQ Network Resources
 
 In this final part, we'll connect to actual resources on the HQ network through the VPN. Remember, in this scenario, we are at home and not on the HQ network directly.
 
 We will be connecting to the following services from *laptop1*:
 * RDP
 * SSH
+* IIS (Website)
 
-> **Screenshots:** Take full-desktop screenshots of the following:
-> 1. Step 3
-> 2. Step 6
-> 3. Step 8
-> 4. Step 10
-> 5. Step 11
+> **Screenshots:** Take screenshots of the following:
+> 1. Step 3 (Screenshot 23)
+> 2. Step 5 (Screenshot 24)
+> 3. Step 8 (Screenshot 25)
+> 4. Step 10 (Screenshot 26)
+> 5. Step 11 (Screenshot 27)
 
 1. On *laptop1*, connect to the SRV1 VPN. (If you already are, skip to *Step 2*.)
 2. Open the **Remote Desktop Connection** application.
-3. Connect to *srv1* with: `srv1.YourUserName.com`
+3. Connect to *srv1* with: `srv1.YourSenecaUsername.com`
 4. If you see the Server1 desktop, congrats! Close the RDP connection.
-5. Back on *laptop1*, open an RDP connection directly to: `srv2.YourUserName.com`
+5. Back on *laptop1*, open an RDP connection directly to: `srv2.YourSenecaUsername.com`
 6. If you see the Server2 desktop with the `sconfig` window, congrats! Close the RDP connection.
 7. Open **Command Prompt** and login to *srv2*'s SSH connection: `ssh Administrator@srv2.YourSenecaUsername.com`
 8. To confirm your work, run the following commands in your SSH session:
@@ -559,7 +647,7 @@ We will be connecting to the following services from *laptop1*:
 11. Open Firefox and navigate to: `http://www.eff.org`
 12. Now, disconnect from the VPN and re-run the RDP, SSH connections and Firefox steps.
 
-> **Reflection:** Why did these connections only work while the VPN was running? What still works with the VPN off?
+> **Reflection 7:** Why did these connections only work while the VPN was running? What still works with the VPN off?
 > What's happening when the VPN is connected? *Hint: Think about the `ipconfig` and `tracert` results you saw earlier.*
 
 ## Submission
@@ -578,3 +666,5 @@ You will submit to Blackboard with a single PDF document that includes the follo
 	2. The reflection questions and your answers to each.
 	3. Each Investigation should start on a new page, and screenshots/reflection answers should be placed in the appropriate Investigation pages.
 	4. Number your pages!
+
+Export to PDF from your editor with images embedded. **No external links!**
