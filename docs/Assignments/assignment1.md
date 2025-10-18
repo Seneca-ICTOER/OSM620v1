@@ -1,5 +1,11 @@
-# Assignment 1 - Roaming Employee Laptop
+---
+id: assignment1
+title: Assignment 1
+sidebar_position: 1
+description: Assignment 1 - Roaming Employee Laptop
+---
 
+# Assignment 1 - Roaming Employee Laptop
 
 ## Lab Preparation
 
@@ -45,6 +51,7 @@ Before beginning, you must have:
 It is *possible* to run Assignment 1 on a non-lab computer. I have done my best to reduce requirements. You may be able to run A1 on your personal computer. You will need an Intel/AMD-based computer with VMware Workstation installed. Check the grid below.
 
 Lab computers are available on campus during Study Week and outside of class time.
+
 #### Absolute Minimum Hardware
 This may result in slow performance and disruptions, but is possible.
 
@@ -113,6 +120,7 @@ Use the following instructions to install the OS and run post-installation tasks
 Here, we'll connect our new `laptop1` machine to office HQ network and access some local resources.
 
 **Scenario:** A physical laptop connected to Ethernet inside our company's physical office.
+
 ### Before You Begin
 
 We will *not* be using our Hyper-V VMs in this assignment. To make things easier, change *srv1*'s hardware settings in VMware Workstation while the VM is powered off.
@@ -149,7 +157,7 @@ Let's see if we can access all the HQ resources we were able to with our other V
 	2. `nslookup srv2.YourSenecaUsername.com`
 	3. `nslookup eff.org`
 
-![[nslookup-srv1.png]]
+> ![Fig 1. Example of a successful DNS lookup using srv1](/img/nslookup-srv1.png)
 *Figure 1. Example of a successful DNS lookup using srv1.*
 
 5. Now, let's confirm we have connections to these resources:
