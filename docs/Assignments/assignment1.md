@@ -157,8 +157,8 @@ Let's see if we can access all the HQ resources we were able to with our other V
 	2. `nslookup srv2.YourSenecaUsername.com`
 	3. `nslookup eff.org`
 
-> ![Fig 1. Example of a successful DNS lookup using srv1](/img/nslookup-srv1.png)
-*Figure 1. Example of a successful DNS lookup using srv1.*
+> ![Fig 1. Example of a successful DNS lookup using srv1](/img/nslookup-srv1.png)  
+> *Figure 1. Example of a successful DNS lookup using srv1.*
 
 5. Now, let's confirm we have connections to these resources:
 	1. `ping srv1.cjohnson30.com`
@@ -250,8 +250,8 @@ Let's begin.
 10. The last page is the confirmation page. If the above selections show up in the display, click **Finish** to complete. (If not, hit the **Back** button and fix your selection. Feel free to ask for help!)
 11. A popup window will appear asking if you'd like to start the service. **Select *Cancel***. We have more configuration to do before starting it up.
 
-> ![Fig 2. Select CANCEL on this screen!](/img/RRAS-donotstart.png)
-*Figure 2. **Select CANCEL on this screen!***
+> ![Fig 2. Select CANCEL on this screen!](/img/RRAS-donotstart.png)  
+> *Figure 2. **Select CANCEL on this screen!***
 
 > 	**Note:** Keeping the RRAS server offline for now allows us to make additional changes without having to restart the service every time we make a change. This saves us a ton of time and frustration.
 
@@ -260,8 +260,8 @@ Let's begin.
 	2. Remote Access Clients
 13. **Check:** The RRAS service should still be offline. Look for the red status icon over SRV1.
 
-> ![Fig 3. RRAS service offline with red status icon.](/img/RRAS-offline.png)
-*Figure 3. RRAS service offline with red status icon.*
+> ![Fig 3. RRAS service offline with red status icon.](/img/RRAS-offline.png)  
+> *Figure 3. RRAS service offline with red status icon.*
 
 14. If the service is online (green), right-click it and go to: **All Tasks > Stop**
 
@@ -342,8 +342,8 @@ Let's begin our setup.
 7. Click **OK** when done.
 8. Click **OK** on the *Properties -> Security* tab to close the window.
 
-> ![Fig 5. Properly selected authentication methods.](/img/RRAS-auth-methods-complete.png)
-*Figure 5. Properly selected authentication methods.*
+> ![Fig 5. Properly selected authentication methods.](/img/RRAS-auth-methods-complete.png)  
+> *Figure 5. Properly selected authentication methods.*
 
 ### Part 6: Starting up the RRAS service with VPN
 
@@ -358,8 +358,8 @@ First, let's start up the RRAS service.
 	1. Allow custom IPsec policy for L2TP/IKEv2 connection: **Checked**
 	2. Preshared Key: **OSM620-2025F-L2TP-ONLY-DoNotReuse!**
 
-> ![Fig 6. Example of an entered Preshared Key value.](/img/RRAS-PSK.png)
-*Figure 6. Example of an entered Preshared Key value.*
+> ![Fig 6. Example of an entered Preshared Key value.](/img/RRAS-PSK.png)  
+> *Figure 6. Example of an entered Preshared Key value.*
 
 6. Click **OK** to apply and close the window.
 7. It may ask you to restart the service. Click **OK**.
@@ -398,8 +398,8 @@ Let's set this up.
 7. When you've finished restarting and logged back in, reopen the RRAS application.
 8. In the main *Ports* window, the list in the main window should only contain the 10 L2TP ports (and 1 PPPoE).
 
-> ![Fig 7. Completed L2TP ports listing.](/img/RRAS-ports-complete.png)
-*Figure 7. Completed L2TP ports listing.*
+> ![Fig 7. Completed L2TP ports listing.](/img/RRAS-ports-complete.png)  
+> *Figure 7. Completed L2TP ports listing.*
 
 ### Part 8: Network Policy Server
 
@@ -410,16 +410,16 @@ In this section, we'll open the **Network Policy Server** application and enable
 3. In the *Network Policy Server* application, use the left-hand column to go to **Policies > Network Policies**.
 4. In the main window, find the policy entry listed as **Connections to Microsoft Routing and Remote Access Server**.
 
-> ![Fig 8. CNetwork Policy Server application with the correct profile selected to edit.](/img/NPS-application.png)
-*Figure 8. Network Policy Server application with the correct profile selected to edit.*
+> ![Fig 8. CNetwork Policy Server application with the correct profile selected to edit.](/img/NPS-application.png)  
+> *Figure 8. Network Policy Server application with the correct profile selected to edit.*
 
 5. Double-click this entry.
 6. In the new *Properties* window, stay on the *Overview* tab.
 7. Find the section on that tab labelled *Access Permission*.
 8. Select: **Grant access. Grant access if the connection matches this policy.**
 
-> ![Fig 9. Granting access to the defined policy we're editing.](/img/NPS-grant-access.png)
-*Figure 9. Granting access to the defined policy we're editing.*
+> ![Fig 9. Granting access to the defined policy we're editing.](/img/NPS-grant-access.png)  
+> *Figure 9. Granting access to the defined policy we're editing.*
 
 9. Click **OK** to apply and close the window.
 10. The policy name in the main window should now have a green icon next to it.
@@ -439,8 +439,8 @@ For the employee to connect to *srv1*, we need to give them an account on that s
 3. In the *Computer Management* application, use the left-hand column to go to **Local Users and Groups > Users**.
 4. Right-click the *Users* folder and select **New User...**
 
-> ![Fig 10. New User selection from context menu.](/img/new-local-user.png)
-*Figure 10. New User selection from context menu.*
+> ![Fig 10. New User selection from context menu.](/img/new-local-user.png)  
+> *Figure 10. New User selection from context menu.*
 
 5. In the *New User* popup window, fill out the following values:
 	1. User name: **`firstname.lastname`** (This is the same as you used for *laptop1*)
@@ -453,14 +453,14 @@ For the employee to connect to *srv1*, we need to give them an account on that s
 	8. Password never expires: **Checked**
 	9. Account is disabled: **Unchecked**
 
-> ![Fig 11. New User Dialog Box - Filled Out.](/img/local-user-dialog.png)
-*Figure 11. New User Dialog Box - Filled Out.*
+> ![Fig 11. New User Dialog Box - Filled Out.](/img/local-user-dialog.png)  
+> *Figure 11. New User Dialog Box - Filled Out.*
 
 6. Confirm your settings are correct and click **Create**.
 7. Confirm you can see your new user in the list. If so, move on to the next Investigation!
 
-> ![Fig 12. New user successfully added to list.](/img/new-user-added-to-list.png)
-*Figure 12. New user successfully added to list.*
+> ![Fig 12. New user successfully added to list.](/img/new-user-added-to-list.png)  
+> *Figure 12. New user successfully added to list.*
 
 ## Investigation 4: Connecting to the VPN with *laptop1*
 
@@ -545,8 +545,8 @@ Let's trick *laptop1*:
 2. Over on *laptop1*: Open the folder: `C:\Windows\System32\drivers\etc`
 3. There are several files here, including one called: `hosts`
 
-> ![Fig 13. List of files in: C:\Windows\System32\drivers\etc](/img/hosts-folder-location.png)
-*Figure 13. List of files in: C:\Windows\System32\drivers\etc*
+> ![Fig 13. List of files in: C:\Windows\System32\drivers\etc](/img/hosts-folder-location.png)  
+> *Figure 13. List of files in: C:\Windows\System32\drivers\etc*
 
 4. Copy the `hosts` file to your *laptop1* desktop.
 5. Double-click it to open it. The system will ask you what application to use. Choose **Notepad**.
@@ -554,8 +554,8 @@ Let's trick *laptop1*:
 	1. *srv1 External Network IP address*        vpn.`YourSenecaUsername`.com
 		> **Example:** `192.168.122.105     vpn.cjohnson30.com`
 
-> ![Fig 14. Example VPN entry in hosts file.](/img/hosts-file.png)
-*Figure 14. Example VPN entry in hosts file.*
+> ![Fig 14. Example VPN entry in hosts file.](/img/hosts-file.png)  
+> *Figure 14. Example VPN entry in hosts file.*
 
 7. Save this file. When the dialog box comes up asking for a name, use this:
 	1. `"hosts"`
@@ -585,16 +585,16 @@ In this part, we'll use our *laptop1* client VM to connect to the VPN on *srv1*.
 	8. Password: **`password you used for the above account on srv1`**
 	9. Remember my sign-in info: **Checked**
 
-> ![Fig 15. Example of filled out VPN client information.](/img/vpn-client-settings.png)
-*Figure 15. Example of filled out VPN client information.*
+> ![Fig 15. Example of filled out VPN client information.](/img/vpn-client-settings.png)  
+> *Figure 15. Example of filled out VPN client information.*
 
 4. Double-check the above information, then click **Save**.
 5. Back in the *VPN* window, a new entry has appeared: **SRV1 VPN**
 6. Click the **Connect** button.
 7. After a few moments, it should say *Connected*.
 
-> ![Fig 16. VPN connected.](/img/vpn-connected.png)
-*Figure 16. VPN connected.*
+> ![Fig 16. VPN connected.](/img/vpn-connected.png)  
+> *Figure 16. VPN connected.*
 
 8. If not, review your previous settings and/or ask for help.
 9. Check your work once more by opening *Command Prompt* and running: `ipconfig`
