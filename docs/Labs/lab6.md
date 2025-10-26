@@ -5,6 +5,58 @@ sidebar_position: 6
 description: Lab 6 - Active Directory
 --- 
 
+# Lab 6 - Active Directory
+
+## Lab Preparation
+
+### Purpose of Lab 6
+
+In this lab, you’ll redesign and configure your environment to a more realistic, low-footprint, on-premises design. You’ll move core network services off **srv1** and into **Active Directory** by promoting **srv2** to **Domain Controller (DC1)** with integrated **DNS** and **DHCP**, manage everything remotely from **srv1** using **RSAT**, and prove end-to-end client functionality by joining **laptop1** to the domain.
+
+You’ll also prepare a clean clone (**srv3**) and promote it to **DC2** for redundancy.
+
+The lightweight **router** VM you'll create replaces RRAS/NAT, mirroring how real sites use a dedicated edge device.
+
+### Objectives
+
+By the end of this lab, you will be able to:
+
+- Build a minimal **VyOS router** VM and configure LAN/WAN, default route, and NAT for Internet access.
+
+- Configure a consistent **IP plan** (gateway 10.0.UID.254, statics for servers, DHCP range for clients).
+
+- Promote **srv2** to **AD DS** as the first domain controller for **yourSenecaUsername.com** with integrated **DNS**.
+
+- Configure **DNS forwarders** and create a **reverse lookup zone** with **Secure only** dynamic updates.
+
+- Convert **srv1** into a **management server** (RSAT only) and manage **srv2** remotely via **Server Manager**.
+
+- Join **srv1** and **laptop1** to the domain and verify **Kerberos + name resolution** end-to-end.
+
+- Validate DNS registration: confirm **A** and **PTR** records for servers and client populate correctly.
+
+- Use GUI tools (**DNS**, **DHCP**, **ADUC/AD DS**) to administer services from **srv1**.
+
+- Clone **srv3**, join it to the domain, promote it to **DC2 (GC + DNS)**, and verify DNS replication.
+
+### Minimum Progression Requirements
+
+Before beginning, you must have:
+
+1. **Successfully completed *Labs 1-5* and *Assignment 1*.**
+2. Attended the **Week 8 - Active Directory** lecture.
+3. Your external SSD (or personal computer) with your VMs.
+4. Your OSM620 Lab Logbook.
+5. Optional, but recommended: Caffeine delivery system.
+
+### Before You Begin
+
+**Time to Backup!** *You will be making major changes to all virtual machines.* This is a good time to backup these VMs so you can restore from them if something catastrophic occurs.
+
+With all VMs turned off, copy the entire `Virtual Machines` folder on your SSD to a separate location. This can be a backup directory on your SSD, or even a separate physical drive. Leave the copy be and use the original going forward. (If you need space, compress the backup folder.)
+
+**Do not continue until the copy has fully completed.**
+
 ## Investigation 1: Adding the *router* VM
 
 In this investigation, we'll be adding a Linux-based router to our setup. This low-footprint virtual machine will take the place of the RRAS NAT work you did in previous labs. Most on-premises installations (offices, warehouses, schools) will have a physical router that does this instead of relying on Windows Server to do that work.
@@ -27,6 +79,7 @@ After you're done, you will need to have this VM powered on during all lab work.
 | NIC1       | VMware NAT                  |
 | NIC2       | VMnet10                     |
 | NIC2 IPv4  | **10.0.`UID`.254/24** (static) |
+
 Instructions to set this up are provided below.
 
 ### Part 1: Create *router* VM
@@ -165,9 +218,9 @@ In this investigation, we're going to clone *srv2*, reset it to defaults, then c
 9. If Step 23 worked, go back to sconfig and shutdown the system.
 10. Keep this VM powered off until told otherwise.
 
-## Investigation 3: Convert srv1 to Control Plane
+## Investigation 3: Convert srv1 to a Management Server
 
-In this investigation, we'll remove all our network services from Labs 1-5 and turn *srv1* into a **control plane**. Essentially, a GUI that let's us control other servers remotely from **Server Manager**.
+In this investigation, we'll remove all our network services from Labs 1-5 and turn *srv1* into a **Management Server**. Essentially, a GUI that let's us control other servers remotely from the **Server Manager** application.
 
 This is a very normal on-prem setup, and you'll see why later on in the lab. It makes everything far easier and it's more secure.
 
@@ -282,7 +335,7 @@ We now have an Active Directory domain, but we need to join *srv1* to it.
 10. The computer will now restart.
 11. When the computer is up again, login using: **Other > YOURSENECAUSERNAME\Administrator**
 
-### Part 2: Setup srv1 as a GUI control plane for srv2
+### Part 2: Setup srv1 as a GUI Management Server for srv2
 
 This is where we add *srv2* to *Server Manager* for remote control. We also install a few features that help with that remote control.
 
