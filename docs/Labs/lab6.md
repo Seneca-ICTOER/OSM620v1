@@ -427,7 +427,7 @@ Unlike DNS, which was installed along with the AD Domain Controller, the DHCP ro
 16. Click **OK**
 17. That's it, you're done!
 
-### Investigation 6: Add laptop1 to Domain
+## Investigation 6: Add laptop1 to Domain
 
 Now that we've set up our AD Domain Controller on *srv2* and remote control on *srv1*, it's time to add a normal client machine to our Active Directory domain. We'll use *laptop1* for this.
 
@@ -491,7 +491,7 @@ Let's check that *laptop1* auto-registered to DNS after the AD join.
 3. Do you see laptop1? If yes, congrats! It auto-registered, just as we wanted.
 4. If not, ask for help. Do not continue.
 
-### Investigation 7: Convert *srv3* to AD DC2
+## Investigation 7: Convert *srv3* to AD DC2
 
 In this investigation, we'll create a second AD Domain Controller by using *srv3*. This is a much simpler process than *srv2*, as we can use *srv1* for part of it.
 
