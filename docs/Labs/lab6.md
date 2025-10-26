@@ -611,7 +611,7 @@ Congrats! You now have a low profile Domain Controller. Resource usage is at a m
 
 > **A note about Hyper-V:** In a real production environment, we could use *srv1* to install Hyper-V VMs on *srv2*, allowing us to run these VMs on a lower resource Core machine. That's beyond the scope of this course, but something cool to know.
 
-### Lab 6 Sign-Off
+## Lab 6 Sign-Off
 
 It’s essential to complete Lab 6 correctly. All later labs assume working Active Directory Domain Controllers and its services.
 
