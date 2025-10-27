@@ -259,7 +259,7 @@ This is a very normal on-prem setup, and you'll see why later on in the lab. It 
 4. Confirm Internet connection.
     1. In Command Prompt, run: `ping eff.org`
     2. Confirm it works. If not, ask for help!
-5. Delete VM disk directory, *Virtual Hard Disks*: **C:\ProgramData\Microsoft\Windows\Hyper-V\Virtual Hard Disks**
+5. Delete and folders inside the VM disk directory, *Virtual Hard Disks*: **C:\ProgramData\Microsoft\Windows\Hyper-V\Virtual Hard Disks/`vm folders`**
 6. Shut down *srv1*.
 
 ## Investigation 4: Convert srv2 to AD DC1
@@ -368,7 +368,7 @@ We're now going to set up Active Directory DNS on *srv2*. This is much more adva
 7. Stick with the wizard defaults until *Network ID*.
 8. Enter Network ID: `10.0.`UID``
 9. Click **Next** and then **Finish** through the rest of the wizard.
-10. Go to *Reverse Lookup Zones > 45.0.10.in-addr.arpa*
+10. Go to *Reverse Lookup Zones > `UID`.0.10.in-addr.arpa*
 11. Notice the list is currently empty.
 12. Run `ipconfig /registerdns` on both *srv1* and *srv2*.
 13. Refresh the view in reverse lookup and confirm the two server entries.
@@ -573,7 +573,9 @@ Always confirm your work. Let's check on DNS.
 5. Open *IPv4 > Forward Lookup Zones* in both *srv2* and *srv3*.
 6. They should look identical.
 7. If they do, then DNS replication is working.
-8. Congratulations, you now have two Domain Controllers!
+8. Find *srv3* in the list, right-click, and select **Properties**.
+9. Add forwarders: **149.112.121.20**
+10. Congratulations, you now have two Domain Controllers!
 
 This confirms *srv2* and *srv3* are communicating and syncing information, including DNS records.
 
