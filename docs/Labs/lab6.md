@@ -220,7 +220,7 @@ In this investigation, we're going to clone *srv2*, reset it to defaults, then c
 
 ## Investigation 3: Convert srv1 to a Management Server
 
-In this investigation, we'll remove all our network services from Labs 1-5 and turn *srv1* into a **Management Server**. Essentially, a GUI that let's us control other servers remotely from the **Server Manager** application.
+In this investigation, we'll remove all our network services from Labs 1-5 and turn *srv1* into a **Management Server**. Essentially, a GUI that lets us control other servers remotely from the **Server Manager** application.
 
 This is a very normal on-prem setup, and you'll see why later on in the lab. It makes everything far easier and it's more secure.
 
@@ -228,7 +228,7 @@ This is a very normal on-prem setup, and you'll see why later on in the lab. It 
 
 1. Turn off all VMs.
 2. Power on *srv1* and login.
-3. In S*erver Manager > Remove Roles*:
+3. In *Server Manager > Remove Roles*:
     1. Roles > Select these roles (Remove features when asked):
           1. DHCP
           2. DNS
@@ -259,7 +259,7 @@ This is a very normal on-prem setup, and you'll see why later on in the lab. It 
 4. Confirm Internet connection.
     1. In Command Prompt, run: `ping eff.org`
     2. Confirm it works. If not, ask for help!
-5. Delete and folders inside the VM disk directory, *Virtual Hard Disks*: **C:\ProgramData\Microsoft\Windows\Hyper-V\Virtual Hard Disks/`vm folders`**
+5. Delete any folders inside the VM disk directory, *Virtual Hard Disks*: **C:\ProgramData\Microsoft\Windows\Hyper-V\Virtual Hard Disks/`vm folders`**
 6. Shut down *srv1*.
 
 ## Investigation 4: Convert srv2 to AD DC1
@@ -268,7 +268,7 @@ In this investigation, we're going to promote *srv2* to an **Active Directory Do
 
 ### Part 1: Network Reconfiguration (srv2)
 
-Let's configure the server to be get it ready for Active Directory.
+Let's configure the server to get it ready for Active Directory.
 
 1. Remove NIC1 (External Network)
 2. Confirm hardware:
@@ -308,7 +308,7 @@ Install-ADDSForest -DomainName 'yourSenecaUsername.com' -DomainNetbiosName 'YOUR
 4. When asked for a password, use the same one you've used for your Administrator accounts.
 5. **This will take several minutes!** Your VM will restart and take a few more minutes. Be patient.
 6. Once you can, login with: `YOURSENECAUSERNAME\Administrator`
-7. in sconfig, confirm you can see:
+7. In sconfig, confirm you can see:
     1. Computer name: **srv2**
     2. Domain: **yourSenecaUsername.com**
 8. Minimize srv2 VM but keep it on!
@@ -479,7 +479,7 @@ Now, it's time to join *laptop1* to our AD domain.
 6. After the congratulations message, allow the machine to restart.
 7. Do not log in with your normal account.
 8. Click on Other, and use: **YOURSENECAUSERNAME\Administrator**
-9. Your profile make take a minute to setup. That's normal.
+9. Your profile may take a minute to setup. That's normal.
 10. Once you see the desktop, minimize this VM.
 
 ### Part 3: Confirm laptop1 is in DNS
@@ -487,7 +487,7 @@ Now, it's time to join *laptop1* to our AD domain.
 Let's check that *laptop1* auto-registered to DNS after the AD join.
 
 1. On *srv1*, open the DNS tool.
-2. Go to *srv2 > IPv4 > Forward Lookup Zone*
+2. Go to *srv2 > Forward Lookup Zones* > *yourSenecaUsername.com*
 3. Do you see laptop1? If yes, congrats! It auto-registered, just as we wanted.
 4. If not, ask for help. Do not continue.
 
@@ -625,7 +625,7 @@ Please have the following on screen and ready to show. You will need to power on
 
 #### On srv1
 
-1. *Server Manager > All Server*s: Shows *srv1*, *srv2*, and *srv3*
+1. *Server Manager > All Servers*: Shows *srv1*, *srv2*, and *srv3*
 2. *Server Manager > AD DS*: Shows *srv2* and *srv3*
 3. `ipconfig /all` shows the correct information.
 4. Firefox loads: **eff.org**
