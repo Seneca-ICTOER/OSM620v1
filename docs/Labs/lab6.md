@@ -215,7 +215,7 @@ In this investigation, we're going to clone *srv2*, reset it to defaults, then c
 
     > **Note:** DNS won't work yet, that's okay.
 
-9. If Step 23 worked, go back to sconfig and shutdown the system.
+9. If Step 8 worked, go back to sconfig and shutdown the system.
 10. Keep this VM powered off until told otherwise.
 
 ## Investigation 3: Convert srv1 to a Management Server
