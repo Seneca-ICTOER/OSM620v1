@@ -43,7 +43,7 @@ By the end of this lab, you will be able to:
 
 Before beginning, you must have:
 
-1. **Successfully completed *Labs 1-5* and *Assignment 1*.**
+1. **Successfully graded *Labs 1-5* and *Assignment 1*.**
 2. Attended the **Week 8 - Active Directory** lecture.
 3. Your external SSD (or personal computer) with your VMs.
 4. Your OSM620 Lab Logbook.
