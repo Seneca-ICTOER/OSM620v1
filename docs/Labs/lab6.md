@@ -621,14 +621,14 @@ When you finish Lab 6, ask your instructor for a sign-off.
 
 Please have the following on screen and ready to show. You will need to power on ALL VMs for the check.
 
-On srv1:
+#### On srv1
 
 1. *Server Manager > All Server*s: Shows *srv1*, *srv2*, and *srv3*
 2. *Server Manager > AD DS*: Shows *srv2* and *srv3*
 3. `ipconfig /all` shows the correct information.
-4. Firefox loads eff.org.
+4. Firefox loads: **eff.org**
 
-On srv2:
+#### On srv2
 
 1. Sconfig shows:
     1. Name: **srv2**
@@ -641,7 +641,7 @@ On srv2:
     4. eff.org
     5. reddit.com
 
-On srv2:
+#### On srv3
 
 1. Sconfig shows:
     1. Name: **srv3**
@@ -654,7 +654,7 @@ On srv2:
     4. eff.org
     5. reddit.com
 
-On laptop1:
+#### On laptop1
 
 1. System Properties shows:
     1. Name: **laptop1**
@@ -666,4 +666,4 @@ On laptop1:
     3. srv3
     4. eff.org
     5. reddit.com
-    4. In Firefox: `http://www.reddit.com` loads the Reddit main page.
+4. In Firefox: `http://www.reddit.com` loads the Reddit main page.
