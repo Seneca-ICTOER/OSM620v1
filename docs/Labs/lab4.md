@@ -137,6 +137,8 @@ If the proper static IP is confirmed, move on to *Part 2*.
 
 ### Part 2: Installing the DNS Server Role on *srv1*
 
+Let's install the DNS Server Role.
+
 1. **Login to srv1** with your Administrator account.
 2. Open the **Server Manager** application (icon is on the taskbar or Start menu).
 3. In the left menu, click on **Local Server** if you’re not already there.
@@ -155,6 +157,8 @@ If the proper static IP is confirmed, move on to *Part 2*.
 
 ### Part 3: Configuring a New DNS Zone
 
+We are now going to create a new DNS foward lookup zone. This is what allows us to put all of our machines under a single **domain name**. Just like *reddit.com* and *eff.org*, you will create your own domain name using *yourSenecaUsername.com*.
+
 1. Back in **Server Manager**, in the top right, click **Tools > DNS** to open the DNS Manager.
 2. In the left pane, expand **srv1** and then **Forward Lookup Zones**.
 3. Right-click on **Forward Lookup Zones** and select **New Zone…**
@@ -168,6 +172,12 @@ If the proper static IP is confirmed, move on to *Part 2*.
     6. Click **Finish** to create the zone.
 
 ### Part 4: Adding Host (A) Records
+
+**A records** (also known as host records) are the entries that allow us to say what name goes to what IP address. So, we can link the IP address *10.0.`UID`.1* with *srv1*, for example.
+
+> **Note:** An A record adds to your domain name. If you make an A record called *srv1*, then the full path is *srv1.yourSenecaUsername.com*.
+> 
+> The formula is always: *A_recordname+domainname*
 
 1. In **DNS Manager**, expand your new **yourSenecaUsername.com** zone.
 2. Right-click in the right pane and select **New Host (A or AAAA)…**
