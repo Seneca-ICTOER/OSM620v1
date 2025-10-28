@@ -84,7 +84,7 @@ Instructions to set this up are provided below.
 
 ### Part 1: Create *router* VM
 
-Here we'll create the VM appliance.
+Here we'll create the VM hardware and install the VyOS operating system. This is very quick process.
 
 > **Reminder**: Remember to create a new *router* folder on your SSD for the VM files!
 
@@ -123,8 +123,10 @@ Here we'll create the VM appliance.
 
 ### Part 2: Configuring Routing
 
+Now that our new virtual machine is installed and running, we need to configure it to do our routing. This is a one-time process.
+
 1. Power on router VM and login. (If you haven't already.)
-2. Run the following commands ONE AT A TIME (Replace UID!):
+2. Run the following commands ONE AT A TIME (**Replace UID!**):
 
 ```bash
 configure
@@ -151,6 +153,8 @@ exit
 6. Keep this VM up! Minimize and move on to the next Investigation.
 
 Congratulations! You now have a NAT router VM that uses minimal resources.
+
+> Note: After this lab, whenever you have other Windows VMs turned on, turn this one on first. (You don't need to log into it, just let it do its thing.)
 
 ## Investigation 2: Create srv3 VM
 
