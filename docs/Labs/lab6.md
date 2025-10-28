@@ -262,7 +262,7 @@ This is a very normal on-prem setup, and you'll see why later on in the lab. It 
 5. Delete any folders inside the VM disk directory, *Virtual Hard Disks*: **C:\ProgramData\Microsoft\Windows\Hyper-V\Virtual Hard Disks/`vm folders`**
 6. Shut down *srv1*.
 
-## Investigation 4: Convert srv2 to AD DC1
+## Investigation 4: Promote srv2 to AD DC1
 
 In this investigation, we're going to promote *srv2* to an **Active Directory Domain Controller**. As the first Core machine, we have to do this purely from the command line with PowerShell.
 
@@ -491,7 +491,7 @@ Let's check that *laptop1* auto-registered to DNS after the AD join.
 3. Do you see laptop1? If yes, congrats! It auto-registered, just as we wanted.
 4. If not, ask for help. Do not continue.
 
-## Investigation 7: Convert *srv3* to AD DC2
+## Investigation 7: Promote *srv3* to AD DC2
 
 In this investigation, we'll create a second AD Domain Controller by using *srv3*. This is a much simpler process than *srv2*, as we can use *srv1* for part of it.
 
