@@ -152,7 +152,7 @@ On *srv2*:
 > ![Fig 2. NIC1 connected in VMware's Hardware Settings.](/img/nic1-connected.png)  
 > *Figure 2. NIC1 connected in VMware's Hardware Settings.*
 
-> ![Fig 3. NIC1 disconnected in VMware's Hardware Settings.](/img/nic1-connected.png)  
+> ![Fig 3. NIC1 disconnected in VMware's Hardware Settings.](/img/nic1-disconnected.png)  
 > *Figure 3. NIC1 **disconnected** in VMware's Hardware Settings.*
 
 ### Part 1: Switching the Network
