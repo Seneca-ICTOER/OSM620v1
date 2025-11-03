@@ -141,12 +141,19 @@ Here, we'll connect our new `laptop1` machine to office HQ network and access so
 ### Before You Begin
 
 We will *not* be using our Hyper-V VMs in this assignment. To make things easier, change *srv1*'s hardware settings in VMware Workstation while the VM is powered off.
+
 On *srv1:*
 1. CPU: **Change from 6-cores to 4-cores.**
 2. RAM: **Change from 16 GB to 8 GB**
 
 On *srv2*:
-1. Disconnect the NAT NIC, leaving only the NIC with the 10.0.`UID`.2 online. *srv2* should only be reachable though the 10.0.`UID`.0/24 network (HQ Network).
+1. Disconnect the NAT NIC, leaving only the NIC with the 10.0.`UID`.2 online. *srv2* should only be reachable though the 10.0.`UID`.0/24 network (HQ Network). (Refer to *Fig. 2* and *Fig. 3* below.)
+
+> ![Fig 2. NIC1 connected in VMware's Hardware Settings.](/img/nic1-connected.png)  
+> *Figure 2. NIC1 connected in VMware's Hardware Settings.*
+
+> ![Fig 3. NIC1 disconnected in VMware's Hardware Settings.](/img/nic1-connected.png)  
+> *Figure 3. NIC1 **disconnected** in VMware's Hardware Settings.*
 
 ### Part 1: Switching the Network
 
@@ -174,8 +181,8 @@ Let's see if we can access all the HQ resources we were able to with our other V
 	2. `nslookup srv2.YourSenecaUsername.com`
 	3. `nslookup eff.org`
 
-> ![Fig 2. Example of a successful DNS lookup using srv1](/img/nslookup-srv1.png)  
-> *Figure 2. Example of a successful DNS lookup using srv1.*
+> ![Fig 4. Example of a successful DNS lookup using srv1](/img/nslookup-srv1.png)  
+> *Figure 4. Example of a successful DNS lookup using srv1.*
 
 5. Now, let's confirm we have connections to these resources:
 	1. `ping srv1.cjohnson30.com`
