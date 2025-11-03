@@ -101,11 +101,27 @@ In this part, you will create a new Windows 11 virtual machine using the hardwar
 Virtual Machine Specifications:
 * Hypervisor: **VMware Workstation**
 * Name: **laptop1**
+* Location: **OSM620/Virtual Machines/laptop1**
+* Encrytiption Information: **See note below.**
 * RAM: **4 GB**
 * CPU: **2 processors**
 * Storage: **64 GB**
 * NIC: **1**, set to **NAT**
 * ISO: **Windows 11 Education**
+
+If you can't remember how to create a VMware virtual machine, please refer back to [Lab 1](../Labs/lab1.md).
+
+#### Encryption Information Page
+
+Like with *client1* and *client2*, this VM's Windows 11 uses a TPM to encrypt certain important files. Unlike Hyper-V, VMware Worksation adds the TPM module automatically.
+
+* Choose Encryption Type: **Only the files needed to support a TPM are encrypted.**
+* Password: **Your normal VM password.**
+
+You do need to choose the encryption type and give it a password. **Use the same password you've used for all other VMs in this course.**
+
+> ![Fig 1. The Encryption Information page for creating a new Windows 11 VM in VMware.](/img/laptop1-encryption.png)  
+> *Figure 1. The Encryption Information page for creating a new Windows 11 VM in VMware.*
 
 ### Part 2: OS Installation and Configuration
 
@@ -158,8 +174,8 @@ Let's see if we can access all the HQ resources we were able to with our other V
 	2. `nslookup srv2.YourSenecaUsername.com`
 	3. `nslookup eff.org`
 
-> ![Fig 1. Example of a successful DNS lookup using srv1](/img/nslookup-srv1.png)  
-> *Figure 1. Example of a successful DNS lookup using srv1.*
+> ![Fig 2. Example of a successful DNS lookup using srv1](/img/nslookup-srv1.png)  
+> *Figure 2. Example of a successful DNS lookup using srv1.*
 
 5. Now, let's confirm we have connections to these resources:
 	1. `ping srv1.cjohnson30.com`
