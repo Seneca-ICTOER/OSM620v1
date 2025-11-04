@@ -499,8 +499,9 @@ Turn on the following VMs:
 * *srv2*
 * *laptop1*
 
-Check the following on *laptop1*:
-1. In **Network Connections**, the single adapter **Ethernet0** has ***IPv6 disabled***.
+> **IMPORTANT!** Check the following on *laptop1*:
+>
+> In **Network Connections**, the single adapter **Ethernet0** has ***IPv6 disabled***.
 
 This should already be set from previous labs, but now is a good time to check. Missing this will break this investigation in interesting and very frustrating ways.
 
