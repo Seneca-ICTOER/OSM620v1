@@ -44,6 +44,8 @@ Before beginning, you must have:
 
 ### Part 1: Add the DHCP Server Role
 
+In this investigation, we'll install the DHCP role on our server so other machines on our network can get their IP address and network configuration from *srv1*.
+
 1. **Login to srv1** with your Administrator account.
 2. Open **Server Manager** → **Manage > Add Roles and Features**.
 3. **Installation Type**: *Role-based or feature-based installation* → **Next**.
@@ -56,9 +58,17 @@ Before beginning, you must have:
 1. In **Server Manager**, click the yellow **!** → **Complete DHCP configuration**.
 2. In the wizard, click **Commit** → **Close**.
 
----
+Once fully complete, move on to the next investigation.
 
 ## Investigation 2: Create Scope and Options (10.0.`UID`.0/24)
+
+In this investigation, we'll configure the **scope**. 
+
+A DHCP scope is , basically, what slice of the network are we going to use and define. (Example are 10.0.45.0/24, 192.168.1.0/24, 172.16.0.0/16, etc.)
+
+Here, we're going to tell DHCP we want to manage the **10.0.`UID`.0/24** network. Any machine that connects to our *Internal Network* will get its IP address, subnet mask, default gateway, and DNS using what we set up below.
+
+In short: *srv1* will give other machines their IP addresses automatically, along with other network configuration.
 
 ### Part 1: Create a New IPv4 Scope
 
@@ -75,35 +85,43 @@ Before beginning, you must have:
     * `10.0.UID.200` to `10.0.UID.254`
     * Leave the delay blank.
 6. **Lease Duration**: default (8 days) → **Next**.
-7. **Configure DHCP Options**: choose **Yes, I want to configure these options now** → **Next**.
-
-### Part 2: Configure Scope Options
-
-1. **Router (Default Gateway) – Option 003**: `10.0.UID.1` → **Add** → **Next**.
-2. **Domain Name and DNS Servers – Option 006/015**:
+7. **Router (Default Gateway) – Option 003**: `10.0.UID.1` → **Add** → **Next**.
+8. **Domain Name and DNS Servers – Option 006/015**:
 
    * **Parent domain** (Option 015): `yourSenecaUsername.com` *(replace with your lab domain from Lab 4)*
    * **DNS Servers** (Option 006): 
        * `10.0.UID.1` *(srv1)*
        * **149.112.121.20** *(CIRA)*
-3. **WINS Servers**: leave blank → **Next**.
-4. **Activate Scope**: select **Yes, I want to activate this scope now** → **Finish**.
+9. **WINS Servers**: leave blank → **Next**.
+10. **Activate Scope**: select **Yes, I want to activate this scope now** → **Finish**.
 
-> **Why start at `.2`?** `.1` is the gateway on *srv1*. We’ll reserve `.2`, `.11`, and `.12` for *srv2*, *client1*, and *client2* to preserve continuity with earlier labs.
-
----
+> **Why start at `.2`?** `.1` is the gateway on *srv1*. We want to make sure our DHCP server can't give out the IP address that *srv1* already uses!
 
 ## Investigation 3: Reservations for Predictable Addresses
 
+By default, a DHCP server will assign IP addresses to other machines randomly from the range you defined earlier. (10.0.`UID`.2 - 10.0.`UID`.254)
+
+Every time one of your other machines connect, it could get *any* IP address inside that range. It will always start with 10.0.`UID`., but that last number (octet) could be anything between 2-254. It can and will change from day to day.
+
+In this investigation, we're going to use **Reservations** to let us decide, from *srv1*, what IP addresses each of our machines should *always* have. After we're done, when srv2 gets an IP address, it won't be random. It will be what we decide.
+
 We’ll bind specific IPs to each machine’s **MAC address** so they keep the same addresses used in Labs 2–4.
 
-### Part 1: Collect MAC addresses
+### Part 1: Collect Physical Addresses From Each NIC
 
-1. On **srv2** (Core): `ipconfig /all` → record the **Physical Address** for the **Internal** adapter.
+To set this up, we need to grab the physical address (otherwise known as MAC address) of each network card on each computer. This is how *srv1* will known which machine is which when it needs to give out IP addresses.
+
+Write down the physical address for each:
+
+1. On **srv2** (Core): `ipconfig /all` → record the **Physical Address** for the **Internal Network** adapter.
 2. On **client1**: `ipconfig /all` → record Physical Address.
 3. On **client2**: `ipconfig /all` → record Physical Address.
 
-### Part 2: Create reservations on *srv1*
+### Part 2: Create Reservations on *srv1*
+
+In this part, we'll know create a DHCP reservation for each computer. This is how we make sure they get the specific IP address we want them to have, instead of a random one.
+
+Each computer will have its own reservation. This is like a record.
 
 In **DHCP Manager** → **IPv4 > OSM620 HQ > Reservations** → **Right‑click > New Reservation…**
 
@@ -130,19 +148,22 @@ Create the following (replace `UID` and MACs):
 
 Verify all three appear under **Reservations**.
 
----
 
 ## Investigation 4: Switch from Static to DHCP
 
-### Part 1: *srv2* (Server Core)
+Right now, you're other computers are using **manual static network configuration**. You set up their IP addresses manually.
+
+In this investigation, we'll switch our other machines back to using DHCP so they can get their network information, including IP address, from *srv1*. 
+
+### Part 1: Swtiching *srv2* (Server Core)
 
 1. Login as **Administrator**.
-2. Identify interface index:
+2. In PowerShell, identify the interface index of your network adapter (look for **IfIndex**):
 
    ```powershell
    Get-NetIPInterface
    ```
-3. Enable DHCP for IPv4 (replace `4` with your **InterfaceIndex** on the Internal adapter):
+3. Enable DHCP for IPv4 (replace `4` with your **IfIndex** on the Internal Network adapter):
 
    ```powershell
    Set-NetIPInterface -InterfaceIndex 4 -Dhcp Enabled
@@ -151,7 +172,8 @@ Verify all three appear under **Reservations**.
    ipconfig /renew
    ipconfig /all
    ```
-4. Confirm **IPv4 Address = 10.0.UID.2**, **Default Gateway = 10.0.UID.1**, **DNS = 10.0.UID.1**.
+4. Run `ipconfig /all` to confirm the following:
+ **IPv4 Address = 10.0.UID.2**, **Default Gateway = 10.0.UID.1**, **DNS = 10.0.UID.1**.
 
 ### Part 2: *client1* (Windows 11)
 
@@ -172,9 +194,13 @@ Repeat the exact steps as client1. Confirm **IPv4 = 10.0.UID.12**.
 
 > If a machine doesn’t pick up the reserved address, re‑check the MAC you entered in the reservation and ensure the NIC you changed to DHCP is the **Internal** (HQ) adapter.
 
----
-
 ## Investigation 5: Verify Leases and Name Resolution
+
+In this investigation, we'll run checks to confirm that our machines are:
+* Using DHCP
+* Have an IP address
+* Can connect to other machines
+* Can connect to the Internet
 
 ### Part 1: Check Leases in DHCP Manager
 
@@ -195,8 +221,6 @@ ping srv1.yourSenecaUsername.com
 
 * All should resolve and ping (ICMP allowed per Lab 3). If `nslookup` for Internet names fails, revisit **DNS Forwarders** on *srv1*.
 
----
-
 ## Troubleshooting
 
 * **Client keeps old static IP**: ensure **IP assignment = Automatic (DHCP)**; on Core, run `Set-NetIPInterface -Dhcp Enabled` then `ipconfig /release` + `/renew`.
@@ -204,8 +228,6 @@ ping srv1.yourSenecaUsername.com
 * **No default gateway**: re‑check **Option 003** in scope options.
 * **DNS wrong**: verify **Option 006** points to `10.0.UID.1` and **Option 015** is your lab domain.
 * **No Internet**: confirm *srv1* still NATs traffic between Internal and External (Lab 2 RRAS) and that **Forwarders** work (Lab 4).
-
----
 
 ## Lab 5 Sign‑Off
 
@@ -217,4 +239,4 @@ To complete Lab 5, show your instructor:
 4. In Address Leases, entries for all three machines marked as **Reservation**.
 5. `nslookup` for `srv1.yourSenecaUsername.com` **and** an Internet site returns addresses successfully.
 
-> **You’re done.** Your lab enterprise now uses **DHCP** correctly while keeping earlier labs’ addressing and DNS intact.
+> **You’re done!** Your lab environment now uses **DHCP** correctly while keeping earlier labs’ addressing and DNS intact.
