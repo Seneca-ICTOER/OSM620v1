@@ -436,7 +436,7 @@ Let's create our first RG and then add a single AD admin privilege to it: Reset 
 
 1. In *HQ\Groups\Roles*, create a new **Group** object with the following settings:
     1. **Group name:** *RG_PasswordReset*
-    1. **Group scope:** *Global*
+    1. **Group scope:** *Domain Local*
     1. **Group type:** *Security*
 
 1. In *HQ\Users\Accounting*, right-click and select: **Delegate control...**
@@ -513,7 +513,7 @@ Or disable his account if he gets fired. (*He is terrible, after all.*)
 
 1. In ADUC, navigate to: **HQ\Groups\Roles** and create a new **Group** object with the following settings:
     1. **Group name:** *RG_OUAdmin_AllDepts*
-    1. **Group scope:** *Global*
+    1. **Group scope:** *Domain Local*
     1. **Group type:** *Security*
 
 1. In *HQ\Users\Accounting*, right-click and select: **Delegate control...**
