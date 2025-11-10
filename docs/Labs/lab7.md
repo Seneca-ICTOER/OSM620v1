@@ -490,7 +490,7 @@ A Level 2 Helpdesk employee has their own special AD admin privileges, along wit
 
 In theory, a Level 2 Helpdesk employee shouldn't be contacted for password resets, but she may be asked to do that after completing some L2 tasks for an employee. It happens.
 
-Fortunately, most of the work here it already done. All we need to do is create a new user, and the L2 GG and RGs.
+Fortunately, most of the work here is already done. All we need to do is create a new user, and the L2 GG and RGs.
 
 ### Part 1: Global Group - GG_IT_L2
 
