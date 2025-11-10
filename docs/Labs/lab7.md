@@ -29,7 +29,7 @@ By the end of this lab, you will be able to:
 
 * Create a tidy **HQ\Users** scaffold and a starter **HQ\Computers** scaffold.
 * Create a **personal domain admin account**, verify access, and **disable** the built-in **Administrator** safely.
-* Create a **User-scope GPO** (**User – Employee Lockdown**), link it to a specific **Employees** OU, and verify that it follows the user (Bob) wherever he signs in.
+* Create a **User-scope GPO** (**User – Employee Lockdown**), link it to a specific **Accounting** OU, and verify that it follows the user (Bob) wherever he signs in.
 * Create a **User-scope GPO** for IT (**User – IT Environment**), link it to **HQ\Users\IT**, and verify that Enzo/Dot get the intended desktop experience.
 * Create ***Global Groups (GG_)*** to represent **who people are** and **Role Groups (RG_)** to represent **what a role can do**; wire them together and **delegate**:
   * **L1**: reset passwords in a department OU (e.g., Accounting).
@@ -113,7 +113,7 @@ We avoid advanced tricks in this lab (no **Block Inheritance**, no **Enforced**)
 
 > **Examples you’ll build:**  
 >
-> * **Standard – Employee Lockdown** *(User)* → link to `…\Users\Accounting\Employees`.  
+> * **User – Employee Lockdown** *(User)* → link to `…\Users\Accounting`.  
 > * **User – IT Environment** *(User)* → link to `…\Users\IT`.  
 > * **Computer – Workstations Baseline** *(Computer)* → link to `…\Computers\Workstations`.  
 > * **Computer – Laptops Baseline** *(Computer)* → link to `…\Computers\Laptops`.
@@ -154,7 +154,15 @@ Have the following VMs turned on:
 
 ## Investigation 1: Create Personal Domain Controller User
 
+We’re going to give the domain a proper identity backbone before we do anything clever. That means building a clean **HQ\Users** OU path, creating a named administrator for yourself, and retiring the **built-in Administrator** account. Named admins are audit-friendly and safer. OUs (not the default *Users* container) are where policy and delegation behave predictably.
+
+You’ll create your personal admin, verify it on both DCs, add a break-glass backup admin, and then disable the built-in Administrator.
+
+**From this point on, every right you have will be applied purpose**, and every policy we link later will land exactly where we intend.
+
 ### Part 1: First OU Scaffolding Setup
+
+Before we make any accounts, we need a proper home for them. The built-in **Users** container isn’t an OU, so you can’t link GPOs to it or delegate neatly. Building **HQ\Users** (with an **IT** branch) gives us a clean, predictable place where policy and delegation will behave the way we want.
 
 1. On *srv1*, open **Active Directory Users and Computers** (ADUC).
 1. Open your domain name from the list. (Example: *cjohnson30.com*)
@@ -175,6 +183,8 @@ Have the following VMs turned on:
 1. If so, move on to the next part. If not, fix your mistakes or ask for help.
 
 ### Part 2: Create Personal User
+
+**Admins shouldn’t live and work in the default *Administrator* account.** A named admin is safer (auditing, accountability) and lets us save the built-in Administrator for emergencies. We’ll create your personal admin under **HQ\Users\IT\SysAdmins** so any IT-specific policy we link there applies to you automatically.
 
 1. On **srv1** in ADUC, navigate to: **HQ\Users\IT\SysAdmins**
 1. Right-click on *SysAdmins* (or the whitespace to the right) and select: **New > User**
@@ -199,6 +209,12 @@ Have the following VMs turned on:
 
 ### Part 3: Add New Personal User to Domain Controllers
 
+Now we grant your account the rights to actually run the domain. Adding it to **Domain Admins** makes the change global.
+
+  > **NOTE:** For your new personal user to have those rights *applied*, you need to log off of that account and log back in. In this case, we haven't logged on to the account yet, so we can skip this step. But it's important to note for changes made to accounts currently logged on.
+
+ We’ll also open Server Manager under your new personal account and re-add the other DCs (*srv2/srv3*).
+
 1. On **srv1** in ADUC, navigate to: **HQ\Users\IT\SysAdmins**
 1. Right-click on the user you created in Step 2 and click **Properties**.
 1. In the *Properties* dialog box, click on the tab: **Member Of**
@@ -208,7 +224,7 @@ Have the following VMs turned on:
 1. Click **OK** to add.
 1. Back in the *Member Of* tab, you should now see two entries. If so, click **OK** to fully apply.
 1. On *srv1*, log out of your Administrator account and log back in using your new personal account by clicking on **Other user**.
-    > Logging in using *firstname.lastname* should be sufficient, but if not, you can use either *`SenecaID\firstname.lastname`* or *`firstname.lastmane@SenecaID.com`*.
+    > Logging in using *firstname.lastname* should be sufficient, but if not, you can use either *`yourSenecaUsername\firstname.lastname`* or *`firstname.lastname@yourSenecaUsername.com`*.
 1. Open *Server Manager > All Servers* and add *srv2* and *srv3*.
 
 You now have full domain admin access using your personal account instead of the default Administrator account. This is far more secure and best practice.
@@ -216,6 +232,8 @@ You now have full domain admin access using your personal account instead of the
 Going forward, always log into your servers using this personal account, never the default Administrator account.
 
 ### Part 4: Create a Secondary Backup Administrator
+
+**This is your break-glass admin.** If your main account gets locked or broken, this one saves the day. It should work everywhere the primary does. We’ll test it right away so you know it works before you ever need it.
 
 1. On **srv1** in ADUC, create a new user in: **HQ\Users\IT\SysAdmins**
 1. Same steps as Part 3, but use the following values:  
@@ -229,7 +247,11 @@ Going forward, always log into your servers using this personal account, never t
 
 ### Part 5: Disable Default Administrator Account
 
-1. On **srv1** in ADUC, nagivate to: **SenecaID.com\Users** (this is not inside HQ)
+The built-in Administrator is a well-known target for attackers. Disabling it removes a giant bullseye without taking away any capability. Your named admin replaces it (as does your backup admin).
+
+From now on, do everything with your personal account. **Make sure you're logged on to your *firstname.lastname* admin account before continuing!**
+
+1. On **srv1** in ADUC, navigate to: **yourSenecaUsername.com\Users** (this is *not* inside HQ)
 1. Find the **Administrator** account and right-click it.
 1. From the drop-down menu, select: **Disable Account**
 
@@ -237,7 +259,15 @@ You've now disabled the default admin account and prevented a possible attack ve
 
 ## Investigation 2: Bob from Accounting
 
+**Now we add a real employee so we can see user-scope policy do real work.** We’ll carve out **HQ\Users\Accountants** and create **Bob Smith** as a standard user: no special rights, just a normal person who should get normal restrictions.
+
+With that in place, we’ll link a **User-scope GPO** to the **Accountants OU** and watch the settings follow Bob wherever he signs in.
+
+This is the first half of the model: people live under Users OUs, and user policy follows the person. It also sets us up to delegate tasks to IT without giving them domain-wide power in the next investigations.
+
 ### Part 1: Add Accountants OUs
+
+Departments deserve their own space. By carving out **HQ\Users\Accountants**, we get a tidy spot to place real people and a perfect target for user-scope GPOs and delegation. Policies linked here will follow accountants wherever they sign in.
 
 1. On **srv1** in ADUC, navigate to: **HQ\Users**
 1. Using the **New > Organizational Unit** function, ***add*** the following to your existing hierarchy:  
@@ -246,8 +276,6 @@ You've now disabled the default admin account and prevented a possible attack ve
     > HQ  
     > └─ Users  
     >    └─ Accountants 
-    >       ├─ Managers
-    >       └─ Employees
     > ```
 
 1. Verify your work. Does your HQ object hold the above items in the correct levels?
@@ -255,7 +283,9 @@ You've now disabled the default admin account and prevented a possible attack ve
 
 ### Part 2: Create User - Bob Smith
 
-1. Create a new user in the following location: **HQ\Users\Accountants\Employees**
+Bob is our test user for “normal staff”. We’ll give him standard settings (password change at next logon, no special rights) so we can see our **Employee Lockdown** user-GPO take effect exactly where we expect later in this investigation.
+
+1. Create a new user in the following location: **HQ\Users\Accountants**
 1. Sse the following values:  
     1. **First name:** *Bob*
     1. **Last name:** *Smith*
@@ -266,8 +296,12 @@ You've now disabled the default admin account and prevented a possible attack ve
     1. Check/uncheck the following:  
         1. **User must change password at next logon:** *Checked*
         1. **User cannot change password:** *Unchecked*
-        1. **Password never expires:** *Unchecked*
+        1. **Password never expires:** *Checked*
         1. **Account is disabled:** *Unchecked*
+
+    > **Note:** Modern views on passwords are to always enable *Password never expires*. In the past, we disabled this option to deal with security issues where users would write down passwords, share them, lose them, etc.  A password would become invalid after a certain amount of time (say, 90 days).
+    >
+    > These days, we use **Multi-factor Authentication (MFA)** instead. We won't set that up in this lab, but it's a very typical addition to managed user accounts.
 
 ### Part 3: Create GPO, *User - Employee Lockdown*
 
@@ -276,7 +310,7 @@ Bob from Accounting is a *terrible* user. He ignores written computer polices an
 We have to create the GPO first before we can have it applied to Bob (and other users we want).
 
 1. On *srv1*, open the **Group Policy Management** application.
-1. In the left-hand column, expand the following: **Forest: SenecaID.com > Domains > SenecaID.com > Group Policy Objects**
+1. In the left-hand column, expand the following: **Forest: yourSenecaUsername.com > Domains > yourSenecaUsername.com > Group Policy Objects**
 1. Right-click *Group Policy Objects* and select: **New**  
     1. **Name:** *User - Employee Lockdown*
 
@@ -288,7 +322,7 @@ Let's add those restrictions to our new **User - Employee Lockdown** GPO.
 1. This opens the **Group Policy Management Editor** application, and loads the **User - Employee Lockdown** GPO automatically.
 1. We are now going to turn on certain restrictions.
 1. Prohibit access to Control Panel and PC settings.  
-    1. Nagivate to: **User Configuration > Policies > Administrative Templates > Control Panel**.
+    1. Navigate to: **User Configuration > Policies > Administrative Templates > Control Panel**.
     1. Find **Prohibit access to Control Panel and PC settings** in the list and double-click it to open.
     1. Click **Enabled** then **OK** to apply.
 1. Repeat for the following:  
@@ -298,18 +332,18 @@ Let's add those restrictions to our new **User - Employee Lockdown** GPO.
     1. User Configuration > Policies > Administrative Templates > Windows Components > File Explorer > **Remove “Map Network Drive” and “Disconnect Network Drive” = Enabled**
     1. User Configuration > Policies > Administrative Templates > Control Panel > Printers > **Prevent addition of printers = Enabled**
 
-### Part 5: Link the *User - Employee Lockdown* GPO to Employees
+### Part 5: Link the *User - Employee Lockdown* GPO to Accounting
 
 Now that we have our GPO with all the restrictions added, it's time to apply it.
 
-The best method is to apply it at the *Accounting\Employees* OU so **any** accounting employee will inherit this GPO and its restrictions, including Bob.
+The best method is to apply it at the *HQ\Users\Accounting* OU so **any** accounting employee will inherit this GPO and its restrictions, including Bob.
 
 Much better than applying it to 50 different employees one at a time!
 
-1. Back in the *Group Policy Management* application, right-click on: **HQ\Users\Accounting\Employees**
+1. Back in the *Group Policy Management* application, right-click on: **HQ\Users\Accounting**
 1. Click **Link an existing GPO**
 1. Select **User - Employee Lockdown** from the list and click **OK**.
-1. You should now see it in the list in the main *Linked Group Policy Objects* pane for *Employees*. If you don't, double-check your work and ask for help before proceeding.
+1. You should now see it in the list in the main *Linked Group Policy Objects* pane for *Accounting*. If you don't, double-check your work and ask for help before proceeding.
 
 ### Part 6: Verify Bob's Restrictions
 
@@ -341,11 +375,11 @@ Let's set that up.
 
 The previous GPO we created is far too restrictive for an IT employee. They can be trusted to make changes to their own system.
 
-**Remember, GPOs are about modifying *default behaviour*.** Think about when you log into a normal Windows machine you own. You can access Control Panel, right? So, to allow it here, all we need to do is **not** disable it. The default is to allow access. Same with the other restrictions we placed on the previous GPO.
+**Remember, Group Policy Objects (GPOs) are about modifying *default behaviour*.** Think about when you log into a normal Windows machine you own. You can access Control Panel, right? So, to allow it here, all we need to do is **not** disable it. The default is to allow access. Same with the other restrictions we placed on the previous GPO.
 
 Instead of adding restrictions, we're going to add some shortcuts for common AD management tools to the IT users' desktops.
 
-1. Open the **Group Policy Management** and navigate to:  **Forest: SenecaID.com > Domains > SenecaID.com > Group Policy Objects**
+1. Open the **Group Policy Management** and navigate to:  **Forest: yourSenecaUsername.com > Domains > yourSenecaUsername.com > Group Policy Objects**
 1. Create a new GPO here called: **User - IT Environment**
 1. **User Configuration > Preferences > Windows Settings > Shortcuts > *Right-Click* > New > Shortcut**
 1. Add the following shortcuts:
@@ -367,6 +401,10 @@ Instead of adding restrictions, we're going to add some shortcuts for common AD 
 
 ### Part 2: Create User - Enzo Matrix
 
+Enzo is our **Level 1 Helpdesk** employee. He needs an IT-friendly desktop (shortcuts, fewer restrictions than Bob) and, soon, the ability to reset passwords in a specific department.
+
+We’ll set him up now so the GPO and group wiring we do next has a real user to affect.
+
 1. Create a new user in the following location: **HQ\Users\IT\Helpdesk**
 1. See the following values:  
     1. **First name:** *Enzo*
@@ -381,9 +419,9 @@ Instead of adding restrictions, we're going to add some shortcuts for common AD 
         1. **Password never expires:** *Unchecked*
         1. **Account is disabled:** *Unchecked*
 
-### Part 3: Link the *User - IT Environment* GPO to Employees
+### Part 3: Link the *User - IT Environment* GPO to IT
 
-Now that we have our GPO with all our additions included, it's time to apply it. We'll apply it to the *IT* OU, since it should apply to everyone there.
+Now that we have our GPO with all our additions included, it's time to apply it. We'll apply it to the *IT* OU, since it should apply to everyone there (all IT employees).
 
 1. Back in the *Group Policy Management* application, right-click on: **HQ\Users\IT**
 1. Click **Link an existing GPO**
@@ -394,7 +432,7 @@ Now that we have our GPO with all our additions included, it's time to apply it.
 
 This is where we get into personal desktop environment settings VS Active Directory admin settings. GPOs are for personal desktop environments that a user sees when they login.
 
-By contrasts, we use Global Groups+Role Groups to grant certain AD admin tasks to groups of users.
+By contrast, we use Global Groups+Role Groups to grant certain AD admin tasks to groups of users.
 
 For reference:
 
@@ -480,6 +518,10 @@ We should check that our new Enzo account works, has our user GPO applied (those
     1. **Server Manager**
     1. **Active Directory Users and Computers**
     1. **Group Policy Management**
+1. Open ADUC and go to: **HQ\Users\Accounting**
+1. Right-click on **Bob Smith** and select *Disable Account*. It doesn't work, does it? It shouldn't; Enzo doesn't have permissions to do that.
+1. Right-click on **Bob Smith** and select *Reset Password*.
+1. Reset Bob's password. Can you?
 1. If so, move on to the next part of the lab.
 
 ## Investigation 4: Dot Matrix - IT Helpdesk L2
@@ -582,7 +624,12 @@ We should check that our new Dot account works, has our user GPO applied (those 
     1. **Server Manager**
     1. **Active Directory Users and Computers**
     1. **Group Policy Management**
-1. If so, move on to the next part of the lab.
+1. Open ADUC and go to: **HQ\Users\Accounting**
+1. Right-click on **Bob Smith** and select *Disable Account*. It works now, doesn't it? It should. Enzo didn't have permissions to do that, but Dot does.
+1. Right-click and Enable the Bob account again so we can keep using it.
+1. Verify your L1 permissions: Right-click on **Bob Smith** and select *Reset Password*.
+1. Don't reset his password again. Opening the window is enough
+1. If all these work, move on to the next part of the lab.
 
 ## Investigation 5: Computers - OUs and GPOs
 
@@ -625,7 +672,7 @@ The following investigation allows us to organize the computers we have joined t
 
 1. In ADUC, click the built-in Computers container (CN=Computers) and your domain root to find machine accounts.
 1. Move (drag and drop) to the new OUs:
-    1. *srv1* → **HQ\Computers\Servers\Member**
+    1. *srv1* → **HQ\Computers\Servers\Members**
     1. *laptop1* → **HQ\Computers\Laptops\Accounting**
 
     > **Note:** Do not move srv2 and srv3! Keep them where they are.
