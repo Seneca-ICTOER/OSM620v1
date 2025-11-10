@@ -94,7 +94,7 @@ Have the following VMs turned on:
 1. Click **OK** to add.
 1. Back in the *Member Of* tab, you should now see two entries. If so, click **OK** to fully apply.
 1. On *srv1*, log out of your Administrator account and log back in using your new personal account by clicking on **Other user**.
-    > Logging in using *firstname.lastname* should be sufficient, but if not, you can use either *SenecaID\firstname.lastname* or *<firstname.lastmane@SenecaID.com>*.
+    > Logging in using *firstname.lastname* should be sufficient, but if not, you can use either *`SenecaID\firstname.lastname`* or *`firstname.lastmane@SenecaID.com`*.
 1. Open *Server Manager > All Servers* and add *srv2* and *srv3*.
 
 You now have full domain admin access using your personal account instead of the default Administrator account. This is far more secure and best practice.
