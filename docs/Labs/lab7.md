@@ -19,11 +19,15 @@ By the end of this lab, you will be able to:
 
 - Stuff
 
+### Concepts
+
+Conceptual discussion and terminology like Users, Groups, Computers, GPOs, RGs, GGs, etc.
+
 ### Minimum Progression Requirements
 
 Before beginning, you must have:
 
-1. **Successfully graded *Lab 6*.
+1. **Successfully graded *Lab 6***.
 1. Attended the **Week 10 - AD Users, Groups, Computers, and GPOs** lecture.
 1. Your external SSD (or personal computer) with your VMs.
 1. Your OSM620 Lab Logbook.
@@ -83,7 +87,7 @@ Have the following VMs turned on:
     1. Click **Next**.
 1. On the final page, review your settings and click **Finish**.
 
-### Part 3: Add Personal User to Domain Controllers
+### Part 3: Add New Personal User to Domain Controllers
 
 1. On **srv1** in ADUC, navigate to: **HQ\Users\IT\SysAdmins**
 1. Right-click on the user you created in Step 2 and click **Properties**.
@@ -110,6 +114,7 @@ Going forward, always log into your servers using this personal account, never t
     1. All others the same as Part 3.
 1. In this user's *Member Of*, add **Domain Admins**
 1. Logout of srv1, log back in with this new user, and add *srv2/srv3* to Server Manager.
+1. On **srv2**, log on with `backup.admin` to confirm you have backup access to your DCs.
 1. If the previous step worked, congrats! Keep going. If not, stop and ask for help.
 
 ### Part 5: Disable Default Administrator Account
@@ -122,7 +127,7 @@ You've now disabled the default admin account and prevented a possible attack ve
 
 ## Investigation 2: Bob from Accounting
 
-### Part 1: Add Accounting OUs
+### Part 1: Add Accountants OUs
 
 1. On **srv1** in ADUC, navigate to: **HQ\Users**
 1. Using the **New > Organizational Unit** function, ***add*** the following to your existing hierarchy:  
@@ -156,7 +161,7 @@ You've now disabled the default admin account and prevented a possible attack ve
 
 ### Part 3: Create GPO, *User - Employee Lockdown*
 
-Bob from Accounting is a *terribble* user. He ignores written computer polices and likes to mess around with settings due to boredom and 'fixing things' instead of contacting IT support. So, we create a **Group Policy Object (GPO)** to disable his ability to change important system settings.
+Bob from Accounting is a *terrible* user. He ignores written computer polices and likes to mess around with settings due to boredom and 'fixing things' instead of contacting IT support. So, we create a **Group Policy Object (GPO)** to disable his ability to change important system settings.
 
 We have to create the GPO first before we can have it applied to Bob (and other users we want).
 
@@ -173,7 +178,7 @@ Let's add those restrictions to our new **User - Employee Lockdown** GPO.
 1. This opens the **Group Policy Management Editor** application, and loads the **User - Employee Lockdown** GPO automatically.
 1. We are now going to turn on certain restrictions.
 1. Prohibit access to Control Panel and PC settings.  
-    1. Nagivate to: **User Configuration > Administrative Templates > Control Panel**.
+    1. Nagivate to: **User Configuration > Policies > Administrative Templates > Control Panel**.
     1. Find **Prohibit access to Control Panel and PC settings** in the list and double-click it to open.
     1. Click **Enabled** then **OK** to apply.
 1. Repeat for the following:  
@@ -187,7 +192,7 @@ Let's add those restrictions to our new **User - Employee Lockdown** GPO.
 
 Now that we have our GPO with all the restrictions added, it's time to apply it.
 
-The best method is to apply it at the *Accounting\Employee* OU so **any** accounting employee will inherit this GPO and its restrictions, including Bob.
+The best method is to apply it at the *Accounting\Employees* OU so **any** accounting employee will inherit this GPO and its restrictions, including Bob.
 
 Much better than applying it to 50 different employees one at a time!
 
@@ -201,12 +206,14 @@ Much better than applying it to 50 different employees one at a time!
 We should check that our restrictions have worked.
 
 1. Logout of your account on *srv1*.
-1. Log in to Bob's account: **bob.smith**
+1. Log on to Bob's account: **bob.smith**
     1. You will be asked to reset the password on first login. This is normal. Pick something complex but basic and **write it down in your Lab Logbook**.
 1. Once logged in, try to open up **Settings**. Does it let you?
 1. If not, nicely done! Move on to the next part of the lab.
 
 This is a good example of applying settings to a user account. No matter what HQ workstation Bob logs into, these restrictions will *follow him*.
+
+  > **Note:** Normally, we'd use a workstation to test Bob's account, not a server. We're using *srv1* here to conserve lab resources. We'll test with *laptop1* towards the end of this lab.
 
 ## Investigation 3: Enzo Matrix - IT Helpdesk
 
@@ -224,12 +231,12 @@ Let's set that up.
 
 The previous GPO we created is far too restrictive for an IT employee. They can be trusted to make changes to their own system.
 
-**Remember, GPOs are about modifying *default behaviour*.** Think about when you log into a normal Windows machin you own. You can access Control Panel, right? So, to allow it here, all we need to do is **not** disable it. The default is to allow access. Same with the other restrictions we placed on the previous GPO.
+**Remember, GPOs are about modifying *default behaviour*.** Think about when you log into a normal Windows machine you own. You can access Control Panel, right? So, to allow it here, all we need to do is **not** disable it. The default is to allow access. Same with the other restrictions we placed on the previous GPO.
 
 Instead, we're going to add some shortcuts to the IT users' desktops for common AD management tools.
 
 1. Open the **Group Policy Manager** and nagivate to:  **Forest: SenecaID.com > Domains > SenecaID.com > Group Policy Objects**
-1. Create a new GPO here called: **User - IT Access**
+1. Create a new GPO here called: **User - IT Environment**
 1. **User Configuration > Preferences > Windows Settings > Shortcuts > *Right-Click* > New > Shortcut**
 1. Add the following shortcuts:
     1. Server Manager
@@ -251,7 +258,7 @@ Instead, we're going to add some shortcuts to the IT users' desktops for common 
 ### Part 2: Create User - Enzo Matrix
 
 1. Create a new user in the following location: **HQ\Users\IT\Helpdesk**
-1. Sse the following values:  
+1. See the following values:  
     1. **First name:** *Enzo*
     1. **Last name:** *Matrix*
     1. **User login name:** *enzo.matrix*
@@ -288,7 +295,7 @@ A **Global Group *(GG)*** is, essentially, an *identity group*. We use Global Gr
 
 Let's create an AD admin-type group (Global Group, GG) for IT Level 1. Remember, this is just a group of users.
 
-1. In ADOC, navigate to: **HQ**
+1. In ADUC, navigate to: **HQ**
 1. Using the **New > Organizational Unit** function, ***add*** the following to your existing hierarchy:  
 
     > ```
@@ -308,7 +315,7 @@ In contrast to Global Groups, a **Role Group *(RG)*** is a collection of AD admi
 
 Let's create our first RG and then add a single AD admin privilege to it: Reset passwords.
 
-1. In ADOC, navigate to: **HQ**
+1. In ADUC, navigate to: **HQ**
 1. Using the **New > Organizational Unit** function, ***add*** the following to your existing hierarchy:  
 
     > ```
@@ -331,7 +338,7 @@ Let's create our first RG and then add a single AD admin privilege to it: Reset 
 
 We'll now assign our new RG from *Part 5* to our Global Group **GG_IT_L1**. This means that anyone who's a part of *GG_IT_L1* will get the AD admin privilege assigned in *RG_PasswordReset*.
 
-1. In ADOC, navigate to: **HQ\Groups\Roles**
+1. In ADUC, navigate to: **HQ\Groups\Roles**
 1. Double-click on **RG_PasswordReset** to open its Properties.
 1. In the *Properties* window, go to the **Members** tab and click on: **Add...**
 1. In the *Select Users, Contacts, Computers, Service Accounts, or Groups* window, type: **GG_IT_L1**
@@ -343,7 +350,7 @@ The Global Group of users *GG_IT_L1* now has all the AD admin privileges given t
 
 And now we put it all together. We add Enzo to the Global Group *GG_IT_L1*. Once we do that, Enzo will be able to reset passwords for all users inside *HQ\Users\Accounting*.
 
-1. In ADOC, navigate to: **HQ\Groups\Global**
+1. In ADUC, navigate to: **HQ\Groups\Global**
 1. Double-click on **GG_IT_L1** to open its Properties.
 1. In the *Properties* window, go to the **Members** tab and click on: **Add...**
 1. In the *Select Users, Contacts, Computers, Service Accounts, or Groups* window, type: **Enzo Matrix**
@@ -356,12 +363,12 @@ That's it! If we ever want to add more IT employees to Helpdesk Level 1, we'd ju
 We should check that our new Enzo account works, has our user GPO applied (those desktop shortcuts), and our Helpdesk Level 1 admin access applied.
 
 1. Logout of your account on *srv1*.
-1. Log in to Enzo's account: **enzo.matrix**
+1. Log on to Enzo's account: **enzo.matrix**
     1. You will be asked to reset the password on first login. This is normal. Pick something complex but basic and **write it down in your Lab Logbook**.
 1. Once logged in, try to open up **Settings**. Does it let you? It should, this time.
 1. Does the desktop contain the three shortcuts we configured:
     1. **Server Manager**
-    1. **Active Directory Users and Groups**
+    1. **Active Directory Users and Computers**
     1. **Group Policy Management**
 1. If so, move on to the next part of the lab.
 
@@ -379,7 +386,7 @@ Fortunately, most of the work here it already done. All we need to do is create 
 
 Let's create an AD admin-type group (Global Group, GG) for IT Level 2. Remember, this is just a group of users.
 
-1. In ADOC, navigate to: **HQ\Groups\Global** and create a new **Group** object with the following settings:
+1. In ADUC, navigate to: **HQ\Groups\Global** and create a new **Group** object with the following settings:
     1. **Group name:** *GG_IT_L2*
     1. **Group scope:** *Global*
     1. **Group type:** *Security*
@@ -394,7 +401,7 @@ As an example, if Bob from Accounting gets reassigned to a different department,
 
 Or disable his account if he gets fired. (*He is terrible, after all.*)
 
-1. In ADOC, navigate to: **HQ\Groups\Roles** and create a new **Group** object with the following settings:
+1. In ADUC, navigate to: **HQ\Groups\Roles** and create a new **Group** object with the following settings:
     1. **Group name:** *RG_OUAdmin_AllDepts*
     1. **Group scope:** *Global*
     1. **Group type:** *Security*
@@ -406,9 +413,9 @@ Or disable his account if he gets fired. (*He is terrible, after all.*)
 
 ### Part 3: Wire Global Group to Resource Group
 
-We'll now assign our new RG from *Part 2* to our Global Group **GG_IT_L2**. This means that anyone who's a part of *GG_IT_L2* will get the AD admin privilege assigned in *RG_PasswordReset*.
+We'll now assign our new RG from *Part 2* to our Global Group **GG_IT_L2**. This means that anyone who's a part of *GG_IT_L2* will get the AD admin privilege assigned in *RG_OUAdmin_AllDepts*.
 
-1. In ADOC, navigate to: **HQ\Groups\Roles**
+1. In ADUC, navigate to: **HQ\Groups\Roles**
 1. Double-click on **RG_OUAdmin_AllDepts** to open its Properties.
 1. In the *Properties* window, go to the **Members** tab and click on: **Add...**
 1. In the *Select Users, Contacts, Computers, Service Accounts, or Groups* window, type: **GG_IT_L2**
@@ -438,12 +445,12 @@ Time to create our L2 user, Dot Matrix.
 
 As mentioned, a Level 2 Helpdesk staff should have L2 AD admin privileges *and* L1 AD admin privileges. **Let's add both.**
 
-1. In ADOC, navigate to: **HQ\Groups\Global**
+1. In ADUC, navigate to: **HQ\Groups\Global**
 1. Double-click on **GG_IT_L1** to open its Properties.
 1. In the *Properties* window, go to the **Members** tab and click on: **Add...**
 1. In the *Select Users, Contacts, Computers, Service Accounts, or Groups* window, type: **Dot Matrix**
 1. Click **OK** and verify it shows up in the *Members* tab.
-1. Go back to ADOC and navigate to: **HQ\Groups\Global**
+1. Go back to ADUC and navigate to: **HQ\Groups\Global**
 1. Double-click on **GG_IT_L2** to open its Properties.
 1. In the *Properties* window, go to the **Members** tab and click on: **Add...**
 1. In the *Select Users, Contacts, Computers, Service Accounts, or Groups* window, type: **Dot Matrix**
@@ -458,11 +465,11 @@ We should check that our new Dot account works, has our user GPO applied (those 
   > **Note:** We didn't have to do anything with GPOs this time, as we applied our IT GPO to the IT folder in Users earlier. So, when Dot was created there, she inherited that GPO. **Cool, right?**
 
 1. Logout of your account on *srv1*.
-1. Log in to Dot's account: **dot.matrix**
+1. Log on to Dot's account: **dot.matrix**
     1. You will be asked to reset the password on first login. This is normal. Pick something complex but basic and **write it down in your Lab Logbook**.
 1. Once logged in, try to open up **Settings**. Does it let you? It should, this time.
 1. Does the desktop contain the three shortcuts we configured:
     1. **Server Manager**
-    1. **Active Directory Users and Groups**
+    1. **Active Directory Users and Computers**
     1. **Group Policy Management**
 1. If so, move on to the next part of the lab.
