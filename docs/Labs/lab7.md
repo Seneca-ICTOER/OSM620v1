@@ -11,17 +11,127 @@ description: Lab 7 - AD Users, Groups, Computers, and GPOs
 
 ### Purpose of Lab 7
 
-- In this lab, you’ll redesign and configure your environment to a more realistic, low-footprint, on-premises design. -
+In this lab, you’ll reshape your domain into something closer to real life:
+
+* Build a clean **OU (Organizational Unit)** structure for **people** and **computers**.
+* Stop using the built-in **Administrator** and switch to a **personal admin** account.
+* Use **GPOs** (Group Policy Objects) to control **how things behave**.
+* Use **Groups + Delegation** to control **who is allowed to do what** in Active Directory.
+* You’ll prove the difference between “policy” and “permission” with three concrete users:
+  * **Bob (Accounting)** — a normal employee who gets a **lockdown** user policy.
+  * **Enzo (IT L1)** — can **reset passwords** in a department.
+  * **Dot (IT L2)** — can **create/modify/move/delete** users in department OUs.
+* Finally, you’ll create the start of a **Computers OU** structure so **device-level** settings have a proper home.
 
 ### Objectives
 
 By the end of this lab, you will be able to:
 
-- Stuff
+* Create a tidy **HQ\Users** scaffold and a starter **HQ\Computers** scaffold.
+* Create a **personal domain admin account**, verify access, and **disable** the built-in **Administrator** safely.
+* Create a **User-scope GPO** (**User – Employee Lockdown**), link it to a specific **Employees** OU, and verify that it follows the user (Bob) wherever he signs in.
+* Create a **User-scope GPO** for IT (**User – IT Environment**), link it to **HQ\Users\IT**, and verify that Enzo/Dot get the intended desktop experience.
+* Create ***Global Groups (GG_)*** to represent **who people are** and **Role Groups (RG_)** to represent **what a role can do**; wire them together and **delegate**:
+  * **L1**: reset passwords in a department OU (e.g., Accounting).
+  * **L2**: create/modify/move/delete users in department OUs (not IT).
+* Build the first **Computers OUs** by hand, then complete the scaffold with a small **CSV → PowerShell script**; move *srv1* and *laptop1* into place.
 
 ### Concepts
 
-Conceptual discussion and terminology like Users, Groups, Computers, GPOs, RGs, GGs, etc.
+This section is your mental model. Read it once now; refer back while you work.
+
+#### Users vs Computers (two different kinds of objects)
+
+* **User object** = a person. When a **User-scope** GPO applies, it **follows the person** to any domain-joined machine they sign in to.  
+  
+  **Example:** Bob gets “no Control Panel” everywhere he signs in.
+
+* **Computer object** = a device. When a **Computer-scope** GPO applies, it **sticks to that device**, no matter who signs in.  
+
+  **Example:** Laptop sleep/USB rules apply for every user on that laptop.
+
+> **Checkpoint:** If the question is “Does this follow the person or the device?” — you already know which scope to use.
+
+#### OUs: what they are (and are not)
+
+* An **OU (Organizational Unit)** is a folder inside AD used for **targeting** and **delegation**:
+  * You **link GPOs** to OUs to target either the **users in that OU** (User-scope) or the **computers in that OU** (Computer-scope).
+  * You **delegate control** on an OU to allow a group to perform tasks (like reset passwords) **for the objects inside that OU**.
+
+* An OU is **not** a security principal. You cannot “give permissions to an OU.” You always grant permissions to **groups** (or users), then point those groups at an OU via **delegation**.
+
+> **Analogy:** Think of OUs as labeled **folders**. Policies and delegation are **rules on the folder**. Groups are the **keyrings** you hand to people.
+
+#### Groups: Global Groups VS Role Groups
+
+We use a simple naming convention to keep your head clear:
+
+* **`GG_*` (Global Group)** = **who they are** (identity buckets).  
+  You put **users** into **GGs**.  
+
+  **Examples:** `GG_IT_L1`, `GG_IT_L2`.
+
+* **`RG_*` (Role Group)** = **what they can do** (delegated abilities).  
+  You assign **rights** to **RGs** by using the **Delegation of Control** wizard on an OU.  
+
+  **Examples:** `RG_PasswordReset`, `RG_OUAdmin_AllDepts`.
+
+**Wiring rule:** *Put the GG inside the RG.*  
+
+* You never delegate directly to a user in production.  
+* You delegate to an **RG** on the target **OU**, then make the **GG** a **member** of that **RG**.  
+* Users gain the delegated ability by being in the **GG**.
+
+> **Example (you’ll do this):**  
+> Delegate **“Reset user passwords”** on `HQ\Users\Accounting` **to** `RG_PasswordReset`.  
+>
+> Make `GG_IT_L1` a **member of** `RG_PasswordReset`.  
+>
+> Add **Enzo** to `GG_IT_L1`.  
+>
+> Result: Enzo can reset passwords **in that OU**.
+
+#### Delegation of Control (where + what + who)
+
+* **Where:** right-click the **target OU** (e.g., `HQ\Users\Accounting`) → **Delegate Control…**
+* **What:** pick the task(s) (e.g., **Reset user passwords**, or **Create, delete, and manage user accounts**).
+* **Who:** choose the **RG** (e.g., `RG_PasswordReset`, `RG_OUAdmin_AllDepts`).
+
+> **Important:** The rights you delegate **apply only to objects in that OU (and its child OUs)**.  
+> If you want the same right in another department, you repeat the delegation on that department’s OU.
+
+#### GPOs: two halves, linked to an OU
+
+A **GPO** is a bundle of settings with two halves:
+
+* **User Configuration** — shapes the **user session** (Start menu, Control Panel access, etc.).  
+  **Link** it to a **Users** OU to target those users.
+* **Computer Configuration** — shapes the **device** (firewall, power settings, removable storage).  
+  **Link** it to a **Computers** OU to target those devices.
+
+We avoid advanced tricks in this lab (no **Block Inheritance**, no **Enforced**). We simply **link at the lowest sensible OU** so there’s no ambiguity.
+
+> **Examples you’ll build:**  
+>
+> * **Standard – Employee Lockdown** *(User)* → link to `…\Users\Accounting\Employees`.  
+> * **User – IT Environment** *(User)* → link to `…\Users\IT`.  
+> * **Computer – Workstations Baseline** *(Computer)* → link to `…\Computers\Workstations`.  
+> * **Computer – Laptops Baseline** *(Computer)* → link to `…\Computers\Laptops`.
+
+#### Policies VS Permissions (why both exist)
+
+* **Policy** = **configuration/behavior** the system adopts.
+
+  *Example:* “Hide Control Panel” (policy) changes the UI for Bob.
+
+* **Permission** = **authority** to perform an action in AD.  
+
+  *Example:* “Reset passwords in Accounting” (delegation) gives Enzo the right to change those user objects.
+
+They solve **different problems** and often work together:
+
+* policies make the environment safe and consistent
+* permissions define who can administer AD
 
 ### Minimum Progression Requirements
 
@@ -473,3 +583,52 @@ We should check that our new Dot account works, has our user GPO applied (those 
     1. **Active Directory Users and Computers**
     1. **Group Policy Management**
 1. If so, move on to the next part of the lab.
+
+## Investigation 5: Computers - OUs and GPOs
+
+In this investigation, we'll create computer-based OUs and GPOs.
+
+Until now, we've been working with User OUs and GPOs. Complicated as they may get, at the end of the day, these are all about settings and permissions that **follow a user**.
+
+Computer OUs, by contrast, are applied at the computer level regardless of who's logged on.
+
+An easy example: Network settings, like configuring an IP address, are applied at the computer level, not the user level. (Can you imagine if network settings changed every time a different user logged in?)
+
+The following investigation allows us to organize the computers we have joined to our Active Directory domain and what settings to apply to each.
+
+### Part 1: First OU Scaffolding Setup
+
+1. On *srv1*, open **Active Directory Users and Computers** (ADUC).
+1. Open your domain name from the list. (Example: *cjohnson30.com*)
+1. Open the **HQ** OU as before.
+1. Inside it, right-click **HQ** and select: **New > Organizational Unit**
+1. Name this new OU: **Computers**
+1. Using the same **New > Organizational Unit** function, ***add*** the following to your existing HQ\Computers hierarchy:  
+
+    > ```
+    > HQ  
+    > └─ Computers 
+    >    └─ Workstations  
+    >       ├─ Accounting
+    >       └─ IT
+    >    └─ Laptops 
+    >       ├─ Accounting
+    >       └─ IT
+    >    └─ Servers 
+    >       └─ Members
+    > ```
+
+1. Verify your work. Does your HQ object hold the above items in the correct levels?
+1. If so, move on to the next part. If not, fix your mistakes or ask for help.
+
+### Part 2: Move Computers into the Correct OUs
+
+1. In ADUC, click the built-in Computers container (CN=Computers) and your domain root to find machine accounts.
+1. Move (drag and drop) to the new OUs:
+    1. *srv1* → **HQ\Computers\Servers\Member**
+    1. *laptop1* → **HQ\Computers\Laptops\Accounting**
+
+    > **Note:** Do not move srv2 and srv3! Keep them where they are.
+
+1. Verify your work. Are your *srv1* and *laptop1* computers in the correct OUs?
+1. If so, move on to the next part. If not, fix your mistakes or ask for help.
