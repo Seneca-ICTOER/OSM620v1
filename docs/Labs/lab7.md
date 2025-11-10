@@ -343,9 +343,9 @@ The previous GPO we created is far too restrictive for an IT employee. They can 
 
 **Remember, GPOs are about modifying *default behaviour*.** Think about when you log into a normal Windows machine you own. You can access Control Panel, right? So, to allow it here, all we need to do is **not** disable it. The default is to allow access. Same with the other restrictions we placed on the previous GPO.
 
-Instead, we're going to add some shortcuts to the IT users' desktops for common AD management tools.
+Instead of adding restrictions, we're going to add some shortcuts for common AD management tools to the IT users' desktops.
 
-1. Open the **Group Policy Manager** and nagivate to:  **Forest: SenecaID.com > Domains > SenecaID.com > Group Policy Objects**
+1. Open the **Group Policy Manager** and navigate to:  **Forest: SenecaID.com > Domains > SenecaID.com > Group Policy Objects**
 1. Create a new GPO here called: **User - IT Environment**
 1. **User Configuration > Preferences > Windows Settings > Shortcuts > *Right-Click* > New > Shortcut**
 1. Add the following shortcuts:
