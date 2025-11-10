@@ -394,12 +394,12 @@ Now that we have our GPO with all our additions included, it's time to apply it.
 
 This is where we get into personal desktop environment settings VS Active Directory admin settings. GPOs are for personal desktop environments that a user sees when they login.
 
-By contrasts, we use Global Groups+Resource Groups to grant certain AD admin tasks to groups of users.
+By contrasts, we use Global Groups+Role Groups to grant certain AD admin tasks to groups of users.
 
 For reference:
 
 1. **GPO+User OU** = Desktop settings and restrictions on the local machine a user logs into.
-1. **Global Groups+Resource Groups** = Combinations of AD administrative tasks assigned to groups of users. This is to allow certain users to change Active Directory settings and configuration, not local computers.
+1. **Global Groups+Role Groups** = Combinations of AD administrative tasks assigned to groups of users. This is to allow certain users to change Active Directory settings and configuration, not local computers.
 
 A **Global Group *(GG)*** is, essentially, an *identity group*. We use Global Groups to add users together, and then apply a role to the group. Each user in that group then gets that role applied. (We do the roles part a bit later.)
 
@@ -444,7 +444,7 @@ Let's create our first RG and then add a single AD admin privilege to it: Reset 
 1. In *Delegation of Control Wizard* > *Tasks to Delegate*, select: **Reset user passwords and force password change at next logon**
 1. Review your settings on the last page, then click **Finish**.
 
-### Part 6: Wire Global Group to Resource Group
+### Part 6: Wire Global Group to Role Group
 
 We'll now assign our new RG from *Part 5* to our Global Group **GG_IT_L1**. This means that anyone who's a part of *GG_IT_L1* will get the AD admin privilege assigned in *RG_PasswordReset*.
 
@@ -454,7 +454,7 @@ We'll now assign our new RG from *Part 5* to our Global Group **GG_IT_L1**. This
 1. In the *Select Users, Contacts, Computers, Service Accounts, or Groups* window, type: **GG_IT_L1**
 1. Click **OK** and verify it shows up in the *Members* tab.
 
-The Global Group of users *GG_IT_L1* now has all the AD admin privileges given to Resource Group *RG_PasswordReset*.
+The Global Group of users *GG_IT_L1* now has all the AD admin privileges given to Role Group *RG_PasswordReset*.
 
 ### Part 7: Add Enzo to GG IT Helpdesk Level 1
 
@@ -521,7 +521,7 @@ Or disable his account if he gets fired. (*He is terrible, after all.*)
 1. In *Delegation of Control Wizard* > *Tasks to Delegate*, select: **Create, delete, and manage user accounts**
 1. Review your settings on the last page, then click **Finish**.
 
-### Part 3: Wire Global Group to Resource Group
+### Part 3: Wire Global Group to Role Group
 
 We'll now assign our new RG from *Part 2* to our Global Group **GG_IT_L2**. This means that anyone who's a part of *GG_IT_L2* will get the AD admin privilege assigned in *RG_OUAdmin_AllDepts*.
 
@@ -531,7 +531,7 @@ We'll now assign our new RG from *Part 2* to our Global Group **GG_IT_L2**. This
 1. In the *Select Users, Contacts, Computers, Service Accounts, or Groups* window, type: **GG_IT_L2**
 1. Click **OK** and verify it shows up in the *Members* tab.
 
-The Global Group of users *GG_IT_L2* now has all the AD admin privileges given to Resource Group *RG_OUAdmin_AllDepts*.
+The Global Group of users *GG_IT_L2* now has all the AD admin privileges given to Role Group *RG_OUAdmin_AllDepts*.
 
 ### Part 4: Create User - Dot Matrix
 
