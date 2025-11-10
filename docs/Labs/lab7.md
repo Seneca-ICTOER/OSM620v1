@@ -275,7 +275,7 @@ Bob from Accounting is a *terrible* user. He ignores written computer polices an
 
 We have to create the GPO first before we can have it applied to Bob (and other users we want).
 
-1. On *srv1*, open the **Group Policy Manager** application.
+1. On *srv1*, open the **Group Policy Management** application.
 1. In the left-hand column, expand the following: **Forest: SenecaID.com > Domains > SenecaID.com > Group Policy Objects**
 1. Right-click *Group Policy Objects* and select: **New**  
     1. **Name:** *User - Employee Lockdown*
@@ -306,7 +306,7 @@ The best method is to apply it at the *Accounting\Employees* OU so **any** accou
 
 Much better than applying it to 50 different employees one at a time!
 
-1. Back in the *Group Policy Manager* application, right-click on: **HQ\Users\Accounting\Employees**
+1. Back in the *Group Policy Management* application, right-click on: **HQ\Users\Accounting\Employees**
 1. Click **Link an existing GPO**
 1. Select **User - Employee Lockdown** from the list and click **OK**.
 1. You should now see it in the list in the main *Linked Group Policy Objects* pane for *Employees*. If you don't, double-check your work and ask for help before proceeding.
@@ -345,7 +345,7 @@ The previous GPO we created is far too restrictive for an IT employee. They can 
 
 Instead of adding restrictions, we're going to add some shortcuts for common AD management tools to the IT users' desktops.
 
-1. Open the **Group Policy Manager** and navigate to:  **Forest: SenecaID.com > Domains > SenecaID.com > Group Policy Objects**
+1. Open the **Group Policy Management** and navigate to:  **Forest: SenecaID.com > Domains > SenecaID.com > Group Policy Objects**
 1. Create a new GPO here called: **User - IT Environment**
 1. **User Configuration > Preferences > Windows Settings > Shortcuts > *Right-Click* > New > Shortcut**
 1. Add the following shortcuts:
@@ -385,7 +385,7 @@ Instead of adding restrictions, we're going to add some shortcuts for common AD 
 
 Now that we have our GPO with all our additions included, it's time to apply it. We'll apply it to the *IT* OU, since it should apply to everyone there.
 
-1. Back in the *Group Policy Manager* application, right-click on: **HQ\Users\IT**
+1. Back in the *Group Policy Management* application, right-click on: **HQ\Users\IT**
 1. Click **Link an existing GPO**
 1. Select **User - IT Environment** from the list and click **OK**.
 1. You should now see it in the list in the main *Linked Group Policy Objects* pane for *IT*. If you don't, double-check your work and ask for help before proceeding.
