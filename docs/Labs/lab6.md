@@ -263,8 +263,7 @@ This is a very normal on-prem setup, and you'll see why later on in the lab. It 
 4. Confirm Internet connection.
     1. In Command Prompt, run: `ping eff.org`
     2. Confirm it works. If not, ask for help!
-5. Delete any folders inside the VM disk directory, *Virtual Hard Disks*: **C:\ProgramData\Microsoft\Windows\Hyper-V\Virtual Hard Disks/`vm folders`**
-6. Shut down *srv1*.
+5. Shut down *srv1*.
 
 ## Investigation 4: Promote srv2 to AD DC1
 
