@@ -363,7 +363,7 @@ This is a good example of applying settings to a user account. No matter what HQ
 
 We're going to create a user that provides Level 1 IT support to employees in the rest of the company.
 
-Unlike Bob, who we only needed to restrict what access he had to computers he logged into directly, with Enzo, we have to grant him specific admin privileges in Active Directory so he can manage certain things.
+Unlike Bob, who we only needed to restrict what access he had to computers he logged into directly, with Enzo, we have to grant him *specific* admin privileges in Active Directory so he can manage certain things.
 
 A Level 1 Helpdesk employee always has the same terrible job: Reset passwords for employees who have forgotten their own.
 
@@ -675,7 +675,173 @@ The following investigation allows us to organize the computers we have joined t
     1. *srv1* → **HQ\Computers\Servers\Members**
     1. *laptop1* → **HQ\Computers\Laptops\Accounting**
 
-    > **Note:** Do not move srv2 and srv3! Keep them where they are.
+    > **Note:** Do not move *srv2* and *srv3*! Keep them where they are.
 
 1. Verify your work. Are your *srv1* and *laptop1* computers in the correct OUs?
 1. If so, move on to the next part. If not, fix your mistakes or ask for help.
+
+> **Why not move *srv2* and *srv3*?**  
+> Domain Controllers live in a special **Domain Controllers** OU with their own built-in GPO (`Default Domain Controllers Policy`).  
+>
+> In real environments, DCs are usually managed separately from normal servers, so we’re leaving them where they are.
+
+### Part 3: Create Computer Baseline GPOs
+
+Now that we have our Computers OUs, we’ll create **Computer-scope** GPOs that can apply to devices in those OUs.
+
+We’ll make two simple baseline GPOs:
+
+* **Computer – Workstations Baseline**
+* **Computer – Laptops Baseline**
+
+In a real company, these would eventually diverge (different sleep policies, USB rules, etc.). For this lab, we’ll give them the same simple setting so you can *see* a device-level policy in action on `laptop1`.
+
+We’ll add a standard **logon banner**. This is a message that appears before anyone logs in. Because it’s a **Computer** setting, it will apply to *any* user who signs in on that device. (In this case, before anyone logs in at all, too.)
+
+1. On *srv1*, open **Group Policy Management**.
+2. In the left pane, navigate to:  
+   **Forest: yourSenecaUsername.com > Domains > yourSenecaUsername.com > Group Policy Objects**
+3. Right-click **Group Policy Objects** → **New…**
+4. Create a new GPO:
+   1. **Name:** `Computer – Workstations Baseline`
+5. Repeat **Step 3–4** to create a second GPO:
+   1. **Name:** `Computer – Laptops Baseline`
+
+Now we’ll edit **both** GPOs to add the same logon message.
+
+6. Right-click **Computer – Workstations Baseline** → **Edit…**
+7. In the *Group Policy Management Editor* window, go to:
+
+   **Computer Configuration → Policies → Windows Settings → Security Settings → Local Policies → Security Options**
+
+8. In the right pane, find the following two policies:
+   1. **Interactive logon: Message title for users attempting to log on**
+   2. **Interactive logon: Message text for users attempting to log on**
+
+9. Double-click **Interactive logon: Message title for users attempting to log on**:
+   1. Set **Security Setting** to something like:  
+      `OSM620 HQ – Authorized Use Only`
+   2. Click **OK**.
+10. Double-click **Interactive logon: Message text for users attempting to log on**:
+    1. Set **Security Setting** to something like:  
+
+       `This system is for authorized use only. Activity may be monitored. By signing in, you agree to comply with company policy.`
+
+    2. Click **OK**.
+
+11. Close the *Group Policy Management Editor* window.
+12. Repeat **Steps 6–11**, but this time for **Computer – Laptops Baseline** so that both GPOs have the same logon banner configured.
+
+> **Why a logon banner?**  
+> It’s a **Computer-scope** setting that shows up *before* anyone signs in.  
+> That makes it a perfect visual example of “policy sticks to the device, not the person.”
+
+### Part 4: Link Computer GPOs to the Computers OUs
+
+Now we’ll link our new Computer GPOs at the correct places in the **HQ\Computers** tree.
+
+1. In **Group Policy Management**, expand:  
+   **Forest: yourSenecaUsername.com > Domains > yourSenecaUsername.com > yourSenecaUsername.com > HQ > Computers**
+2. Right-click **Workstations** → **Link an Existing GPO…**
+3. Choose **Computer – Workstations Baseline** → **OK**.
+4. Right-click **Laptops** → **Link an Existing GPO…**
+5. Choose **Computer – Laptops Baseline** → **OK**.
+
+You should now see:
+
+* `Computer – Workstations Baseline` linked at **HQ\Computers\Workstations**
+* `Computer – Laptops Baseline` linked at **HQ\Computers\Laptops**
+
+Remember from **Part 2**:
+
+* `srv1` is in **HQ\Computers\Servers\Members**
+* `laptop1` is in **HQ\Computers\Laptops\Accounting**
+
+So right now, **only `laptop1`** will actually inherit **Computer – Laptops Baseline**.
+
+### Part 5: Verify Laptop Baseline on *laptop1*
+
+Let’s prove that this GPO is really a **Computer-scope** policy that “sticks” to `laptop1`.
+
+1. On *laptop1*, sign in with your normal domain account (*yourSenecaUsername*).
+1. Open **Command Prompt** using *Run as Adminstrator*.
+1. Run: `gpupdate /force`  
+   This forces the new Computer policy to apply right away instead of waiting.
+1. When it completes, confirm your work by running the following: `gpresult /r /scope computer`
+1. You should see something similar to the following:
+
+```powershell
+C:\Windows\System32>gpresult /r /scope computer
+
+Microsoft (R) Windows (R) Operating System Group Policy Result tool v2.0
+© Microsoft Corporation. All rights reserved.
+
+Created on 2025-11-22 at 4:47:29 PM
+
+
+RSOP data for  on LAPTOP1 : Logging Mode
+-----------------------------------------
+
+OS Configuration:            Member Workstation
+OS Version:                  10.0.26200
+Site Name:                   Default-First-Site-Name
+Roaming Profile:
+Local Profile:
+Connected over a slow link?: No
+
+
+COMPUTER SETTINGS
+------------------
+    CN=LAPTOP1,OU=IT,OU=Laptops,OU=Computers,OU=HQ,DC=cjohnson30,DC=com
+    Last time Group Policy was applied: 2025-11-22 at 4:37:30 PM
+    Group Policy was applied from:      srv2.cjohnson30.com
+    Group Policy slow link threshold:   500 kbps
+    Domain Name:                        CJOHNSON30
+    Domain Type:                        Windows 2008 or later
+
+    Applied Group Policy Objects
+    -----------------------------
+        Computer - Laptop Baseline
+        Default Domain Policy
+
+    The following GPOs were not applied because they were filtered out
+    -------------------------------------------------------------------
+        Local Group Policy
+            Filtering:  Not Applied (Empty)
+
+    The computer is a part of the following security groups
+    -------------------------------------------------------
+        BUILTIN\Administrators
+        Everyone
+        BUILTIN\Users
+        NT AUTHORITY\NETWORK
+        NT AUTHORITY\Authenticated Users
+        This Organization
+        LAPTOP1$
+        Domain Computers
+        Authentication authority asserted identity
+        System Mandatory Level
+```
+
+> **Notice the line: *Computer - Laptop Baseline***
+
+1. Once confirmed, restart `laptop1`.
+1. After the restart, look carefully at the **logon screen**:
+   1. Do you see the **title** and **message text** you configured in Part 3?
+1. Sign in as a different domain user (for example, Enzo or Dot, once their accounts are set up).
+1. Confirm that the **same logon banner** appears for them as well.
+
+If the banner shows up before *any* user signs in, you’ve just seen a **Computer-scope** GPO in action:
+
+* It follows the **device (`laptop1`)**, not the individual user.
+* Every domain user on that device must see and acknowledge the message.
+
+If you **don’t** see the message:
+
+1. Double-check that:
+   1. `laptop1` is in **HQ\Computers\Laptops\Accounting** in ADUC.
+   2. **Computer – Laptops Baseline** is linked at **HQ\Computers\Laptops**.
+2. Run `gpupdate /force` again on *laptop1* and restart one more time.
+3. If it still doesn’t work, ask your instructor for help.
+
+> **Note:** In a real environment, admins can trigger a *Group Policy Update* remotely from GPMC on the domain or OU, but for this lab you’ll run `gpupdate /force` locally on *laptop1*.
