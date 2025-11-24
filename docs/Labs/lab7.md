@@ -34,7 +34,7 @@ By the end of this lab, you will be able to:
 * Create ***Global Groups (GG_)*** to represent **who people are** and **Role Groups (RG_)** to represent **what a role can do**; wire them together and **delegate**:
   * **L1**: reset passwords in a department OU (e.g., Accounting).
   * **L2**: create/modify/move/delete users in department OUs (not IT).
-* Build the first **Computers OUs** by hand, then complete the scaffold with a small **CSV → PowerShell script**; move *srv1* and *laptop1* into place.
+* Build the first **Computers OUs** by hand, then complete the scaffold with a small **CSV > PowerShell script**; move *srv1* and *laptop1* into place.
 
 ### Concepts
 
@@ -93,7 +93,7 @@ We use a simple naming convention to keep your head clear:
 
 #### Delegation of Control (where + what + who)
 
-* **Where:** right-click the **target OU** (e.g., `HQ\Users\Accounting`) → **Delegate Control…**
+* **Where:** right-click the **target OU** (e.g., `HQ\Users\Accounting`) > **Delegate Control…**
 * **What:** pick the task(s) (e.g., **Reset user passwords**, or **Create, delete, and manage user accounts**).
 * **Who:** choose the **RG** (e.g., `RG_PasswordReset`, `RG_OUAdmin_AllDepts`).
 
@@ -113,10 +113,10 @@ We avoid advanced tricks in this lab (no **Block Inheritance**, no **Enforced**)
 
 > **Examples you’ll build:**  
 >
-> * **User – Employee Lockdown** *(User)* → link to `…\Users\Accounting`.  
-> * **User – IT Environment** *(User)* → link to `…\Users\IT`.  
-> * **Computer – Workstations Baseline** *(Computer)* → link to `…\Computers\Workstations`.  
-> * **Computer – Laptops Baseline** *(Computer)* → link to `…\Computers\Laptops`.
+> * **User – Employee Lockdown** *(User)* > link to `…\Users\Accounting`.  
+> * **User – IT Environment** *(User)* > link to `…\Users\IT`.  
+> * **Computer – Workstations Baseline** *(Computer)* > link to `…\Computers\Workstations`.  
+> * **Computer – Laptops Baseline** *(Computer)* > link to `…\Computers\Laptops`.
 
 #### Policies VS Permissions (why both exist)
 
@@ -672,8 +672,8 @@ The following investigation allows us to organize the computers we have joined t
 
 1. In ADUC, click the built-in Computers container (CN=Computers) and your domain root to find machine accounts.
 1. Move (drag and drop) to the new OUs:
-    1. *srv1* → **HQ\Computers\Servers\Members**
-    1. *laptop1* → **HQ\Computers\Laptops\Accounting**
+    1. *srv1* > **HQ\Computers\Servers\Members**
+    1. *laptop1* > **HQ\Computers\Laptops\Accounting**
 
     > **Note:** Do not move *srv2* and *srv3*! Keep them where they are.
 
@@ -701,7 +701,7 @@ We’ll add a standard **logon banner**. This is a message that appears before a
 1. On *srv1*, open **Group Policy Management**.
 2. In the left pane, navigate to:  
    **Forest: yourSenecaUsername.com > Domains > yourSenecaUsername.com > Group Policy Objects**
-3. Right-click **Group Policy Objects** → **New…**
+3. Right-click **Group Policy Objects** > **New…**
 4. Create a new GPO:
    1. **Name:** `Computer – Workstations Baseline`
 5. Repeat **Step 3–4** to create a second GPO:
@@ -709,10 +709,10 @@ We’ll add a standard **logon banner**. This is a message that appears before a
 
 Now we’ll edit **both** GPOs to add the same logon message.
 
-6. Right-click **Computer – Workstations Baseline** → **Edit…**
+6. Right-click **Computer – Workstations Baseline** > **Edit…**
 7. In the *Group Policy Management Editor* window, go to:
 
-   **Computer Configuration → Policies → Windows Settings → Security Settings → Local Policies → Security Options**
+   **Computer Configuration > Policies > Windows Settings > Security Settings > Local Policies > Security Options**
 
 8. In the right pane, find the following two policies:
    1. **Interactive logon: Message title for users attempting to log on**
@@ -742,10 +742,10 @@ Now we’ll link our new Computer GPOs at the correct places in the **HQ\Compute
 
 1. In **Group Policy Management**, expand:  
    **Forest: yourSenecaUsername.com > Domains > yourSenecaUsername.com > yourSenecaUsername.com > HQ > Computers**
-2. Right-click **Workstations** → **Link an Existing GPO…**
-3. Choose **Computer – Workstations Baseline** → **OK**.
-4. Right-click **Laptops** → **Link an Existing GPO…**
-5. Choose **Computer – Laptops Baseline** → **OK**.
+2. Right-click **Workstations** > **Link an Existing GPO…**
+3. Choose **Computer – Workstations Baseline** > **OK**.
+4. Right-click **Laptops** > **Link an Existing GPO…**
+5. Choose **Computer – Laptops Baseline** > **OK**.
 
 You should now see:
 
@@ -845,3 +845,51 @@ If you **don’t** see the message:
 3. If it still doesn’t work, ask your instructor for help.
 
 > **Note:** In a real environment, admins can trigger a *Group Policy Update* remotely from GPMC on the domain or OU, but for this lab you’ll run `gpupdate /force` locally on *laptop1*.
+
+## Lab 7 Sign-Off
+
+**It’s essential to complete Lab 7 correctly.** Lab 8 assumes you have your users, groups, and computers properly organized in Active Directory.
+
+When you finish Lab 7, ask your instructor for a sign-off.
+
+### Sign-Off Checklist
+
+Please have the following on screen and ready to show. You will need to power on the following VMs:
+
+ * srv1
+ * srv2
+ * laptop1
+
+#### On srv1:
+
+**Using your `firstname.lastname` Domain Administrator account**, show the following in *Active Directory Users and Computers*.
+
+HQ\Users OU structure
+
+1.	In Active Directory Users and Computers, show:
+	1.	Bob Smith in HQ > Users > Accountants
+	2.	Enzo Matrix in HQ > Users > IT > Helpdesk
+	3.	Dot Matrix in HQ > Users > IT > SysAdmins
+
+HQ\Computers OU structure
+
+1.	In HQ > Computers, show:
+	1.	srv1 in Servers > Members
+	2.	laptop1 in Laptops > Accounting
+	3.	User and Computer GPOs
+1.	In Group Policy Management, show that:
+	1.	Your Employee user GPO (for example, User – Employee Lockdown) is linked at HQ > Users > Accountants.
+	2.	Your IT user GPO (for example, User – IT Environment) is linked at HQ > Users > IT.
+	3.	Your Laptop computer GPO (for example, Computer – Laptops Baseline) is linked at HQ > Computers > Laptops.
+
+If all of the above are present, your directory structure and GPO links are considered correct for this lab.
+
+Test your user accounts:
+
+1. Log into Enzo Matrix.
+2. Log into Dot Matrix.
+
+#### On laptop1:
+
+1. Log into Bob Smith.
+1. Log into your `firstname.lastname` Domain Administrator account.
