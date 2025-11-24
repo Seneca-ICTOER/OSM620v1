@@ -283,7 +283,7 @@ Departments deserve their own space. By carving out **HQ\Users\Accountants**, we
 
 ### Part 2: Create User - Bob Smith
 
-Bob is our test user for “normal staff”. We’ll give him standard settings (password change at next logon, no special rights) so we can see our **Employee Lockdown** user-GPO take effect exactly where we expect later in this investigation.
+Bob is our test user for “normal staff”. We’ll give him standard settings so we can see our **Employee Lockdown** user-GPO take effect exactly where we expect later in this investigation.
 
 1. Create a new user in the following location: **HQ\Users\Accountants**
 1. Sse the following values:  
