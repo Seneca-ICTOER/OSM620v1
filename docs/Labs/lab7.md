@@ -229,7 +229,7 @@ Now we grant your account the rights to actually run the domain. Adding it to **
 
 You now have full domain admin access using your personal account instead of the default Administrator account. This is far more secure and best practice.
 
-Going forward, always log into your servers using this personal account, never the default Administrator account.
+> **IMPORTANT: Going forward, *always log into your servers using this personal account*, never the default Administrator account.**
 
 ### Part 4: Create a Secondary Backup Administrator
 
