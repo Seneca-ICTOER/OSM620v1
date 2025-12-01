@@ -461,3 +461,53 @@ Now:
  7. Confirm:
     1. There is no **M:** drive.
     1. There is no **Accounting Files** shortcut.
+
+## Lab 8 Sign-Off
+
+**It’s essential to complete Lab 8 correctly.** Lab 8 assumes you have your users able to access their correct file shares properly.
+
+When you finish Lab 8, ask your instructor for a sign-off.
+
+### Sign-Off Checklist
+
+Please have the following on screen and ready to show. You will need to power on the following VMs:
+
+ * srv1
+ * srv2
+ * laptop1
+
+To receive sign off for Lab 8, you must demonstrate the following in person to your instructor:
+
+#### Department Groups in AD
+
+In Active Directory Users and Computers on srv1, show:
+
+1. GG_Dept_Accounting exists and contains your Accounting user (e.g., bob.smith).
+1. GG_Dept_IT exists and contains your IT user(s) (e.g., enzo.matrix, dot.matrix).
+
+#### Department Shares on SRV2
+
+From srv1, open \\srv2 in File Explorer and show:
+1. The Accounting and IT shares are present.
+1. Open the Security properties for one of the folders (either C:\CorpData\Accounting or C:\CorpData\IT on srv2) and show:
+   1. The matching GG_Dept_* group has Modify permission.
+   1. SYSTEM and Administrators still have Full control.
+
+#### Accounting User View (laptop1)
+
+Sign in to laptop1 as your Accounting user and show:
+1. Drive M: is mapped and points to \\srv2\Accounting.
+1. There is an Accounting Files shortcut on the desktop that opens M:
+1. There is no X: drive and no IT Files shortcut.
+1. You can create and delete a test file on H:.
+
+#### IT User View (laptop1)
+
+Sign in to laptop1 as your IT user (Enzo or Dot) and show: 
+
+1. Drive X: is mapped and points to \\srv2\IT.
+1. There is an IT Files shortcut on the desktop that opens X:
+1. There is no M: drive and no Accounting Files shortcut.
+1. You can create and delete a test file on X:.
+
+Once you have demonstrated all four items, your instructor will sign off Lab 8.
