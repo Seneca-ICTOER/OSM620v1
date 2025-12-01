@@ -39,8 +39,6 @@ By the end of this lab, you will be able to:
   - Create **desktop shortcuts** pointing at those drives.
 - Verify **end-user experience** from a domain-joined client (`laptop1`).
 
----
-
 ### Minimum Progression Requirements
 
 Before beginning, you must have:
