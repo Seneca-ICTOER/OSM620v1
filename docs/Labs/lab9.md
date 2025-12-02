@@ -43,7 +43,7 @@ In this investigation, you'll log in to your Seneca-provided Azure account and e
 
 Logging in after initial setup is quite easy.
 
-1. Navigate to the Azure portal: <https://portal.azure.com>
+1. Navigate to the Azure portal: `https://portal.azure.com`
 1. Use your Seneca credentials.
 1. Complete 2FA authentication.
 1. Our classroom DevTest Lab will be in your recent list, or you can use the search bar to bring up DevTest Labs by looking for **OSM620**.
